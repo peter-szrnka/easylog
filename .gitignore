@@ -15,3 +15,11 @@ buildNumber.properties
 .project
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
+common/.idea/compiler.xml
+common/.idea/copilot.data.migration.agent.xml
+common/.idea/copilot.data.migration.ask.xml
+common/.idea/copilot.data.migration.ask2agent.xml
+common/.idea/copilot.data.migration.edit.xml
+common/.idea/encodings.xml
+common/.idea/jarRepositories.xml
+common/.idea/misc.xml
