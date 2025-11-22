@@ -1,0 +1,105 @@
+<div class="log-viewer-container">
+  <div class="filters">
+    <input
+      class="search-input"
+      #search
+      id="search"
+      type="text"
+      placeholder="Search by text"
+      aria-label="Search"
+    />
+
+    <label>
+      From:
+      <input
+        type="datetime-local"
+        [(ngModel)]="startDate"
+        (change)="onDateChange()"
+      />
+    </label>
+
+    <label>
+      To:
+      <input
+        type="datetime-local"
+        [(ngModel)]="endDate"
+        (change)="onDateChange()"
+      />
+    </label>
+
+    <div class="pagination-controls">
+      <label>
+        Rows per page:
+        <select [(ngModel)]="size" (change)="onPageSizeChange($event)">
+          @for (s of pageSizeOptions; track s) {
+            <option [value]="s" [selected]="s === size">{{ s }}</option>
+          }
+        </select>
+      </label>
+    </div>
+  </div>
+
+  <ngx-datatable
+    #table
+    class="material"
+    [rows]="messages"
+    [headerHeight]="40"
+    [footerHeight]="50"
+    [limit]="size"
+    [count]="totalElements"
+    [offset]="page"
+    [rowHeight]="'auto'"
+    [columnMode]="'force'"
+    [rowIdentity]="getRowId"
+    [externalPaging]="true"
+    [externalSorting]="true"
+    (page)="onPage($event)"
+    (sort)="onSort($event)"
+    [rowClass]="getRowClass"
+
+    [expanded]="expandedRows"
+    (activate)="onActivate($event)"
+    [rowDetailTemplate]="rowDetail"
+    [rowExpansionIndicator]="true"
+  >
+
+    <ngx-datatable-column
+      name=""
+      prop="fromWebSocket"
+      [width]="20"
+      [sortable]="false"
+    >
+      <ng-template let-row="row" ngx-datatable-cell-template>
+        @if (row.fromWebSocket) {
+          <div class="ws-indicator" title="Message from WebSocket"></div>
+        }
+      </ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-column
+      name="Timestamp"
+      prop="timestamp"
+      [width]="150"
+    >
+      <ng-template let-row="row" ngx-datatable-cell-template>
+        {{ row.timestamp | date: 'medium' }}
+      </ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-column name="Correlation ID" prop="correlationId" [width]="230"></ngx-datatable-column>
+    <ngx-datatable-column name="Session ID" prop="sessionId" [width]="230"></ngx-datatable-column>
+    <ngx-datatable-column name="Level" prop="logLevel" [width]="50"></ngx-datatable-column>
+    <ngx-datatable-column name="Tag" prop="tag" [width]="120"></ngx-datatable-column>
+    <ngx-datatable-column name="Message" prop="message" [width]="600">
+      <ng-template let-row="row" ngx-datatable-cell-template>
+        {{row.message }}
+      </ng-template>
+    </ngx-datatable-column>
+
+    <ng-template #rowDetail let-row="row" let-expanded="expanded">
+      <div style="padding: 10px; background: #f9f9f9; border-left: 2px solid #ccc;">
+        {{ row.message }}
+      </div>
+    </ng-template>
+  </ngx-datatable>
+</div>

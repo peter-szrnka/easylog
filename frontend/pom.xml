@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>hu.peterszrnka.easylog</groupId>
+    <artifactId>easylog</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <artifactId>easylog-frontend</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>easylog-frontend</name>
+  <description>Server application for EasyLog service</description>
+
+  <properties>
+    <java.version>25</java.version>
+    <maven.compiler.source>25</maven.compiler.source>
+    <maven.compiler.target>25</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+    <easylog.common.version>0.0.1-SNAPSHOT</easylog.common.version>
+  </properties>
+
+  <developers>
+    <developer>
+      <email>szrnka.peter@gmail.com</email>
+      <name>Peter Szrnka</name>
+      <url>https://github.com/peter-szrnka</url>
+      <roles>
+        <role>Architect</role>
+        <role>Technical lead</role>
+        <role>Developer</role>
+      </roles>
+    </developer>
+  </developers>
+
+  <profiles>
+    <profile>
+      <id>build-prod</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-clean-plugin</artifactId>
+            <version>3.0.0</version>
+            <configuration>
+              <filesets>
+                <fileset>
+                  <directory>${project.basedir}/dist</directory>
+                </fileset>
+                <fileset>
+                  <directory>${project.basedir}/target</directory>
+                </fileset>
+              </filesets>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>3.3.0</version>
+            <executions>
+              <execution>
+                <id>exec-npm-install</id>
+                <phase>generate-resources</phase>
+                <configuration>
+                  <workingDirectory>${project.basedir}/src</workingDirectory>
+                  <executable>npm</executable>
+                  <arguments>
+                    <argument>install</argument>
+                  </arguments>
+                </configuration>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>exec-ng-build</id>
+                <phase>generate-resources</phase>
+                <configuration>
+                  <workingDirectory>${project.basedir}/src</workingDirectory>
+                  <executable>npm</executable>
+                  <arguments>
+                    <argument>run</argument>
+                    <argument>build</argument>
+                  </arguments>
+                </configuration>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>

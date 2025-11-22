@@ -1,0 +1,71 @@
+::ng-deep .from-websocket {
+  font-weight: bolder;
+  animation: fadeInHighlight 1s ease-in-out;
+}
+
+@keyframes fadeInHighlight {
+  0% { background-color: #e0ffe0; alpha: 0.0; opacity: 0.0; }
+  100% { background-color: transparent; alpha: 1.0; opacity: 1.0; }
+}
+
+::ng-deep .ws-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #00cc66; /* zöld */
+  box-shadow: 0 0 4px rgba(0, 255, 100, 0.7);
+}
+
+::ng-deep .hidden-header {
+  display: none;
+}
+
+.search-input {
+  width: 100%;
+  box-sizing: border-box;
+  display: block;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+  margin-bottom: 10px;
+}
+
+.search-input:focus {
+  border-color: #4caf50;
+  box-shadow: 0 0 4px rgba(76, 175, 80, 0.4);
+}
+
+::ng-deep .filters {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: top;
+  gap: 1rem;
+  margin-bottom: 1rem;
+
+  input[type="text"],
+  input[type="datetime-local"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    height: 40px; /* fix magasság a sorokhoz */
+    box-sizing: border-box;
+  }
+
+  label {
+    display: flex;
+    align-items: center; /* ⬅ label belseje is középre */
+    gap: 0.3rem;
+    height: 40px; /* igazítás a input magassághoz */
+  }
+
+  ::ng-deep .pagination-controls {
+    flex: 0 0 auto;
+  }
+
+  .pagination-controls select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+}
