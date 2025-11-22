@@ -40,10 +40,10 @@ public class FileDbLogService extends LogServiceBase {
     @Override
     public Page<LogEntry> list(SearchRequest searchRequest) {
         return repository
-                .findAll(LogSpecification.search(searchRequest.getFilter(), searchRequest.getFrom(), searchRequest.getTo()), searchRequest.getPageable()).map(this::mapToDto);
+                .findAll(LogSpecification.search(searchRequest.getFilter(), searchRequest.getFrom(), searchRequest.getTo()), searchRequest.getPageable()).map(FileDbLogService::mapToDto);
     }
 
-    private LogEntry mapToDto(LogEntity entity) {
+    private static LogEntry mapToDto(LogEntity entity) {
         LogEntry logEntry = new LogEntry();
         logEntry.setLogLevel(entity.getLevel());
         logEntry.setMessage(entity.getMessage());
@@ -55,7 +55,7 @@ public class FileDbLogService extends LogServiceBase {
         return logEntry;
     }
 
-    private LogEntity mapToEntity(LogEntry item) {
+    private static LogEntity mapToEntity(LogEntry item) {
         return LogEntity.builder()
                 .level(item.getLogLevel())
                 .message(item.getMessage())
