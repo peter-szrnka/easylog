@@ -45,12 +45,14 @@ public class JmDnsConfig {
 
     @PreDestroy
     public void onShutdown() {
+        if (jmdns == null) {
+            return;
+        }
+
         try {
-            if (jmdns != null) {
-                log.info("Unregistering service...");
-                jmdns.unregisterAllServices();
-                jmdns.close();
-            }
+            log.info("Unregistering service...");
+            jmdns.unregisterAllServices();
+            jmdns.close();
         } catch (Exception e) {
             log.error("Error while closing JmDNS", e);
         }

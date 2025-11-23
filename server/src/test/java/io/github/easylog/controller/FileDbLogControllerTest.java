@@ -6,17 +6,22 @@ import io.github.easylog.model.LogLevel;
 import io.github.easylog.model.SaveLogRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -25,13 +30,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class LogControllerTest {
+@ActiveProfiles("file-db")
+class FileDbLogControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    private static DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
 
     @Test
     void save_shouldCallServiceWithRequestBody() throws Exception {
@@ -57,8 +65,8 @@ class LogControllerTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"asc", "desc"})
-    void list_shouldReturnPagedResult(String sortDirection) throws Exception {
+    @MethodSource("listInputData")
+    void list_shouldReturnPagedResult(String sortDirection, String startDate, String endDate) throws Exception {
         // given
         SaveLogRequest request = new SaveLogRequest();
         LogEntry entry = new LogEntry();
@@ -75,15 +83,29 @@ class LogControllerTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk());
 
+
         // when & then
         mockMvc.perform(get("/api/log")
                         .param("page", "0")
                         .param("size", "10")
                         .param("sortBy", "timestamp")
                         .param("sortDirection", sortDirection)
+                        .param("filter", "message")
+                        .param("startDate", startDate)
+                        .param("endDate", endDate)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content[0].message").value("message"))
                 .andExpect(jsonPath("$.content[0].correlationId").value("1"));
+    }
+
+    private static Stream<Arguments> listInputData() {
+        return Stream.of(
+                Arguments.of("asc", null, null),
+                Arguments.of("desc", null, null),
+                Arguments.of("asc", formatter.format(ZonedDateTime.now().minusDays(1)), null),
+                Arguments.of("asc", null, formatter.format(ZonedDateTime.now().plusDays(1))),
+                Arguments.of("asc", formatter.format(ZonedDateTime.now().minusDays(1)), formatter.format(ZonedDateTime.now().plusDays(1)))
+        );
     }
 }
