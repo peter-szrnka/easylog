@@ -17,8 +17,6 @@
     <maven.compiler.source>25</maven.compiler.source>
     <maven.compiler.target>25</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-    <easylog.common.version>0.0.1-SNAPSHOT</easylog.common.version>
   </properties>
 
   <developers>
