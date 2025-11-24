@@ -26,6 +26,11 @@ jobs:
         run: chmod +x ./gradlew
         working-directory: client
 
+      #  Build server module WITHOUT tests, publish to mavenLocal
+      - name: Build server module (Maven)
+        run: mvn clean install -DskipTests
+        working-directory: server
+
       - name: Build library
         run: ./gradlew :easylog-client:clean :easylog-client:build
         working-directory: client
