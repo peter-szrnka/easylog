@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="60b11f3a-d7cb-452d-8eae-6f51bf94eed8" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/java/io/github/easylog/model/LogEntry.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/java/io/github/easylog/model/LogLevel.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/java/io/github/easylog/model/SaveLogRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.editorconfig" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.vscode/extensions.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.vscode/launch.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.vscode/tasks.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/angular.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/package-lock.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/public/favicon.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/app.config.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/app.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/app.routes.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/app.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/app.spec.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/app.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/log.service.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/mock.interceptor.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/model.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/websocket-viewer.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/websocket-viewer.component.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/websocket-viewer.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/websocket.service.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/environment/environment.mock.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/environment/environment.prod.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/environment/environment.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/main.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/polyfills.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/styles.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/tsconfig.app.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/tsconfig.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/tsconfig.spec.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/.gitattributes" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/server/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/mvnw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/mvnw.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/server/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/io/github/easylog/EasylogServerApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/io/github/easylog/config/ApplicationConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/io/github/easylog/config/DatabaseConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/io/github/easylog/config/JmDnsConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/io/github/easylog/config/WebSocketConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/io/github/easylog/controller/LogController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/io/github/easylog/data/LogEntity.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/io/github/easylog/data/LogEntityRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/io/github/easylog/data/LogMetaDataEntity.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/io/github/easylog/data/LogSpecification.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/io/github/easylog/model/SearchRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/io/github/easylog/service/FileDbLogService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/io/github/easylog/service/LogService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/io/github/easylog/service/LogServiceBase.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/io/github/easylog/service/SimpleLogService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/resources/application-file-db.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/resources/application.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/resources/banner.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/test/java/io/github/easylog/EasyLogServerApplicationTests.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/test/java/io/github/easylog/config/JmDnsConfigTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/test/java/io/github/easylog/controller/FileDbLogControllerTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/test/java/io/github/easylog/controller/LogControllerTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/test/java/io/github/easylog/service/FileDbLogServiceTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/test/java/io/github/easylog/service/SimpleLogServiceTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/test/resources/application-file-db.properties" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "peter-szrnka"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/peter-szrnka/easylog.git",
+    "accountId": "0a9168ec-f0a9-44b8-9eb0-e6e8016f8aad"
+  }
+}]]></component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "customColor": "",
+  "associatedIndex": 8
+}]]></component>
+  <component name="ProjectId" id="35ukDAUaEakmU8CNS8j1w7haCS6" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true"
+  }
+}]]></component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="60b11f3a-d7cb-452d-8eae-6f51bf94eed8" name="Changes" comment="" />
+      <created>1763967227828</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1763967227828</updated>
+    </task>
+    <servers />
+  </component>
+</project>
