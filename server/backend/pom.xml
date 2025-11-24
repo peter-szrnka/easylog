@@ -7,9 +7,9 @@
         <artifactId>easylog</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
-    <artifactId>server</artifactId>
+    <artifactId>backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>server</name>
+    <name>backend</name>
     <description>Server application for EasyLog service</description>
 
     <properties>
