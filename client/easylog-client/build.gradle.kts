@@ -41,7 +41,7 @@ android {
 
 dependencies {
     implementation(libs.androidx.core.ktx)
-    implementation("io.github.easylog:easylog-common:0.0.1-SNAPSHOT")
+    implementation("io.github.easylog:common:0.0.1-SNAPSHOT")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("com.google.code.gson:gson:2.11.0")
 
