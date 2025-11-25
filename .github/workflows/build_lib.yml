@@ -24,7 +24,7 @@ jobs:
           java-version: 25
 
       - name: Build server module (Maven)
-        run: mvn clean install -DskipTests -Pcommon-only
+        run: mvn clean install -DskipTests -Ponly-common
         working-directory: server
 
       - name: Set up JDK 17 for Client (Gradle)
