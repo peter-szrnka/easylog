@@ -2,20 +2,32 @@ name: Build Android/Kotlin Library
 
 on:
   workflow_dispatch:
-  push:
-    tags:
-      - 'v*.*.*'
-    branches:
-      - main
-  pull_request:
+    inputs:
+      releaseVersion:
+        description: "Default version to use when preparing a release."
+        required: true
+        default: "X.Y.Z"
+      developmentVersion:
+        description: "Default version to use for new local working copy."
+        required: true
+        default: "X.Y.Z-SNAPSHOT"
+  #push:
+  #  tags:
+  #    - 'v*.*.*'
+  #  branches:
+  #    - main
+  #pull_request:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up JDK 25 for Server (Maven)
         uses: actions/setup-java@v3
@@ -37,6 +49,9 @@ jobs:
         run: chmod +x ./gradlew
         working-directory: client
 
+      - name: Set releaseVersion
+        run: |
+          sed -i "s/^version = .*/version = '${{ github.event.inputs.releaseVersion }}'/" ./client/easylog-client/build.gradle.kts
       - name: Build library (Gradle)
         run: ./gradlew :easylog-client:clean :easylog-client:build
         working-directory: client
