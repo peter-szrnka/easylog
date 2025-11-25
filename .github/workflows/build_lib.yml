@@ -55,3 +55,12 @@ jobs:
       - name: Build library (Gradle)
         run: ./gradlew :easylog-client:clean :easylog-client:build
         working-directory: client
+      - name: Set releaseVersion
+        run: |
+          sed -i "s/^version = .*/version = '${{ github.event.inputs.developmentVersion }}'/" ./client/easylog-client/build.gradle.kts
+      - name: Commit version change
+        run: |
+          git config --global user.name ${{ secrets.GH_USERNAME }}
+          git config --global user.email ${{ secrets.GH_EMAIL }}
+          git commit -am "[ci-skip] Version updated to ${{ github.event.inputs.releaseVersion }}"
+          git push
