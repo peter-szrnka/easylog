@@ -47,9 +47,11 @@ dependencies {
 
 }
 
+val mvnCmd = if (System.getProperty("os.name").startsWith("Windows")) "mvnw.cmd" else "./mvnw"
+
 tasks.register<Exec>("buildServerCommon") {
     workingDir = file("../server")
-    commandLine("mvn", "clean", "install", "-DskipTests", "-Ponly-common")
+    commandLine(mvnCmd, "clean", "install", "-DskipTests", "-Ponly-common")
 }
 
 
