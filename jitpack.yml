@@ -4,9 +4,9 @@ jdk:
 before_install:
   - export MAVEN_VERSION=3.8.8
   - cd server
-  - mvn clean install -DskipTests -Ponly-common
+  - mvn clean package -DskipTests -Ponly-common
   - cd ..
-  - cd client/easylog-client
+  - cd client
 
 install:
-  - ./gradlew publishToMavenLocal
+  - ./gradlew :easylog-client:publishToMavenLocal
