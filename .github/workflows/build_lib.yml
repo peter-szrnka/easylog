@@ -61,8 +61,8 @@ jobs:
         run: |
           git config --global user.name ${{ secrets.GH_USERNAME }}
           git config --global user.email ${{ secrets.GH_EMAIL }}
-          git tag ${{ github.event.inputs.releaseVersion }}
-          git push origin ${{ github.event.inputs.releaseVersion }}
+          git tag android-client-${{ github.event.inputs.releaseVersion }}
+          git push origin android-client-${{ github.event.inputs.releaseVersion }}
       - name: Set developmentVersion
         run: |
           sed -i 's/^[[:space:]]*version *= *".*"/version = "${{ github.event.inputs.developmentVersion }}"/' ./client/easylog-client/build.gradle.kts
