@@ -54,12 +54,13 @@ tasks.register<Exec>("buildServerCommon") {
 publishing {
     publications {
         register<MavenPublication>("release") {
-            afterEvaluate {
-                from(components["release"])
-            }
             groupId = "io.github.peter-szrnka"
             artifactId = "easylog-client"
 version = "0.0.2-SNAPSHOT"
+
+            afterEvaluate {
+                from(components["release"])
+            }
         }
     }
 }
