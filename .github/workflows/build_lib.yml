@@ -41,8 +41,6 @@ jobs:
         working-directory: server
       - name: Check Maven local path
         run: echo $HOME/.m2/repository
-      - name: Make mvnw executable
-        run: chmod +x ./server/mvnw
       - name: Set up JDK 17 for Client (Gradle)
         uses: actions/setup-java@v3
         with:
