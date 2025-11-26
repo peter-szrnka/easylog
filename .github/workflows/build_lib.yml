@@ -52,7 +52,7 @@ jobs:
 
       - name: Set releaseVersion
         run: |
-          sed -i "s/^version = .*/version = '${{ github.event.inputs.releaseVersion }}'/" ./client/easylog-client/build.gradle.kts
+          sed -i 's/^[[:space:]]*version *= *".*"/version = "${{ github.event.inputs.releaseVersion }}"/' ./client/easylog-client/build.gradle.kts
       - name: Build library (Gradle)
         run: ./gradlew :easylog-client:buildServerCommon :easylog-client:clean :easylog-client:build
         working-directory: client
@@ -64,7 +64,7 @@ jobs:
           git push origin ${{ github.event.inputs.releaseVersion }}
       - name: Set developmentVersion
         run: |
-          sed -i "s/^version = .*/version = '${{ github.event.inputs.developmentVersion }}'/" ./client/easylog-client/build.gradle.kts
+          sed -i 's/^[[:space:]]*version *= *".*"/version = "${{ github.event.inputs.developmentVersion }}"/' ./client/easylog-client/build.gradle.kts
       - name: Commit version change to ${{ github.event.inputs.developmentVersion }}
         run: |
           git config --global user.name ${{ secrets.GH_USERNAME }}
