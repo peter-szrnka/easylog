@@ -6,7 +6,7 @@ before_install:
   - cd server
   - mvn clean install -DskipTests -Ponly-common
   - cd ..
-  - cd client
+  - cd client/easylog-client
 
 install:
-  - ./gradlew :easylog-client:publishToMavenLocal
+  - ./gradlew publishToMavenLocal

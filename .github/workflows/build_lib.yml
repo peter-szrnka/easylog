@@ -66,6 +66,9 @@ jobs:
       - name: Set developmentVersion
         run: |
           sed -i 's/^[[:space:]]*version *= *".*"/version = "${{ github.event.inputs.developmentVersion }}"/' ./client/easylog-client/build.gradle.kts
+      - name: Trigger JitPack build
+        run: |
+          curl -X GET https://jitpack.io/com/github/peter-szrnka/easylog/android-client-${{ github.event.inputs.releaseVersion }}/build.log
       - name: Commit version change to ${{ github.event.inputs.developmentVersion }}
         run: |
           git config --global user.name ${{ secrets.GH_USERNAME }}
@@ -73,7 +76,3 @@ jobs:
           git add ./client/easylog-client/build.gradle.kts
           git commit -am "[ci-skip] Version updated to ${{ github.event.inputs.developmentVersion }}" || echo "No changes to commit"
           git push
-      - name: Trigger JitPack build
-        run: |
-          curl -X GET https://jitpack.io/com/github/peter-szrnka/easylog/android-client-${{ github.event.inputs.releaseVersion }}/build.log
-
