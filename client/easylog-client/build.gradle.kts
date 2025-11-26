@@ -59,7 +59,12 @@ publishing {
 version = "0.0.2-SNAPSHOT"
 
             afterEvaluate {
-                from(components["release"])
+				val releaseComponent = components.findByName("release")
+                if (releaseComponent != null) {
+                    from(releaseComponent)
+                } else {
+                    println("No release component found – AAR will not be published!")
+                }
             }
         }
     }
