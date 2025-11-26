@@ -9,4 +9,4 @@ before_install:
   - cd client
 
 install:
-  - ./gradlew :easylog-client:publishToMavenLocal
+  - ./gradlew :easylog-client:publishReleasePublicationToMavenLocal

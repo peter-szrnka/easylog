@@ -56,7 +56,7 @@ publishing {
 		register<MavenPublication>("release") {
             groupId = "com.github.peter-szrnka"
             artifactId = "easylog-client"
-version = "0.0.2-SNAPSHOT"
+			version = "0.0.1"
 
             afterEvaluate {
                 from(components["release"])
