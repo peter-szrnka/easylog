@@ -74,7 +74,7 @@ jobs:
           git config --global user.email ${{ secrets.GH_EMAIL }}
           git add ./client/easylog-client/build.gradle.kts
           git commit -am "[ci-skip] Version updated to ${{ github.event.inputs.developmentVersion }}" || echo "No changes to commit"
-          git push
+          git push origin main
       - name: Trigger JitPack build
         run: |
           curl -X GET https://jitpack.io/com/github/peter-szrnka/easylog/android-client-${{ github.event.inputs.releaseVersion }}/build.log
