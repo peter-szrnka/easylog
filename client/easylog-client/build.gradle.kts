@@ -54,7 +54,7 @@ tasks.register<Exec>("buildServerCommon") {
 publishing {
     publications {
 		register<MavenPublication>("release") {
-            groupId = "com.github.peter-szrnka"
+            groupId = "io.github.peter-szrnka"
             artifactId = "easylog-client"
 			version = "0.0.1"
 
