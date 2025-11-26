@@ -5,4 +5,4 @@ before_install:
   - cd client
 
 install:
-  - ./gradlew :easylog-client:publishToMavenLocal
+  - ./gradlew :easylog-client:buildServerCommon :easylog-client:publishToMavenLocal
