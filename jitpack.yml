@@ -2,6 +2,7 @@ jdk:
   - openjdk17
 
 before_install:
+  - export MAVEN_VERSION=3.8.8
   - cd server
   - mvn clean install -DskipTests -Ponly-common
   - cd ..
