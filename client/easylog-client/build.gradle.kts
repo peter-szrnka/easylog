@@ -56,11 +56,12 @@ publishing {
 		register<MavenPublication>("release") {
             groupId = "io.github.peter-szrnka"
             artifactId = "easylog-client"
-version = "0.0.2-SNAPSHOT"
+			version = "0.0.0-SNAPSHOT"
 
             afterEvaluate {
 				val releaseComponent = components.findByName("release")
                 if (releaseComponent != null) {
+					println("Release component found")
                     from(releaseComponent)
                 } else {
                     println("No release component found – AAR will not be published!")
