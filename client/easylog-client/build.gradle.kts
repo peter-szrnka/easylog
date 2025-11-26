@@ -47,6 +47,12 @@ dependencies {
 
 }
 
+tasks.register<Exec>("buildServerCommon") {
+    workingDir = file("../server")
+    commandLine("mvn", "clean", "install", "-DskipTests", "-Ponly-common")
+}
+
+
 publishing {
     publications {
         register<MavenPublication>("release") {
