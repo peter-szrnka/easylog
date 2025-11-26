@@ -67,6 +67,7 @@ jobs:
         run: |
           git fetch origin main
           git checkout main
+          git pull origin main
           sed -i 's/^[[:space:]]*version *= *".*"/version = "${{ github.event.inputs.developmentVersion }}"/' ./client/easylog-client/build.gradle.kts
       - name: Commit version change to ${{ github.event.inputs.developmentVersion }}
         run: |
