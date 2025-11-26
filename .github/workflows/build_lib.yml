@@ -39,7 +39,8 @@ jobs:
      # - name: Build server module (Maven)
      #   run: mvn clean install -DskipTests -Ponly-common
      #   working-directory: server
-
+      - name: Make mvnw executable
+        run: chmod +x ./server/mvnw
       - name: Set up JDK 17 for Client (Gradle)
         uses: actions/setup-java@v3
         with:
