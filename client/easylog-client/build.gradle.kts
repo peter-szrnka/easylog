@@ -49,7 +49,7 @@ dependencies {
 
 tasks.register<Exec>("buildServerCommon") {
     workingDir = file("server")
-    commandLine("mvn, "clean", "install", "-DskipTests", "-Ponly-common")
+    commandLine("mvn", "clean", "install", "-DskipTests", "-Ponly-common")
 }
 
 
