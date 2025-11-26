@@ -36,9 +36,11 @@ jobs:
           distribution: temurin
           java-version: 25
 
-     # - name: Build server module (Maven)
-     #   run: mvn clean install -DskipTests -Ponly-common
-     #   working-directory: server
+      - name: Build server module (Maven)
+        run: mvn clean install -DskipTests -Ponly-common
+        working-directory: server
+      - name: Check Maven local path
+        run: echo $HOME/.m2/repository
       - name: Make mvnw executable
         run: chmod +x ./server/mvnw
       - name: Set up JDK 17 for Client (Gradle)
@@ -55,7 +57,7 @@ jobs:
         run: |
           sed -i 's/^[[:space:]]*version *= *".*"/version = "${{ github.event.inputs.releaseVersion }}"/' ./client/easylog-client/build.gradle.kts
       - name: Build library (Gradle)
-        run: ./gradlew :easylog-client:buildServerCommon :easylog-client:clean :easylog-client:build
+        run: ./gradlew :easylog-client:clean :easylog-client:build
         working-directory: client
       - name: Create and push tag
         run: |
