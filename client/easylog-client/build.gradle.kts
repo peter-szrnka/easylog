@@ -64,3 +64,7 @@ version = "0.0.2-SNAPSHOT"
         }
     }
 }
+
+tasks.withType<PublishToMavenLocal>().configureEach {
+    onlyIf { publication.name == "release" }
+}

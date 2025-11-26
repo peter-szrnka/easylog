@@ -4,7 +4,7 @@ jdk:
 before_install:
   - export MAVEN_VERSION=3.8.8
   - cd server
-  - mvn clean package -DskipTests -Ponly-common
+  - mvn clean install -DskipTests -Ponly-common
   - cd ..
   - cd client
 
