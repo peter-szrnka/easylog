@@ -51,12 +51,6 @@ val mvnCmd = if (System.getProperty("os.name").startsWith("Windows")) "mvnw.cmd"
 
 tasks.register<Exec>("buildServerCommon") {
     workingDir = file("../server")
-    doFirst {
-        exec {
-            commandLine("chmod", "+x", "./mvnw")
-            workingDir = file("../server")
-        }
-    }
     commandLine(mvnCmd, "clean", "install", "-DskipTests", "-Ponly-common")
 }
 
