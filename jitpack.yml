@@ -2,7 +2,10 @@ jdk:
   - openjdk17
 
 before_install:
+  - cd server
+  - mvn clean install -DskipTests -Ponly-common
+  - cd ..
   - cd client
 
 install:
-  - ./gradlew :easylog-client:buildServerCommon :easylog-client:publishToMavenLocal
+  - ./gradlew :easylog-client:publishToMavenLocal
