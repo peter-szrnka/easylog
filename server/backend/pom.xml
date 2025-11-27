@@ -49,9 +49,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.github.peter-szrnka</groupId>
+            <groupId>io.github.easylog</groupId>
             <artifactId>easylog-common</artifactId>
-            <version>0.0.1</version>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <!-- Spring Boot dependencies -->
         <dependency>
