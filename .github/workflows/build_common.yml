@@ -92,7 +92,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ needs.build.outputs.tag_name }}
-          name: Release ${{ needs.build.outputs.tag_name }}
+          name: easylog-common-${{ needs.build.outputs.tag_name }}
           draft: false
           prerelease: false
           overwrite_files: true
