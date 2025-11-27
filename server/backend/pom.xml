@@ -5,12 +5,10 @@
     <parent>
         <groupId>io.github.easylog</groupId>
         <artifactId>easylog</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>${parent.project.version}</version>
     </parent>
     <artifactId>backend</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <name>backend</name>
-    <description>Server application for EasyLog service</description>
 
     <properties>
         <java.version>25</java.version>
