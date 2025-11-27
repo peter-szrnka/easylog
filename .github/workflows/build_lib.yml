@@ -42,11 +42,11 @@ jobs:
         run: mvn clean install -DskipTests
         working-directory: common
 
-      - name: Upload local Maven repo
+      - name: Upload built JAR
         uses: actions/upload-artifact@v4
         with:
-          name: maven-local
-          path: ~/.m2/repository
+          name: common-jar
+          path: common/target/easylog-common-${{ github.event.inputs.releaseVersion }}.jar
 
       - name: Create and push release tag
         id: create_tag
@@ -81,11 +81,11 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Download Maven repo
+      - name: Download built JAR
         uses: actions/download-artifact@v4
         with:
-          name: maven-local
-          path: ~/.m2/repository
+          name: common-jar
+          path: common/target
 
       - name: Create or update Release
         id: create_release
@@ -99,7 +99,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload AAR to Release
+      - name: Upload Common JAR to Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ needs.build.outputs.tag_name }}
