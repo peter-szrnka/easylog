@@ -72,9 +72,46 @@ jobs:
           git tag android-client-${{ github.event.inputs.releaseVersion }}
           git push origin android-client-${{ github.event.inputs.releaseVersion }}
 
-      - name: Trigger JitPack build
-        run: |
-          curl -X GET https://jitpack.io/com/github/peter-szrnka/easylog/android-client-${{ github.event.inputs.releaseVersion }}/build.log
+      #- name: Trigger JitPack build
+      #  run: |
+      #    curl -X GET https://jitpack.io/com/github/peter-szrnka/easylog/android-client-${{ github.event.inputs.releaseVersion }}/build.log
+  releaseAAR:
+    name: Release AAR
+    runs-on: ubuntu-latest
+    needs: release
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Build AAR
+        run: ./gradlew :mylibrary:assembleRelease
+
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload AAR
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            client/client-library/build/outputs/aar/client-library-release.aar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   bump-version:
     name: Bump Development Version on main
