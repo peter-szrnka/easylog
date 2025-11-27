@@ -64,13 +64,15 @@ jobs:
 
       - name: Create and push release tag
         run: |
+          TAG_NAME="android-client-${{ github.event.inputs.releaseVersion }}"
           git config --global user.name ${{ secrets.GH_USERNAME }}
           git config --global user.email ${{ secrets.GH_EMAIL }}
           git fetch origin main
           git checkout main
           git pull origin main
-          git tag android-client-${{ github.event.inputs.releaseVersion }}
-          git push origin android-client-${{ github.event.inputs.releaseVersion }}
+          git tag "$TAG_NAME"
+          git push origin "$TAG_NAME"
+          echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
 
       #- name: Trigger JitPack build
       #  run: |
@@ -92,14 +94,15 @@ jobs:
           java-version: '17'
 
       - name: Build AAR
-        run: ./gradlew :mylibrary:assembleRelease
+        run: ./gradlew :client-library:assembleRelease
+        working-directory: client
 
       - name: Create Release
         id: create_release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.ref_name }}
-          name: Release ${{ github.ref_name }}
+          tag_name: ${{ needs.release.outputs.tag_name }}
+          name: Release ${{ needs.release.outputs.tag_name }}
           draft: false
           prerelease: false
         env:
@@ -108,6 +111,7 @@ jobs:
       - name: Upload AAR
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ needs.release.outputs.tag_name }}
           files: |
             client/client-library/build/outputs/aar/client-library-release.aar
         env:
