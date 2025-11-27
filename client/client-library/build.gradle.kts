@@ -56,7 +56,7 @@ publishing {
 		register<MavenPublication>("release") {
             groupId = "io.github.easylog"
             artifactId = "android-client-library"
-            version = "0.0.0-SNAPSHOT"
+version = "0.0.1"
 
             afterEvaluate {
 				val releaseComponent = components.findByName("release")
