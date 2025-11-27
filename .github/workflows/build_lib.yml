@@ -59,7 +59,7 @@ jobs:
           git push origin main
 
       - name: Build library (Gradle)
-        run: ./gradlew :easylog-client:clean :easylog-client:build
+        run: ./gradlew :client-library:clean :client-library:build
         working-directory: client
 
       - name: Create and push release tag
