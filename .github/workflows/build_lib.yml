@@ -19,6 +19,8 @@ jobs:
     permissions:
       contents: write
       packages: write
+    outputs:
+      tag_name: ${{ steps.create_tag.outputs.tag_name }}
 
     steps:
       - name: Checkout code
@@ -68,6 +70,7 @@ jobs:
         working-directory: client
 
       - name: Create and push release tag
+        id: create_tag
         run: |
           TAG_NAME="android-client-${{ github.event.inputs.releaseVersion }}"
           git config --global user.name ${{ secrets.GH_USERNAME }}
@@ -91,6 +94,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
 
       - name: Set up JDK
         uses: actions/setup-java@v4
