@@ -41,7 +41,7 @@ jobs:
           mvn -B versions:set -DnewVersion=${{ github.event.inputs.releaseVersion }} -DgenerateBackupPoms=false -f ./server/pom.xml
 
       - name: Build server module (Maven)
-        run: mvn clean install -DskipTests
+        run: mvn clean install -DskipTests -Pbuild-prod
         working-directory: server
 
       - name: Upload built JAR
