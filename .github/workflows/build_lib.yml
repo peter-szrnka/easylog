@@ -21,7 +21,6 @@ jobs:
       packages: write
     outputs:
       tag_name: ${{ steps.create_tag.outputs.tag_name || format('common-{0}', github.event.inputs.releaseVersion) }}
-      tag_exists: ${{ steps.check_tag.outputs.tag_exists }}
 
     steps:
       - name: Checkout code
@@ -92,8 +91,8 @@ jobs:
         id: create_release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ needs.release.outputs.tag_name }}
-          name: Release ${{ needs.release.outputs.tag_name }}
+          tag_name: ${{ needs.build.outputs.tag_name }}
+          name: Release ${{ needs.build.outputs.tag_name }}
           draft: false
           prerelease: false
           overwrite_files: true
@@ -103,7 +102,7 @@ jobs:
       - name: Upload AAR to Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ needs.release.outputs.tag_name }}
+          tag_name: ${{ needs.build.outputs.tag_name }}
           files: |
             common/target/common-${{ github.event.inputs.releaseVersion }}.jar
         env:
