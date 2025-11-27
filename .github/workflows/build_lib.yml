@@ -20,7 +20,7 @@ jobs:
       contents: write
       packages: write
     outputs:
-      tag_name: ${{ steps.create_tag.outputs.tag_name || format('server-{0}', github.event.inputs.releaseVersion) }}
+      tag_name: ${{ steps.create_tag.outputs.tag_name || format('common-{0}', github.event.inputs.releaseVersion) }}
       tag_exists: ${{ steps.check_tag.outputs.tag_exists }}
 
     steps:
@@ -30,18 +30,18 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
-      - name: Set up JDK 25 for Server (Maven)
+      - name: Set up JDK 17 for Common (Maven)
         uses: actions/setup-java@v3
         with:
           distribution: temurin
           java-version: 17
       - name: Update pom.xml to releaseVersion
         run: |
-          mvn -B versions:set -DnewVersion=${{ github.event.inputs.releaseVersion }} -DgenerateBackupPoms=false -f ./server/common/pom.xml
+          mvn -B versions:set -DnewVersion=${{ github.event.inputs.releaseVersion }} -DgenerateBackupPoms=false -f ./common/pom.xml
 
-      - name: Build server module (Maven)
-        run: mvn clean install -DskipTests -Ponly-common
-        working-directory: server
+      - name: Build common module (Maven)
+        run: mvn clean install -DskipTests
+        working-directory: common
 
       - name: Upload local Maven repo
         uses: actions/upload-artifact@v4
@@ -52,7 +52,7 @@ jobs:
       - name: Create and push release tag
         id: create_tag
         run: |
-          TAG_NAME="server-${{ github.event.inputs.releaseVersion }}"
+          TAG_NAME="common-${{ github.event.inputs.releaseVersion }}"
           git config --global user.name ${{ secrets.GH_USERNAME }}
           git config --global user.email ${{ secrets.GH_EMAIL }}
           git fetch origin main
@@ -83,16 +83,10 @@ jobs:
           java-version: '17'
 
       - name: Download Maven repo
-        if: ${{ needs.release.outputs.tag_exists == 'false' }}
         uses: actions/download-artifact@v4
         with:
           name: maven-local
           path: ~/.m2/repository
-
-      - name: Build AAR
-        if: ${{ needs.release.outputs.tag_exists == 'false' }}
-        run: ./gradlew :client-library:assembleRelease
-        working-directory: client
 
       - name: Create or update Release
         id: create_release
@@ -111,7 +105,7 @@ jobs:
         with:
           tag_name: ${{ needs.release.outputs.tag_name }}
           files: |
-            server/common/target/easylog-common-0.0.1.jar
+            common/target/common-${{ github.event.inputs.releaseVersion }}.jar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -128,13 +122,13 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
-      - name: Update pom.xml to developmentVersion
+      - name: Update common pom.xml to developmentVersion
         run: |
-          mvn -B versions:set -DnewVersion=${{ github.event.inputs.developmentVersion }} -DgenerateBackupPoms=false -f ./server/common/pom.xml
+          mvn -B versions:set -DnewVersion=${{ github.event.inputs.developmentVersion }} -DgenerateBackupPoms=false -f ./common/pom.xml
 
       - name: Commit developmentVersion change
         run: |
           git config --global user.name ${{ secrets.GH_USERNAME }}
           git config --global user.email ${{ secrets.GH_EMAIL }}
-          git commit -m "[ci-skip] Version updated to ${{ github.event.inputs.developmentVersion }}" || echo "No changes to commit"
+          git commit -m "[ci-skip] Common version updated to ${{ github.event.inputs.developmentVersion }}" || echo "No changes to commit"
           git push origin main

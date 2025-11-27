@@ -30,6 +30,11 @@
             </roles>
         </developer>
     </developers>
+	
+	<modules>
+                <module>frontend</module>
+                <module>backend</module>
+            </modules>
 
     <profiles>
         <profile>
@@ -37,24 +42,8 @@
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
-
-            <modules>
-                <module>common</module>
-                <module>frontend</module>
-                <module>backend</module>
-            </modules>
         </profile>
 
-        <profile>
-            <id>only-common</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-
-            <modules>
-                <module>common</module>
-            </modules>
-        </profile>
     </profiles>
 	
 	<build>
