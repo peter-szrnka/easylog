@@ -4,9 +4,9 @@
     <modelVersion>4.0.0</modelVersion>
 
 	<groupId>io.github.easylog</groupId>
-    <artifactId>common</artifactId>
+    <artifactId>easylog-common</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>common</name>
+    <name>easylog-common</name>
     <description>Common parts of EasyLog service</description>
 
     <properties>
@@ -33,7 +33,6 @@
     </distributionManagement>
 
     <build>
-        <finalName>easylog-common</finalName>
         <plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

@@ -45,7 +45,7 @@ jobs:
       - name: Upload built JAR
         uses: actions/upload-artifact@v4
         with:
-          name: common-jar
+          name: easylog-common-${{ github.event.inputs.releaseVersion }}.jar
           path: common/target/easylog-common-${{ github.event.inputs.releaseVersion }}.jar
 
       - name: Create and push release tag
@@ -84,7 +84,7 @@ jobs:
       - name: Download built JAR
         uses: actions/download-artifact@v4
         with:
-          name: common-jar
+          name: easylog-common-${{ github.event.inputs.releaseVersion }}.jar
           path: common/target
 
       - name: Create or update Release
