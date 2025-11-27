@@ -5,7 +5,7 @@
   <parent>
     <groupId>io.github.easylog</groupId>
     <artifactId>easylog</artifactId>
-    <version>${parent.project.version}</version>
+    <version>0.0.1-SNAPSHOT</version>
   </parent>
   <artifactId>frontend</artifactId>
   <name>frontend</name>
