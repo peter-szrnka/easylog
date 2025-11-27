@@ -3,6 +3,11 @@ jdk:
 
 before_install:
   - ./scripts/prepareJitpackEnvironment.sh
+  
+install:
+  - cd common
+  - mvn install -DskipTests
+
 #  - export MAVEN_VERSION=3.8.8
 #  - cd server
 #  - mvn clean install -DskipTests -Ponly-common
