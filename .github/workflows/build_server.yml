@@ -42,6 +42,7 @@ jobs:
           mvn versions:update-child-modules -f ./server/pom.xml
 
       - name: Build server module (Maven)
+        working-directory: server
         run: mvn clean install -DskipTests -Pbuild-prod
 
       - name: Upload built JAR
