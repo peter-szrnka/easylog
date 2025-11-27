@@ -105,6 +105,7 @@ jobs:
       - name: Upload Server JAR to Release
         uses: softprops/action-gh-release@v2
         with:
+          name: easylog-server-${{ github.event.inputs.releaseVersion }}
           tag_name: ${{ needs.build.outputs.tag_name }}
           files: |
             server/backend/target/easylog-server-${{ github.event.inputs.releaseVersion }}.jar
