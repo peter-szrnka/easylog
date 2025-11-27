@@ -143,6 +143,7 @@
                 <activeByDefault>false</activeByDefault>
             </activation>
             <build>
+				<finalName>easylog-server-${project.version}</finalName>
                 <plugins>
                     <!-- Copy the already built resources of the frontend component -->
                     <plugin>

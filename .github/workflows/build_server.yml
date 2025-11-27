@@ -49,7 +49,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: easylog-server-${{ github.event.inputs.releaseVersion }}.jar
-          path: server/backend/target/backend-${{ github.event.inputs.releaseVersion }}.jar
+          path: server/backend/target/easylog-server-${{ github.event.inputs.releaseVersion }}.jar
 
       - name: Create and push release tag
         id: create_tag
