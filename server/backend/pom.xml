@@ -95,8 +95,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-			<version>1.18.30</version>
-            <optional>true</optional>
+			<version>1.18.42</version>
         </dependency>
         <dependency>
             <groupId>org.jmdns</groupId>
@@ -123,6 +122,15 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>1.18.42</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -179,12 +187,6 @@
                                 <id>build-info</id>
                                 <goals>
                                     <goal>build-info</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>process-aot</id>
-                                <goals>
-                                    <goal>process-aot</goal>
                                 </goals>
                             </execution>
                         </executions>

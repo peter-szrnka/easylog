@@ -42,7 +42,6 @@ jobs:
 
       - name: Build server module (Maven)
         run: mvn clean install -DskipTests -Pbuild-prod
-        working-directory: server
 
       - name: Upload built JAR
         uses: actions/upload-artifact@v4
