@@ -20,43 +20,65 @@ jobs:
       contents: write
       packages: write
     outputs:
-      tag_name: ${{ steps.create_tag.outputs.tag_name }}
+      tag_name: ${{ steps.create_tag.outputs.tag_name || format('android-client-{0}', github.event.inputs.releaseVersion) }}
+      tag_exists: ${{ steps.check_tag.outputs.tag_exists }}
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          fetch-tags: true
+
+      - name: Check if tag exists
+        id: check_tag
+        run: |
+          TAG_NAME="android-client-${{ github.event.inputs.releaseVersion }}"
+          if git ls-remote --tags origin | grep -q "refs/tags/$TAG_NAME"; then
+            echo "Tag $TAG_NAME already exists."
+            echo "tag_exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "tag_exists=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Stop if tag exists
+        if: ${{ steps.check_tag.outputs.tag_exists == 'true' }}
+        run: |
+          echo "Tag already exists — skipping release build."
 
       - name: Set up JDK 25 for Server (Maven)
+        if: ${{ steps.check_tag.outputs.tag_exists == 'false' }}
         uses: actions/setup-java@v3
         with:
           distribution: temurin
           java-version: 25
 
       - name: Build server module (Maven)
+        if: ${{ steps.check_tag.outputs.tag_exists == 'false' }}
         run: mvn clean install -DskipTests -Ponly-common
         working-directory: server
 
-      - name: Check Maven local path
-        run: echo $HOME/.m2/repository
       - name: Upload local Maven repo
+        if: ${{ steps.check_tag.outputs.tag_exists == 'false' }}
         uses: actions/upload-artifact@v4
         with:
           name: maven-local
           path: ~/.m2/repository
 
       - name: Set up JDK 17 for Client (Gradle)
+        if: ${{ steps.check_tag.outputs.tag_exists == 'false' }}
         uses: actions/setup-java@v3
         with:
           distribution: temurin
           java-version: 17
 
       - name: Grant execute permission for Gradlew
+        if: ${{ steps.check_tag.outputs.tag_exists == 'false' }}
         run: chmod +x ./gradlew
         working-directory: client
 
       - name: Set releaseVersion
+        if: ${{ steps.check_tag.outputs.tag_exists == 'false' }}
         run: |
           sed -i 's/^[[:space:]]*version *= *".*"/version = "${{ github.event.inputs.releaseVersion }}"/' ./client/client-library/build.gradle.kts
           git config --global user.name ${{ secrets.GH_USERNAME }}
@@ -66,11 +88,13 @@ jobs:
           git push origin main
 
       - name: Build library (Gradle)
+        if: ${{ steps.check_tag.outputs.tag_exists == 'false' }}
         run: ./gradlew :client-library:clean :client-library:build
         working-directory: client
 
       - name: Create and push release tag
         id: create_tag
+        if: ${{ steps.check_tag.outputs.tag_exists == 'false' }}
         run: |
           TAG_NAME="android-client-${{ github.event.inputs.releaseVersion }}"
           git config --global user.name ${{ secrets.GH_USERNAME }}
@@ -82,15 +106,13 @@ jobs:
           git push origin "$TAG_NAME"
           echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
 
-      #- name: Trigger JitPack build
-      #  run: |
-      #    curl -X GET https://jitpack.io/com/github/peter-szrnka/easylog/android-client-${{ github.event.inputs.releaseVersion }}/build.log
   releaseAAR:
     name: Release AAR
     runs-on: ubuntu-latest
     needs: release
     permissions:
       contents: write
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -103,17 +125,20 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
+
       - name: Download Maven repo
+        if: ${{ needs.release.outputs.tag_exists == 'false' }}
         uses: actions/download-artifact@v4
         with:
           name: maven-local
           path: ~/.m2/repository
 
       - name: Build AAR
+        if: ${{ needs.release.outputs.tag_exists == 'false' }}
         run: ./gradlew :client-library:assembleRelease
         working-directory: client
 
-      - name: Create Release
+      - name: Create or update Release
         id: create_release
         uses: softprops/action-gh-release@v2
         with:
@@ -121,10 +146,11 @@ jobs:
           name: Release ${{ needs.release.outputs.tag_name }}
           draft: false
           prerelease: false
+          overwrite_files: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload AAR
+      - name: Upload AAR to Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ needs.release.outputs.tag_name }}
@@ -137,6 +163,7 @@ jobs:
     name: Bump Development Version on main
     runs-on: ubuntu-latest
     needs: release
+    if: ${{ needs.release.outputs.tag_exists == 'false' }}
     permissions:
       contents: write
 
