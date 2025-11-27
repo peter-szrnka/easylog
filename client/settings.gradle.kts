@@ -22,4 +22,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "easylog-client-library"
-include(":easylog-client")
+include(":client-library")

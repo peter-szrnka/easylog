@@ -54,9 +54,9 @@ tasks.register<Exec>("buildServerCommon") {
 publishing {
     publications {
 		register<MavenPublication>("release") {
-            groupId = "io.github.peter-szrnka"
-            artifactId = "easylog-client"
-version = "0.0.2-SNAPSHOT"
+            groupId = "io.github.easylog"
+            artifactId = "android-client-library"
+            version = "0.0.0-SNAPSHOT"
 
             afterEvaluate {
 				val releaseComponent = components.findByName("release")
