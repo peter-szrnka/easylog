@@ -158,6 +158,9 @@ jobs:
             client/client-library/build/outputs/aar/client-library-release.aar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Trigger JitPack build 
+        run: | 
+          curl -X GET https://jitpack.io/com/github/peter-szrnka/easylog/android-client-${{ github.event.inputs.releaseVersion }}/build.log
 
   bump-version:
     name: Bump Development Version on main
