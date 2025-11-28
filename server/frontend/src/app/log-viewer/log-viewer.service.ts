@@ -2,11 +2,11 @@ import { HttpClient, HttpParams } from "@angular/common/http";
 import { Inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { LogEntry } from "./model";
-import { environment } from "../environment/environment";
+import { environment } from "../../environment/environment";
 
 
 @Injectable({  providedIn: 'root' })
-export class LogService {
+export class LogViewerService {
   
     constructor(private readonly httpClient: HttpClient) {}
 

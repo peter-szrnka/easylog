@@ -1,22 +1,23 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef, CUSTOM_ELEMENTS_SCHEMA, ViewChild, AfterViewInit, ComponentRef } from '@angular/core';
 import { debounceTime, fromEvent, map, Subscription } from 'rxjs';
-import { WebsocketService } from './websocket.service';
+import { WebsocketService } from '../websocket.service';
 import { LogEntry, LogEntryDisplayable, SaveLogRequest } from './model';
 import { DatatableComponent, NgxDatatableModule } from '@swimlane/ngx-datatable';
-import { LogService } from './log.service';
+import { LogViewerService } from './log-viewer.service';
 import { Title } from '@angular/platform-browser';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-websocket-viewer',
-  templateUrl: './websocket-viewer.component.html',
+  selector: 'log-viewer',
+  templateUrl: './log-viewer.component.html',
   standalone: true,
   imports: [NgxDatatableModule, DatePipe, FormsModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  styleUrls: ['./websocket-viewer.component.scss'],
+  styleUrls: ['./log-viewer.component.scss'],
 })
-export class WebsocketViewerComponent
+export class LogViewerComponent
   implements OnInit, OnDestroy, AfterViewInit {
   messages: LogEntryDisplayable[] = [];
   private sub?: Subscription;
@@ -39,7 +40,8 @@ export class WebsocketViewerComponent
     private title: Title,
     private wsService: WebsocketService,
     private cd: ChangeDetectorRef,
-    private logService: LogService
+    private logService: LogViewerService,
+    private route: ActivatedRoute,
   ) { }
 
   ngOnInit(): void {
@@ -67,6 +69,18 @@ export class WebsocketViewerComponent
       this.messages = [...this.messages];
       this.totalElements = this.totalElements;
       this.cd.detectChanges();
+    });
+
+     this.route.queryParams.subscribe((params) => {
+      this.filter = params['filter'] || '';
+      this.startDate = params['startDate'] || '';
+      this.endDate = params['endDate'] || '';
+      this.page = params['page'] ? +params['page'] : 0;
+      this.size = params['size'] ? +params['size'] : 50;
+      this.sortBy = params['sortBy'] || 'timestamp';
+      this.sortDirection = params['sortDirection'] || 'desc';
+
+      this.loadLogs();
     });
 
     document.addEventListener('visibilitychange', () => {

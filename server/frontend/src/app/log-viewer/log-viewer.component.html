@@ -7,6 +7,7 @@
       type="text"
       placeholder="Search by text"
       aria-label="Search"
+      [(ngModel)]="filter"
     />
 
     <label>
@@ -97,9 +98,10 @@
     </ngx-datatable-column>
 
     <ng-template #rowDetail let-row="row" let-expanded="expanded">
-      <div style="padding: 10px; background: #f9f9f9; border-left: 2px solid #ccc;">
+      <div class="row-detail">
         {{ row.message }}
       </div>
     </ng-template>
+
   </ngx-datatable>
 </div>
