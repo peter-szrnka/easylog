@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef, CUSTOM_ELEMENTS_SCHEMA, ViewChild, AfterViewInit, ComponentRef } from '@angular/core';
 import { debounceTime, fromEvent, map, Subscription } from 'rxjs';
-import { WebsocketService } from '../websocket.service';
+import { WebsocketService } from '../websocket/websocket.service';
 import { LogEntry, LogEntryDisplayable, SaveLogRequest } from './model';
 import { DatatableComponent, NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { LogViewerService } from './log-viewer.service';
@@ -9,6 +9,9 @@ import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
+/**
+ * @author Peter Szrnka
+ */
 @Component({
   selector: 'log-viewer',
   templateUrl: './log-viewer.component.html',

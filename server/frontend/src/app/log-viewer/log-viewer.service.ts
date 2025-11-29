@@ -4,7 +4,9 @@ import { Observable } from "rxjs";
 import { LogEntry } from "./model";
 import { environment } from "../../environment/environment";
 
-
+/**
+ * @author Peter Szrnka
+ */
 @Injectable({  providedIn: 'root' })
 export class LogViewerService {
   
