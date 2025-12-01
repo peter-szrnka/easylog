@@ -4,6 +4,9 @@ import com.github.f4b6a3.ulid.UlidCreator;
 import jakarta.persistence.*;
 import lombok.*;
 
+/**
+ * @author Peter Szrnka
+ */
 @Entity
 @Getter
 @Setter

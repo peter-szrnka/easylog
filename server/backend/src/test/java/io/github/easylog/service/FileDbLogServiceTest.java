@@ -2,10 +2,7 @@ package io.github.easylog.service;
 
 import io.github.easylog.data.LogEntity;
 import io.github.easylog.data.LogEntityRepository;
-import io.github.easylog.model.LogEntry;
-import io.github.easylog.model.LogLevel;
-import io.github.easylog.model.SaveLogRequest;
-import io.github.easylog.model.SearchRequest;
+import io.github.easylog.model.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -70,29 +67,29 @@ class FileDbLogServiceTest {
                 .timestamp(ZonedDateTime.now())
                 .tag("TAG")
                 .sessionId("SESSION1")
-                .correlationId("CORR1")
+                .messageId("CORR1")
                 .build();
 
         Page<LogEntity> entityPage = new PageImpl<>(List.of(entity));
         when(repository.findAll(Mockito.<Specification<LogEntity>>any(), any(Pageable.class))).thenReturn(entityPage);
 
         SearchRequest searchRequest = SearchRequest.builder()
-                .pageable(Pageable.ofSize(10))
+                .pageRequest(PageRequest.builder().size(10).sortBy("timestamp").build())
                 .from(ZonedDateTime.now().minusDays(1L))
                 .build();
 
         // when
-        Page<LogEntry> result = fileDbLogService.list(searchRequest);
+        PageResponse<LogEntry> result = fileDbLogService.list(searchRequest);
 
         // then
         assertNotNull(result);
         assertEquals(1, result.getContent().size());
-        LogEntry logEntry = result.getContent().get(0);
+        LogEntry logEntry = result.getContent().getFirst();
         assertEquals(entity.getLevel(), logEntry.getLogLevel());
         assertEquals(entity.getMessage(), logEntry.getMessage());
         assertEquals(entity.getTimestamp(), logEntry.getTimestamp());
         assertEquals(entity.getTag(), logEntry.getTag());
         assertEquals(entity.getSessionId(), logEntry.getSessionId());
-        assertEquals(entity.getCorrelationId(), logEntry.getCorrelationId());
+        assertEquals(entity.getMessageId(), logEntry.getMessageId());
     }
 }

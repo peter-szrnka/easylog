@@ -3,7 +3,6 @@
  */
 export interface LogEntry {
     messageId: string,
-    correlationId: string,
     sessionId: string,
     logLevel: string,
     timestamp: string,
@@ -25,3 +24,12 @@ export interface LogEntryDisplayable extends LogEntry {
 export interface SaveLogRequest {
     entries: LogEntry[]
 };
+
+/**
+ * @author Peter Szrnka
+ */
+export enum WebsocketState {
+    LOADING,
+    FAILED,
+    CONNECTED
+}

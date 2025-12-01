@@ -1,5 +1,12 @@
 <div class="log-viewer-container">
   <div class="filters">
+    <div class="websocket-container">
+    @if(websocketState === 0) {
+        <div class="websocket-spinner" title="loading"></div>
+    } @else if(websocketState === 2) {
+      <div class="websocket-online" title="online"></div>
+    }
+    </div>
     <input
       class="search-input"
       #search
@@ -8,6 +15,7 @@
       placeholder="Search by text"
       aria-label="Search"
       [(ngModel)]="filter"
+      [disabled]="websocketState === 1"
     />
 
     <label>
@@ -16,6 +24,7 @@
         type="datetime-local"
         [(ngModel)]="startDate"
         (change)="onDateChange()"
+        [disabled]="websocketState === 1"
       />
     </label>
 
@@ -25,13 +34,16 @@
         type="datetime-local"
         [(ngModel)]="endDate"
         (change)="onDateChange()"
+        [disabled]="websocketState === 1"
       />
     </label>
+
+    <button (click)="fetchLogs()">Search</button>
 
     <div class="pagination-controls">
       <label>
         Rows per page:
-        <select [(ngModel)]="size" (change)="onPageSizeChange($event)">
+        <select [(ngModel)]="size" (change)="onPageSizeChange($event)" [disabled]="websocketState === 1">
           @for (s of pageSizeOptions; track s) {
             <option [value]="s" [selected]="s === size">{{ s }}</option>
           }
@@ -45,7 +57,7 @@
     class="material"
     [rows]="messages"
     [headerHeight]="40"
-    [footerHeight]="50"
+    [footerHeight]="80"
     [limit]="size"
     [count]="totalElements"
     [offset]="page"
@@ -57,7 +69,6 @@
     (page)="onPage($event)"
     (sort)="onSort($event)"
     [rowClass]="getRowClass"
-
     [expanded]="expandedRows"
     (activate)="onActivate($event)"
     [rowDetailTemplate]="rowDetail"
@@ -87,7 +98,7 @@
       </ng-template>
     </ngx-datatable-column>
 
-    <ngx-datatable-column name="Correlation ID" prop="correlationId" [width]="230"></ngx-datatable-column>
+    <ngx-datatable-column name="Message ID" prop="messageId" [width]="230"></ngx-datatable-column>
     <ngx-datatable-column name="Session ID" prop="sessionId" [width]="230"></ngx-datatable-column>
     <ngx-datatable-column name="Level" prop="logLevel" [width]="50"></ngx-datatable-column>
     <ngx-datatable-column name="Tag" prop="tag" [width]="120"></ngx-datatable-column>
@@ -102,6 +113,44 @@
         {{ row.message }}
       </div>
     </ng-template>
+
+    <ngx-datatable-footer>
+      <ng-template 
+        ngx-datatable-footer-template
+        let-rowCount="rowCount"
+            let-pageSize="pageSize"
+            let-selectedCount="selectedCount"
+            let-curPage="curPage"
+            let-offset="offset"
+      >
+        <div class="datatable-footer-wrapper">
+          <div class="datatable-pager">
+            <datatable-pager
+              [page]="page"
+              [size]="size"
+              [count]="totalElements"
+              [hidden]="!totalElements"
+              (change)="onPage($event)">
+            </datatable-pager>
+          </div>
+
+          <div class="pagination-controls">
+            <label>
+              Rows per page:
+              <select [(ngModel)]="size" 
+                      (change)="onPageSizeChange($event)" 
+                      [disabled]="websocketState === 1">
+                @for(s of pageSizeOptions; track s) {
+                  <option [value]="s">{{ s }}</option>
+                }
+                
+              </select>
+            </label>
+          </div>
+
+        </div>
+      </ng-template>
+    </ngx-datatable-footer>
 
   </ngx-datatable>
 </div>

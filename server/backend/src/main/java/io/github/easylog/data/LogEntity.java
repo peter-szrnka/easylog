@@ -8,6 +8,9 @@ import lombok.*;
 import java.time.ZonedDateTime;
 import java.util.Set;
 
+/**
+ * @author Peter Szrnka
+ */
 @Entity
 @Getter
 @Setter
@@ -22,7 +25,7 @@ public class LogEntity {
     private String id;
 
     @Column(nullable = false)
-    private String correlationId;
+    private String messageId;
 
     @Column(nullable = false)
     private String sessionId;

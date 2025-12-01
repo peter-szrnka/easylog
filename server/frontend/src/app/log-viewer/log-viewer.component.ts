@@ -1,13 +1,14 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef, CUSTOM_ELEMENTS_SCHEMA, ViewChild, AfterViewInit, ComponentRef } from '@angular/core';
-import { debounceTime, fromEvent, map, Subscription } from 'rxjs';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, CUSTOM_ELEMENTS_SCHEMA, ViewChild, DestroyRef } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { WebsocketService } from '../websocket/websocket.service';
-import { LogEntry, LogEntryDisplayable, SaveLogRequest } from './model';
+import { LogEntry, LogEntryDisplayable, SaveLogRequest, WebsocketState } from './model';
 import { DatatableComponent, NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { LogViewerService } from './log-viewer.service';
 import { Title } from '@angular/platform-browser';
-import { DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 /**
  * @author Peter Szrnka
@@ -16,17 +17,18 @@ import { ActivatedRoute } from '@angular/router';
   selector: 'log-viewer',
   templateUrl: './log-viewer.component.html',
   standalone: true,
-  imports: [NgxDatatableModule, DatePipe, FormsModule],
+  imports: [NgxDatatableModule, DatePipe, CommonModule, FormsModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   styleUrls: ['./log-viewer.component.scss'],
 })
 export class LogViewerComponent
-  implements OnInit, OnDestroy, AfterViewInit {
+  implements OnInit, OnDestroy {
   messages: LogEntryDisplayable[] = [];
   private sub?: Subscription;
   private baseTitle = 'EasyLog Viewer';
   @ViewChild('search', { static: false }) search: any;
   @ViewChild('table') table!: DatatableComponent;
+  websocketState: WebsocketState = WebsocketState.LOADING;
 
   filter: string = '';
   startDate?: string = '';
@@ -40,6 +42,7 @@ export class LogViewerComponent
   expandedRows: any[] = [];
 
   constructor(
+    private destroyRef: DestroyRef,
     private title: Title,
     private wsService: WebsocketService,
     private cd: ChangeDetectorRef,
@@ -49,9 +52,13 @@ export class LogViewerComponent
 
   ngOnInit(): void {
     this.title.setTitle(this.baseTitle);
+    this.wsService.websocketState$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((state) => {
+      this.websocketState = state;
+      this.cd.detectChanges();
+    });
 
     this.wsService.connect();
-    this.sub = this.wsService.messages$.subscribe((msg: string | null) => {
+    this.sub = this.wsService.messages$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((msg: string | null) => {
       if (msg) {
         const obj: SaveLogRequest = JSON.parse(msg) as SaveLogRequest;
         const mappedEntries = obj.entries.map((entry) => ({ ...entry, fromWebSocket: true })).sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
@@ -74,7 +81,7 @@ export class LogViewerComponent
       this.cd.detectChanges();
     });
 
-     this.route.queryParams.subscribe((params) => {
+     this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
       this.filter = params['filter'] || '';
       this.startDate = params['startDate'] || '';
       this.endDate = params['endDate'] || '';
@@ -98,17 +105,9 @@ export class LogViewerComponent
     this.sub?.unsubscribe();
   }
 
-  ngAfterViewInit(): void {
-    fromEvent(this.search.nativeElement, 'keyup')
-      .pipe(
-        debounceTime(400),
-        map((x) => ((x as any).target as HTMLInputElement).value)
-      )
-      .subscribe((value) => {
-        this.filter = value;
-        this.page = 0;
-        this.loadLogs();
-      });
+  fetchLogs(): void {
+    this.page = 0;
+    this.loadLogs();
   }
 
   loadLogs(): void {
@@ -122,10 +121,10 @@ export class LogViewerComponent
         this.sortBy,
         this.sortDirection
       )
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (logs: any) => {
           if (logs.content) {
-            // Page<LogEntry>
             this.messages = logs.content.map((log: LogEntry) => ({
               ...log,
               fromWebSocket: false,

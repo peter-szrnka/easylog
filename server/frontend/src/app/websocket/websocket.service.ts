@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import SockJS from 'sockjs-client';
-import { Client, IMessage, Stomp } from '@stomp/stompjs';
-import { BehaviorSubject } from 'rxjs';
+import { Client, IMessage } from '@stomp/stompjs';
+import { BehaviorSubject, ReplaySubject } from 'rxjs';
 import { environment } from '../../environment/environment';
+import { WebsocketState } from '../log-viewer/model';
 
 /**
  * @author Peter Szrnka
@@ -13,16 +13,20 @@ import { environment } from '../../environment/environment';
 export class WebsocketService {
   private stompClient?: Client;
   private messageSubject = new BehaviorSubject<string | null>(null);
+  private websocketSubject = new ReplaySubject<WebsocketState>(WebsocketState.LOADING);
   public messages$ = this.messageSubject.asObservable();
+  public websocketState$ = this.websocketSubject.asObservable();
 
   connect(): void {
-    const socket = new SockJS(environment.webSocketUrl);
-    this.stompClient = Stomp.over(socket);
+    this.stompClient = new Client({
+      brokerURL: environment.webSocketUrl,
+      reconnectDelay: 10000
+    });
 
     this.stompClient.debug = () => {};
-
     this.stompClient.activate();
     this.stompClient.onConnect = () => {
+      this.websocketSubject.next(WebsocketState.CONNECTED);
       console.log('WebSocket connected');
         this.stompClient?.subscribe('/topic/logs', (message: IMessage) => {
           if (message.body) {
@@ -31,8 +35,9 @@ export class WebsocketService {
         });
     };
 
-    this.stompClient.onStompError = (frame) => {
-      console.error('WebSocket error:', frame.headers['message']);
+    this.stompClient.onWebSocketError = (event) => {
+      this.websocketSubject.next(WebsocketState.FAILED);
+      console.error('WebSocket Error:', event);
     };
   }
 

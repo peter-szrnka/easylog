@@ -38,7 +38,7 @@ class LogControllerTest {
         // given
         SaveLogRequest request = new SaveLogRequest();
         LogEntry entry = new LogEntry();
-        entry.setCorrelationId(UUID.randomUUID().toString());
+        entry.setMessageId(UUID.randomUUID().toString());
         entry.setLogLevel(LogLevel.INFO);
         entry.setTag("test");
         entry.setTimestamp(ZonedDateTime.now());
@@ -62,7 +62,7 @@ class LogControllerTest {
         // given
         SaveLogRequest request = new SaveLogRequest();
         LogEntry entry = new LogEntry();
-        entry.setCorrelationId("1");
+        entry.setMessageId("1");
         entry.setLogLevel(LogLevel.INFO);
         entry.setTag("test");
         entry.setTimestamp(ZonedDateTime.now());

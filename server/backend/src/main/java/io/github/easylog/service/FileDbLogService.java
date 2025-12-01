@@ -4,14 +4,21 @@ import io.github.easylog.data.LogEntity;
 import io.github.easylog.data.LogEntityRepository;
 import io.github.easylog.data.LogSpecification;
 import io.github.easylog.model.LogEntry;
+import io.github.easylog.model.PageResponse;
 import io.github.easylog.model.SaveLogRequest;
 import io.github.easylog.model.SearchRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+/**
+ * @author Peter Szrnka
+ */
 @Slf4j
 @Service
 @Profile("file-db")
@@ -38,9 +45,22 @@ public class FileDbLogService extends LogServiceBase {
     }
 
     @Override
-    public Page<LogEntry> list(SearchRequest searchRequest) {
-        return repository
-                .findAll(LogSpecification.search(searchRequest.getFilter(), searchRequest.getFrom(), searchRequest.getTo()), searchRequest.getPageable()).map(FileDbLogService::mapToDto);
+    public PageResponse<LogEntry> list(SearchRequest searchRequest) {
+        Page<LogEntry> results = repository
+                .findAll(LogSpecification.search(searchRequest.getFilter(), searchRequest.getFrom(), searchRequest.getTo()), mapToPageable(searchRequest.getPageRequest()))
+                .map(FileDbLogService::mapToDto);
+
+        return PageResponse.<LogEntry>builder()
+                .content(results.getContent())
+                .totalPages(results.getTotalPages())
+                .totalElements(results.getTotalElements())
+                .build();
+    }
+
+    private static Pageable mapToPageable(io.github.easylog.model.PageRequest pageRequest) {
+        String sortBy = pageRequest.getSortBy();
+        Sort.Order order = ("desc".equalsIgnoreCase(pageRequest.getSortDirection())) ? Sort.Order.desc(sortBy) : Sort.Order.asc(sortBy);
+        return PageRequest.of(pageRequest.getPage(), pageRequest.getSize(), Sort.by(order));
     }
 
     private static LogEntry mapToDto(LogEntity entity) {
@@ -50,7 +70,7 @@ public class FileDbLogService extends LogServiceBase {
         logEntry.setTimestamp(entity.getTimestamp());
         logEntry.setTag(entity.getTag());
         logEntry.setSessionId(entity.getSessionId());
-        logEntry.setCorrelationId(entity.getCorrelationId());
+        logEntry.setMessageId(entity.getMessageId());
 
         return logEntry;
     }
@@ -62,7 +82,7 @@ public class FileDbLogService extends LogServiceBase {
                 .timestamp(item.getTimestamp())
                 .tag(item.getTag())
                 .sessionId(item.getSessionId())
-                .correlationId(item.getCorrelationId())
+                .messageId(item.getMessageId())
                 .build();
     }
 }

@@ -1,16 +1,11 @@
 package io.github.easylog.service;
 
-import io.github.easylog.model.LogEntry;
-import io.github.easylog.model.LogLevel;
-import io.github.easylog.model.SaveLogRequest;
-import io.github.easylog.model.SearchRequest;
+import io.github.easylog.model.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import java.time.ZonedDateTime;
@@ -50,7 +45,7 @@ class SimpleLogServiceTest {
         // then
         verify(messagingTemplate, times(1)).convertAndSend(anyString(), eq(request));
 
-        Page<LogEntry> result = simpleLogService.list(SearchRequest.builder().pageable(PageRequest.of(0, 5)).build());
+        PageResponse<LogEntry> result = simpleLogService.list(SearchRequest.builder().pageRequest(io.github.easylog.model.PageRequest.builder().page(0).size(5).build()).build());
         assertEquals(2, result.getContent().size());
         assertTrue(result.getContent().containsAll(List.of(entry1, entry2)));
     }
@@ -67,10 +62,10 @@ class SimpleLogServiceTest {
         request.setEntries(List.of(entry));
         simpleLogService.save(request);
 
-        SearchRequest searchRequest = SearchRequest.builder().pageable(PageRequest.of(0, 5)).build();
+        SearchRequest searchRequest = SearchRequest.builder().pageRequest(io.github.easylog.model.PageRequest.builder().page(0).size(5).build()).build();
 
         // when
-        Page<LogEntry> result = simpleLogService.list(searchRequest);
+        PageResponse<LogEntry> result = simpleLogService.list(searchRequest);
 
         // then
         assertNotNull(result);

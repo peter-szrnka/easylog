@@ -8,7 +8,7 @@ import java.util.Map;
  */
 public class LogEntry {
 
-    private String correlationId;
+    private String messageId;
     private String sessionId;
     private LogLevel logLevel;
     private ZonedDateTime timestamp;
@@ -24,12 +24,12 @@ public class LogEntry {
         this.timestamp = timestamp;
     }
 
-    public String getCorrelationId() {
-        return correlationId;
+    public String getMessageId() {
+        return messageId;
     }
 
-    public void setCorrelationId(String correlationId) {
-        this.correlationId = correlationId;
+    public void setMessageId(String messageId) {
+        this.messageId = messageId;
     }
 
     public String getSessionId() {
@@ -75,7 +75,7 @@ public class LogEntry {
     @Override
     public String toString() {
         return "LogEntry{" +
-                ", correlationId='" + correlationId + '\'' +
+                ", messageId='" + messageId + '\'' +
                 ", sessionId='" + sessionId + '\'' +
                 ", logLevel=" + logLevel +
                 ", timestamp=" + timestamp +
