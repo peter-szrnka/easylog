@@ -38,6 +38,7 @@ export class DateRangeDropdownComponent {
     selectRange(range: DateRangeType) {
         this.selectedRange = range;
         this.onRangeChange();
+        this.open = false;
     }
 
     onRangeChange() {
