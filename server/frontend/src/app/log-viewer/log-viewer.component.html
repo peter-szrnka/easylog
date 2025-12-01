@@ -38,18 +38,7 @@
       />
     </label>
 
-    <button (click)="fetchLogs()">Search</button>
-
-    <div class="pagination-controls">
-      <label>
-        Rows per page:
-        <select [(ngModel)]="size" (change)="onPageSizeChange($event)" [disabled]="websocketState === 1">
-          @for (s of pageSizeOptions; track s) {
-            <option [value]="s" [selected]="s === size">{{ s }}</option>
-          }
-        </select>
-      </label>
-    </div>
+    <button (click)="fetchLogs()" style="height:40px;border-radius: 4px;background-color: rgb(0, 82, 136);color: white;">Search</button>
   </div>
 
   <ngx-datatable
@@ -74,6 +63,8 @@
     [rowDetailTemplate]="rowDetail"
     [rowExpansionIndicator]="true"
   >
+
+    <div empty-content style="text-align: center;padding: 10px 0 10px 0;">No data to display.</div>
 
     <ngx-datatable-column
       name=""
@@ -114,6 +105,7 @@
       </div>
     </ng-template>
 
+    <!-- TODO Finalize custom footer -->
     <ngx-datatable-footer>
       <ng-template 
         ngx-datatable-footer-template
@@ -124,16 +116,7 @@
             let-offset="offset"
       >
         <div class="datatable-footer-wrapper">
-          <div class="datatable-pager">
-            <datatable-pager
-              [page]="page"
-              [size]="size"
-              [count]="totalElements"
-              [hidden]="!totalElements"
-              (change)="onPage($event)">
-            </datatable-pager>
-          </div>
-
+          {{ totalElements }} total | 
           <div class="pagination-controls">
             <label>
               Rows per page:
@@ -147,7 +130,15 @@
               </select>
             </label>
           </div>
-
+          <div class="datatable-pager">
+            <datatable-pager
+              [page]="page"
+              [size]="size"
+              [count]="totalElements"
+              [hidden]="!totalElements"
+              (change)="onPage($event)">
+            </datatable-pager>
+          </div>
         </div>
       </ng-template>
     </ngx-datatable-footer>
