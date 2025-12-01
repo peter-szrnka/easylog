@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef, CUSTOM_ELEMENTS_SCHEMA, ViewChild, DestroyRef } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { WebsocketService } from '../websocket/websocket.service';
-import { LogEntry, LogEntryDisplayable, SaveLogRequest, WebsocketState } from './model';
+import { DateRangeSelection, DateRangeType, LogEntry, LogEntryDisplayable, SaveLogRequest, WebsocketState } from '../model';
 import { DatatableComponent, NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { LogViewerService } from './log-viewer.service';
 import { Title } from '@angular/platform-browser';
@@ -9,6 +9,8 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { DateRangeDropdownComponent } from '../date-range-dropdown/date-range-dropdown.component';
+import { SpinnerComponent } from '../common/spinner.component';
 
 /**
  * @author Peter Szrnka
@@ -17,7 +19,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   selector: 'log-viewer',
   templateUrl: './log-viewer.component.html',
   standalone: true,
-  imports: [NgxDatatableModule, DatePipe, CommonModule, FormsModule],
+  imports: [NgxDatatableModule, DatePipe, CommonModule, FormsModule, DateRangeDropdownComponent, SpinnerComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   styleUrls: ['./log-viewer.component.scss'],
 })
@@ -40,6 +42,7 @@ export class LogViewerComponent
   totalElements = 0;
   pageSizeOptions = [5, 10, 25, 50, 100];
   expandedRows: any[] = [];
+  dateRangeType: DateRangeType = DateRangeType.LAST_15_MINUTES;
 
   constructor(
     private destroyRef: DestroyRef,
@@ -110,16 +113,23 @@ export class LogViewerComponent
     this.loadLogs();
   }
 
+  onDateRangeChanged($event: DateRangeSelection) {
+    this.startDate = $event.from;
+    this.endDate = $event.to;
+    this.dateRangeType = $event.dateRangeType;
+  }
+
   loadLogs(): void {
     this.logService
       .list(
         this.filter,
-        this.startDate ? new Date(this.startDate) : undefined,
-        this.endDate ? new Date(this.endDate) : undefined,
+        this.dateRangeType === DateRangeType.CUSTOM ? (this.startDate ? new Date(this.startDate) : undefined) : undefined,
+        this.dateRangeType === DateRangeType.CUSTOM ? (this.endDate ? new Date(this.endDate) : undefined) : undefined,
+        this.dateRangeType,
         this.page,
         this.size,
         this.sortBy,
-        this.sortDirection
+        this.sortDirection,
       )
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({

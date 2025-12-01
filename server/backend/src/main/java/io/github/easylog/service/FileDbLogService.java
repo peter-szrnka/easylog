@@ -3,10 +3,7 @@ package io.github.easylog.service;
 import io.github.easylog.data.LogEntity;
 import io.github.easylog.data.LogEntityRepository;
 import io.github.easylog.data.LogSpecification;
-import io.github.easylog.model.LogEntry;
-import io.github.easylog.model.PageResponse;
-import io.github.easylog.model.SaveLogRequest;
-import io.github.easylog.model.SearchRequest;
+import io.github.easylog.model.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
@@ -15,6 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+
+import java.time.ZonedDateTime;
 
 /**
  * @author Peter Szrnka
@@ -47,7 +46,7 @@ public class FileDbLogService extends LogServiceBase {
     @Override
     public PageResponse<LogEntry> list(SearchRequest searchRequest) {
         Page<LogEntry> results = repository
-                .findAll(LogSpecification.search(searchRequest.getFilter(), searchRequest.getFrom(), searchRequest.getTo()), mapToPageable(searchRequest.getPageRequest()))
+                .findAll(LogSpecification.search(searchRequest.getFilter(), from(searchRequest.getDateRangeType(), searchRequest.getFrom()), searchRequest.getTo()), mapToPageable(searchRequest.getPageRequest()))
                 .map(FileDbLogService::mapToDto);
 
         return PageResponse.<LogEntry>builder()
@@ -55,6 +54,24 @@ public class FileDbLogService extends LogServiceBase {
                 .totalPages(results.getTotalPages())
                 .totalElements(results.getTotalElements())
                 .build();
+    }
+
+    private static ZonedDateTime from(DateRangeType dateRangeType, ZonedDateTime from) {
+        if (DateRangeType.CUSTOM == dateRangeType) {
+            return from;
+        }
+
+        ZonedDateTime now = ZonedDateTime.now();
+        return switch (dateRangeType) {
+            case LAST_5_MINUTES -> now.minusMinutes(5);
+            case LAST_30_MINUTES -> now.minusMinutes(30);
+            case LAST_1_HOUR -> now.minusHours(1);
+            case LAST_4_HOURS -> now.minusHours(4);
+            case LAST_1_DAY -> now.minusDays(1);
+            case LAST_7_DAYS -> now.minusDays(7);
+            case LAST_1_MONTH -> now.minusMonths(1);
+            default ->  now.minusMinutes(15);
+        };
     }
 
     private static Pageable mapToPageable(io.github.easylog.model.PageRequest pageRequest) {

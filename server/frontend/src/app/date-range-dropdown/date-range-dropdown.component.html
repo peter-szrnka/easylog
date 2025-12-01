@@ -1,0 +1,31 @@
+<div class="dropdown-container">
+  <button class="dropdown-button" (click)="toggle()">
+    {{ selectedRange.replaceAll('_', ' ') }}<span class="arrow">▼</span>
+  </button>
+
+  @if(open) {
+    <div #dropdownPanel class="dropdown-panel">
+      <ul class="dropdown-list">
+        @for(range of (DateRangeType | keyvalue); track range) {
+          <li (click)="selectRange(range.value)"[class.selected]="selectedRange === range.value">
+            {{ range.value.replaceAll('_', ' ') }}
+          </li>
+        }
+      </ul>
+
+      @if(selectedRange === DateRangeType.CUSTOM) {
+        <div class="custom-dates">
+          <label>
+            From:
+            <input type="datetime-local" [(ngModel)]="startDate" (change)="onDateChanged()" />
+          </label>
+          <br/>
+          <label>
+            To:
+            <input type="datetime-local" [(ngModel)]="endDate" (change)="onDateChanged()" />
+          </label>
+        </div>
+      }
+    </div>
+  }
+</div>

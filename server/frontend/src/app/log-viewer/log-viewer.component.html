@@ -2,9 +2,7 @@
   <div class="filters">
     <div class="websocket-container">
     @if(websocketState === 0) {
-        <div class="websocket-spinner" title="loading"></div>
-    } @else if(websocketState === 2) {
-      <div class="websocket-online" title="online"></div>
+        <app-spinner></app-spinner>
     }
     </div>
     <input
@@ -18,27 +16,9 @@
       [disabled]="websocketState === 1"
     />
 
-    <label>
-      From:
-      <input
-        type="datetime-local"
-        [(ngModel)]="startDate"
-        (change)="onDateChange()"
-        [disabled]="websocketState === 1"
-      />
-    </label>
+    <app-date-range-dropdown (dateRangeSelectionEmitter)="onDateRangeChanged($event)"></app-date-range-dropdown>
 
-    <label>
-      To:
-      <input
-        type="datetime-local"
-        [(ngModel)]="endDate"
-        (change)="onDateChange()"
-        [disabled]="websocketState === 1"
-      />
-    </label>
-
-    <button (click)="fetchLogs()" style="height:40px;border-radius: 4px;background-color: rgb(0, 82, 136);color: white;">Search</button>
+    <button (click)="fetchLogs()" class="search-btn">Search</button>
   </div>
 
   <ngx-datatable

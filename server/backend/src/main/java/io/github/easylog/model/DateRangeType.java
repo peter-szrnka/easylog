@@ -3,7 +3,7 @@ package io.github.easylog.model;
 /**
  * @author Peter Szrnka
  */
-public enum DateRange {
+public enum DateRangeType {
     CUSTOM,
     LAST_5_MINUTES,
     LAST_15_MINUTES,

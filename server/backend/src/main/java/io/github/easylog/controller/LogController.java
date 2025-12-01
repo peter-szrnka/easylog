@@ -26,7 +26,7 @@ public class LogController {
     @GetMapping
     public PageResponse<LogEntry> list(
             @RequestParam(name = "filter", required = false) String filter,
-            @RequestParam(name = "dateRange", required = false) DateRange dateRange,
+            @RequestParam(name = "dateRangeType", required = false) DateRangeType dateRangeType,
             @RequestParam(name = "startDate", required = false)
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime startDate,
             @RequestParam(name = "endDate", required = false)
@@ -38,7 +38,7 @@ public class LogController {
     ) {
         return logService.list(SearchRequest.builder()
                 .filter(filter)
-                .dateRange(dateRange)
+                .dateRangeType(dateRangeType)
                 .pageRequest(PageRequest.builder().page(page).size(size).sortBy(sortBy).sortDirection(sortDirection).build())
                 .from(startDate)
                 .to(endDate)

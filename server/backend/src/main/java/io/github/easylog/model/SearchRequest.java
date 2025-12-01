@@ -16,7 +16,7 @@ import java.time.ZonedDateTime;
 @AllArgsConstructor
 public class SearchRequest {
     private String filter;
-    private DateRange dateRange;
+    private DateRangeType dateRangeType;
     private ZonedDateTime from;
     private ZonedDateTime to;
     private PageRequest pageRequest;

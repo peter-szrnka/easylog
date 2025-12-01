@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Client, IMessage } from '@stomp/stompjs';
 import { BehaviorSubject, ReplaySubject } from 'rxjs';
 import { environment } from '../../environment/environment';
-import { WebsocketState } from '../log-viewer/model';
+import { WebsocketState } from '../model';
 
 /**
  * @author Peter Szrnka
