@@ -1,28 +1,36 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef, CUSTOM_ELEMENTS_SCHEMA, ViewChild, AfterViewInit, ComponentRef } from '@angular/core';
-import { debounceTime, fromEvent, map, Subscription } from 'rxjs';
-import { WebsocketService } from './websocket.service';
-import { LogEntry, LogEntryDisplayable, SaveLogRequest } from './model';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, CUSTOM_ELEMENTS_SCHEMA, ViewChild, DestroyRef } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { WebsocketService } from '../websocket/websocket.service';
+import { DateRangeSelection, DateRangeType, LogEntry, LogEntryDisplayable, SaveLogRequest, WebsocketState } from '../model';
 import { DatatableComponent, NgxDatatableModule } from '@swimlane/ngx-datatable';
-import { LogService } from './log.service';
+import { LogViewerService } from './log-viewer.service';
 import { Title } from '@angular/platform-browser';
-import { DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { DateRangeDropdownComponent } from '../date-range-dropdown/date-range-dropdown.component';
+import { SpinnerComponent } from '../common/spinner.component';
 
+/**
+ * @author Peter Szrnka
+ */
 @Component({
-  selector: 'app-websocket-viewer',
-  templateUrl: './websocket-viewer.component.html',
+  selector: 'log-viewer',
+  templateUrl: './log-viewer.component.html',
   standalone: true,
-  imports: [NgxDatatableModule, DatePipe, FormsModule],
+  imports: [NgxDatatableModule, DatePipe, CommonModule, FormsModule, DateRangeDropdownComponent, SpinnerComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  styleUrls: ['./websocket-viewer.component.scss'],
+  styleUrls: ['./log-viewer.component.scss'],
 })
-export class WebsocketViewerComponent
-  implements OnInit, OnDestroy, AfterViewInit {
+export class LogViewerComponent
+  implements OnInit, OnDestroy {
   messages: LogEntryDisplayable[] = [];
   private sub?: Subscription;
   private baseTitle = 'EasyLog Viewer';
   @ViewChild('search', { static: false }) search: any;
   @ViewChild('table') table!: DatatableComponent;
+  websocketState: WebsocketState = WebsocketState.LOADING;
 
   filter: string = '';
   startDate?: string = '';
@@ -34,19 +42,26 @@ export class WebsocketViewerComponent
   totalElements = 0;
   pageSizeOptions = [5, 10, 25, 50, 100];
   expandedRows: any[] = [];
+  dateRangeType: DateRangeType = DateRangeType.LAST_15_MINUTES;
 
   constructor(
+    private destroyRef: DestroyRef,
     private title: Title,
     private wsService: WebsocketService,
     private cd: ChangeDetectorRef,
-    private logService: LogService
+    private logService: LogViewerService,
+    private route: ActivatedRoute,
   ) { }
 
   ngOnInit(): void {
     this.title.setTitle(this.baseTitle);
+    this.wsService.websocketState$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((state) => {
+      this.websocketState = state;
+      this.cd.detectChanges();
+    });
 
     this.wsService.connect();
-    this.sub = this.wsService.messages$.subscribe((msg: string | null) => {
+    this.sub = this.wsService.messages$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((msg: string | null) => {
       if (msg) {
         const obj: SaveLogRequest = JSON.parse(msg) as SaveLogRequest;
         const mappedEntries = obj.entries.map((entry) => ({ ...entry, fromWebSocket: true })).sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
@@ -69,6 +84,18 @@ export class WebsocketViewerComponent
       this.cd.detectChanges();
     });
 
+     this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
+      this.filter = params['filter'] || '';
+      this.startDate = params['startDate'] || '';
+      this.endDate = params['endDate'] || '';
+      this.page = params['page'] ? +params['page'] : 0;
+      this.size = params['size'] ? +params['size'] : 50;
+      this.sortBy = params['sortBy'] || 'timestamp';
+      this.sortDirection = params['sortDirection'] || 'desc';
+
+      this.loadLogs();
+    });
+
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'visible') {
         this.title.setTitle(this.baseTitle);
@@ -81,34 +108,33 @@ export class WebsocketViewerComponent
     this.sub?.unsubscribe();
   }
 
-  ngAfterViewInit(): void {
-    fromEvent(this.search.nativeElement, 'keyup')
-      .pipe(
-        debounceTime(400),
-        map((x) => ((x as any).target as HTMLInputElement).value)
-      )
-      .subscribe((value) => {
-        this.filter = value;
-        this.page = 0;
-        this.loadLogs();
-      });
+  fetchLogs(): void {
+    this.page = 0;
+    this.loadLogs();
+  }
+
+  onDateRangeChanged($event: DateRangeSelection) {
+    this.startDate = $event.from;
+    this.endDate = $event.to;
+    this.dateRangeType = $event.dateRangeType;
   }
 
   loadLogs(): void {
     this.logService
       .list(
         this.filter,
-        this.startDate ? new Date(this.startDate) : undefined,
-        this.endDate ? new Date(this.endDate) : undefined,
+        this.dateRangeType === DateRangeType.CUSTOM ? (this.startDate ? new Date(this.startDate) : undefined) : undefined,
+        this.dateRangeType === DateRangeType.CUSTOM ? (this.endDate ? new Date(this.endDate) : undefined) : undefined,
+        this.dateRangeType,
         this.page,
         this.size,
         this.sortBy,
-        this.sortDirection
+        this.sortDirection,
       )
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (logs: any) => {
           if (logs.content) {
-            // Page<LogEntry>
             this.messages = logs.content.map((log: LogEntry) => ({
               ...log,
               fromWebSocket: false,

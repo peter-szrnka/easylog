@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
+/**
+ * @author Peter Szrnka
+ */
 @Getter
 @RequiredArgsConstructor
 public abstract class LogServiceBase implements LogService {

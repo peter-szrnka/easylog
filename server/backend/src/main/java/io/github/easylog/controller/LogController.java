@@ -1,18 +1,16 @@
 package io.github.easylog.controller;
 
-import io.github.easylog.model.LogEntry;
-import io.github.easylog.model.SaveLogRequest;
-import io.github.easylog.model.SearchRequest;
+import io.github.easylog.model.*;
 import io.github.easylog.service.LogService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.ZonedDateTime;
 
+/**
+ * @author Peter Szrnka
+ */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/log")
@@ -26,8 +24,9 @@ public class LogController {
     }
 
     @GetMapping
-    public Page<LogEntry> list(
+    public PageResponse<LogEntry> list(
             @RequestParam(name = "filter", required = false) String filter,
+            @RequestParam(name = "dateRangeType", required = false) DateRangeType dateRangeType,
             @RequestParam(name = "startDate", required = false)
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime startDate,
             @RequestParam(name = "endDate", required = false)
@@ -37,10 +36,10 @@ public class LogController {
             @RequestParam(name = "sortBy") String sortBy,
             @RequestParam(name = "sortDirection") String sortDirection
     ) {
-        Sort.Order order = ("desc".equalsIgnoreCase(sortDirection)) ? Sort.Order.desc(sortBy) : Sort.Order.asc(sortBy);
         return logService.list(SearchRequest.builder()
                 .filter(filter)
-                .pageable(PageRequest.of(page, size, Sort.by(order)))
+                .dateRangeType(dateRangeType)
+                .pageRequest(PageRequest.builder().page(page).size(size).sortBy(sortBy).sortDirection(sortDirection).build())
                 .from(startDate)
                 .to(endDate)
                 .build()

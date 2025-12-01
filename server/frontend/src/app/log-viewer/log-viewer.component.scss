@@ -4,15 +4,24 @@
 }
 
 @keyframes fadeInHighlight {
-  0% { background-color: #e0ffe0; alpha: 0.0; opacity: 0.0; }
-  100% { background-color: transparent; alpha: 1.0; opacity: 1.0; }
+  0% {
+    background-color: #e0ffe0;
+    alpha: 0.0;
+    opacity: 0.0;
+  }
+
+  100% {
+    background-color: transparent;
+    alpha: 1.0;
+    opacity: 1.0;
+  }
 }
 
 ::ng-deep .ws-indicator {
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background-color: #00cc66; /* zöld */
+  background-color: #00cc66;
   box-shadow: 0 0 4px rgba(0, 255, 100, 0.7);
 }
 
@@ -48,15 +57,15 @@
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    height: 40px; /* fix magasság a sorokhoz */
+    height: 40px;
     box-sizing: border-box;
   }
 
   label {
     display: flex;
-    align-items: center; /* ⬅ label belseje is középre */
+    align-items: center;
     gap: 0.3rem;
-    height: 40px; /* igazítás a input magassághoz */
+    height: 40px;
   }
 
   ::ng-deep .pagination-controls {
@@ -68,4 +77,33 @@
     border: 1px solid #ccc;
     border-radius: 4px;
   }
+
+  ::ng-deep .datatable-footer-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 12px;
+  }
+}
+
+.websocket-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+}
+
+.websocket-loading {
+  background-color: #cff4ff;
+  display: inline-block;
+  box-sizing: border-box;
+  vertical-align: middle;
+  padding: 5px;
+}
+
+.search-btn {
+  height: 40px;
+  border-radius: 4px;
+  background-color: rgb(0, 82, 136);
+  color: white;
 }

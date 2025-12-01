@@ -2,16 +2,18 @@ import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZonelessC
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
-import { LogService } from './log.service';
-import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptors, withInterceptorsFromDi } from '@angular/common/http';
-import { mockInterceptor } from './mock.interceptor';
+import { provideHttpClient } from '@angular/common/http';
+import { LogViewerService } from '../log-viewer/log-viewer.service';
 
+/**
+ * @author Peter Szrnka
+ */
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideHttpClient(withInterceptors([mockInterceptor])),
+    provideHttpClient(),
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
     provideRouter(routes),
-    LogService,
+    LogViewerService,
   ]
 };

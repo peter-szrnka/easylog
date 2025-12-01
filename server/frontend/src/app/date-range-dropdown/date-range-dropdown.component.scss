@@ -1,0 +1,80 @@
+.dropdown-container {
+  position: relative;
+  display: inline-block;
+  font-family: Arial, sans-serif;
+}
+
+.dropdown-button {
+  padding: 8px 12px;
+  width: 200px;
+  height: 40px;
+  background-color: #1d4ed8;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+.dropdown-button:hover {
+  background-color: #2563eb;
+}
+.arrow {
+  margin-left: 6px;
+  font-size: 12px;
+}
+
+.dropdown-panel {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 4px;
+  width: 250px;
+  background-color: white;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  z-index: 9999;
+  overflow: hidden;
+  will-change: transform;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  padding: 5px;
+}
+
+.dropdown-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 240px;
+  overflow-y: auto;
+}
+.dropdown-list li {
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+.dropdown-list li:hover {
+  background-color: #e0f2fe;
+}
+.dropdown-list li.selected {
+  background-color: #bfdbfe;
+}
+
+.custom-dates {
+  padding: 10px;
+  border-top: 1px solid #d1d5db;
+}
+.custom-dates label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+}
+.custom-dates input {
+  width: 100%;
+  padding: 4px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+}

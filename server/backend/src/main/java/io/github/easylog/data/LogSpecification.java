@@ -7,6 +7,9 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Peter Szrnka
+ */
 public class LogSpecification {
 
     public static Specification<LogEntity> search(String term, ZonedDateTime startDate, ZonedDateTime endDate) {
@@ -19,7 +22,7 @@ public class LogSpecification {
                 predicates.add(
                         cb.or(
                                 cb.like(cb.lower(root.get("sessionId")), like),
-                                cb.like(cb.lower(root.get("correlationId")), like),
+                                cb.like(cb.lower(root.get("messageId")), like),
                                 cb.like(cb.lower(root.get("message")), like),
                                 cb.like(cb.lower(root.get("tag")), like),
                                 cb.like(cb.lower(root.get("level").as(String.class)), like)

@@ -1,5 +1,8 @@
+/**
+ * @author Peter Szrnka
+ */
 export const environment = {
   production: false,
-  mock: false,
-  apiUrl: 'http://localhost:8080/api'
+  apiUrl: 'http://localhost:8080/api',
+  webSocketUrl: 'http://localhost:8080/ws'
 };

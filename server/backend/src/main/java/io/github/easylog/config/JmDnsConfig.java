@@ -14,6 +14,9 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.util.Map;
 
+/**
+ * @author Peter Szrnka
+ */
 @Slf4j
 @Configuration
 @RequiredArgsConstructor

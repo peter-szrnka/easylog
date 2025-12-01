@@ -1,10 +1,12 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { WebsocketViewerComponent } from "./websocket-viewer.component";
 
+/**
+ * @author Peter Szrnka
+ */
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, WebsocketViewerComponent],
+  imports: [RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })

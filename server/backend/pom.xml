@@ -173,7 +173,7 @@
                         <artifactId>spring-boot-maven-plugin</artifactId>
                         <version>${spring-boot.version}</version>
                         <configuration>
-                            <mainClass>io.github.easylog.EasylogServerApplication</mainClass>
+                            <mainClass>io.github.easylog.EasyLogServerApplication</mainClass>
                         </configuration>
                         <executions>
                             <execution>
