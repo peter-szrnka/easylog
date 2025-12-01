@@ -104,6 +104,9 @@ jobs:
         with:
           tag_name: ${{ needs.build.outputs.tag_name }}
           name: ${{ needs.build.outputs.tag_name }}
+          draft: false
+          prerelease: false
+          overwrite_files: true
           files: |
             common/target/easylog-common-${{ github.event.inputs.releaseVersion }}.jar
         env:
