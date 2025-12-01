@@ -19,7 +19,7 @@ import { SpinnerComponent } from '../common/spinner.component';
   selector: 'log-viewer',
   templateUrl: './log-viewer.component.html',
   standalone: true,
-  imports: [NgxDatatableModule, DatePipe, CommonModule, FormsModule, DateRangeDropdownComponent, SpinnerComponent],
+  imports: [NgxDatatableModule, CommonModule, FormsModule, DateRangeDropdownComponent, SpinnerComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   styleUrls: ['./log-viewer.component.scss'],
 })
@@ -31,6 +31,7 @@ export class LogViewerComponent
   @ViewChild('search', { static: false }) search: any;
   @ViewChild('table') table!: DatatableComponent;
   websocketState: WebsocketState = WebsocketState.LOADING;
+  loading = true;
 
   filter: string = '';
   startDate?: string = '';
@@ -120,6 +121,7 @@ export class LogViewerComponent
   }
 
   loadLogs(): void {
+    this.loading = true;
     this.logService
       .list(
         this.filter,
@@ -146,9 +148,14 @@ export class LogViewerComponent
               fromWebSocket: false,
             }));
           }
+          this.loading = false;
           this.cd.detectChanges();
         },
-        error: (err) => console.error('Error:', err),
+        error: (err) => {
+          console.error('Error:', err);
+          this.loading = false;
+          this.cd.detectChanges();
+        },
       });
   }
 

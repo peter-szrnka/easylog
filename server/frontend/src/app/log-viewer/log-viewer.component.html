@@ -23,7 +23,7 @@
 
   <ngx-datatable
     #table
-    class="material"
+    class="datatable material"
     [rows]="messages"
     [headerHeight]="40"
     [footerHeight]="80"
@@ -44,7 +44,13 @@
     [rowExpansionIndicator]="true"
   >
 
-    <div empty-content style="text-align: center;padding: 10px 0 10px 0;">No data to display.</div>
+    <div empty-content style="text-align: center;padding: 10px 0 10px 0;">
+      @if(loading) {
+        <app-spinner></app-spinner>
+      } @else {
+        No data to display.
+      }
+    </div>
 
     <ngx-datatable-column
       name=""

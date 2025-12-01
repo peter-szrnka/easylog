@@ -1,6 +1,7 @@
 <div class="dropdown-container">
   <button class="dropdown-button" (click)="toggle()">
-    {{ selectedRange.replaceAll('_', ' ') }}<span class="arrow">▼</span>
+    <span class="text">{{ selectedRange.replaceAll('_', ' ') }}</span>
+    <span class="arrow">▼</span>
   </button>
 
   @if(open) {

@@ -16,6 +16,25 @@
   font-size: 14px;
   transition: background-color 0.2s;
 }
+@media (max-width: 768px) {
+  .dropdown-button {
+    width: 40px; /* opcionális: kisebb gombméret */
+    padding: 8px;
+  }
+
+  .dropdown-button span.arrow {
+    margin-left: 0; /* igazítás, ha kell */
+  }
+
+  /* A szöveg elrejtése mobilon */
+  .dropdown-button {
+    font-size: 0; /* a szöveget eltünteti */
+  }
+
+  .dropdown-button .arrow {
+    font-size: 16px; /* visszaállítjuk a nyíl méretét */
+  }
+}
 .dropdown-button:hover {
   background-color: #2563eb;
 }
