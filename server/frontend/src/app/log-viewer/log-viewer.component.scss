@@ -58,8 +58,7 @@
   background-color: #002a4b;
   padding: 10px 10px 0 10px;
 
-  input[type="text"],
-  input[type="datetime-local"] {
+  input[type="text"] {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -110,8 +109,9 @@
 .search-btn {
   height: 40px;
   border-radius: 4px;
-  background-color: rgb(0, 82, 136);
-  color: white;
   border: 0;
   cursor: pointer;
+}
+.search-btn:disabled {
+  cursor: auto;
 }

@@ -2,7 +2,7 @@
   <div class="filters">
     <div class="websocket-container">
     @if(websocketState === 0) {
-        <app-spinner></app-spinner>
+      <app-spinner></app-spinner>
     }
     </div>
     <input
@@ -16,9 +16,8 @@
       [disabled]="websocketState === 1"
     />
 
-    <app-date-range-dropdown (dateRangeSelectionEmitter)="onDateRangeChanged($event)"></app-date-range-dropdown>
-
-    <button (click)="fetchLogs()" class="search-btn">Search</button>
+    <button (click)="fetchLogs()" class="search-btn" [disabled]="websocketState === 1">Search</button>
+    <app-date-range-dropdown [disabled]="websocketState === 1" (dateRangeSelectionEmitter)="onDateRangeChanged($event)"></app-date-range-dropdown>
   </div>
 
   <ngx-datatable
@@ -26,7 +25,7 @@
     class="datatable material"
     [rows]="messages"
     [headerHeight]="40"
-    [footerHeight]="80"
+    [footerHeight]="50"
     [limit]="size"
     [count]="totalElements"
     [offset]="page"
@@ -53,7 +52,7 @@
     </div>
 
     <ngx-datatable-column
-      name=""
+      name="fromWebSocket"
       prop="fromWebSocket"
       [width]="20"
       [sortable]="false"
@@ -92,7 +91,7 @@
     </ng-template>
 
     <!-- TODO Finalize custom footer -->
-    <ngx-datatable-footer>
+    <!--<ngx-datatable-footer>
       <ng-template 
         ngx-datatable-footer-template
         let-rowCount="rowCount"
@@ -116,18 +115,19 @@
               </select>
             </label>
           </div>
-          <div class="datatable-pager">
+          <div>
             <datatable-pager
+              class="datatable-pager"
               [page]="page"
               [size]="size"
               [count]="totalElements"
-              [hidden]="!totalElements"
+              [hidden]="false"
               (change)="onPage($event)">
             </datatable-pager>
           </div>
         </div>
       </ng-template>
-    </ngx-datatable-footer>
+    </ngx-datatable-footer>-->
 
   </ngx-datatable>
 </div>

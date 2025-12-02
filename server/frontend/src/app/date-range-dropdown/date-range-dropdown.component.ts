@@ -17,7 +17,7 @@ export class DateRangeDropdownComponent {
     DateRangeType = DateRangeType;
 
     open = false;
-    selectedRange: DateRangeType = DateRangeType.LAST_15_MINUTES;
+    selectedRange: DateRangeType = localStorage.getItem('range') as DateRangeType ?? DateRangeType.LAST_15_MINUTES;
     startDate = '';
     endDate = '';
     @Output()
@@ -30,15 +30,18 @@ export class DateRangeDropdownComponent {
     toggle() {
         this.open = !this.open;
         if (this.open) {
-            this.onRangeChange();
             setTimeout(() => this.adjustPosition(), 0);
         }
     }
 
     selectRange(range: DateRangeType) {
+        localStorage.setItem('range', range);
         this.selectedRange = range;
         this.onRangeChange();
-        this.open = false;
+
+        if (DateRangeType.CUSTOM !== range) {
+            this.open = false;
+        }
     }
 
     onRangeChange() {
@@ -64,7 +67,8 @@ export class DateRangeDropdownComponent {
         this.dateRangeSelectionEmitter.emit({
                 dateRangeType: this.selectedRange,
                 from: this.startDate,
-                to: this.endDate
+                to: this.endDate,
+                reloadLogs: (this.selectedRange !== DateRangeType.CUSTOM)
             });
     }
 
@@ -72,7 +76,8 @@ export class DateRangeDropdownComponent {
         this.dateRangeSelectionEmitter.emit({
             dateRangeType: this.selectedRange,
             from: this.startDate,
-            to: this.endDate
+            to: this.endDate,
+            reloadLogs: true
         });
     }
 

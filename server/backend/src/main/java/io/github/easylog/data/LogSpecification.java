@@ -1,5 +1,6 @@
 package io.github.easylog.data;
 
+import io.github.easylog.entity.LogEntity;
 import org.springframework.data.jpa.domain.Specification;
 import jakarta.persistence.criteria.Predicate;
 

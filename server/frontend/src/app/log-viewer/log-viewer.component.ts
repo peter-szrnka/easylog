@@ -43,7 +43,7 @@ export class LogViewerComponent
   totalElements = 0;
   pageSizeOptions = [5, 10, 25, 50, 100];
   expandedRows: any[] = [];
-  dateRangeType: DateRangeType = DateRangeType.LAST_15_MINUTES;
+  dateRangeType: DateRangeType = localStorage.getItem('range') as DateRangeType ?? DateRangeType.LAST_15_MINUTES;
 
   constructor(
     private destroyRef: DestroyRef,
@@ -114,10 +114,14 @@ export class LogViewerComponent
     this.loadLogs();
   }
 
-  onDateRangeChanged($event: DateRangeSelection) {
-    this.startDate = $event.from;
-    this.endDate = $event.to;
-    this.dateRangeType = $event.dateRangeType;
+  onDateRangeChanged(event: DateRangeSelection) {
+    this.startDate = event.from;
+    this.endDate = event.to;
+    this.dateRangeType = event.dateRangeType;
+
+    if (event.reloadLogs === true) {
+      this.loadLogs();
+    }
   }
 
   loadLogs(): void {
@@ -171,11 +175,6 @@ export class LogViewerComponent
     this.loadLogs();
   }
 
-  onDateChange(): void {
-    this.page = 0;
-    this.loadLogs();
-  }
-
   onPageSizeChange(event: any) {
     this.page = 0;
     this.loadLogs();
@@ -198,7 +197,7 @@ export class LogViewerComponent
   }
 
   getRowId(row: any): string {
-    return row.correlationId + row.timestamp + row.sessionId;
+    return row.messageId + row.timestamp + row.sessionId;
   }
 
   getRowClass = (row: LogEntryDisplayable) => ({

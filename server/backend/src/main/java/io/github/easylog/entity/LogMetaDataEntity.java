@@ -1,4 +1,4 @@
-package io.github.easylog.data;
+package io.github.easylog.entity;
 
 import com.github.f4b6a3.ulid.UlidCreator;
 import jakarta.persistence.*;

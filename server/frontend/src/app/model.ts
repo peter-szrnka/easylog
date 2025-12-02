@@ -38,6 +38,7 @@ export enum WebsocketState {
  * @author Peter Szrnka
  */
 export enum DateRangeType {
+  LIVE = 'LIVE',
   CUSTOM = 'CUSTOM',
   LAST_5_MINUTES = 'LAST_5_MINUTES',
   LAST_15_MINUTES = 'LAST_15_MINUTES',
@@ -54,6 +55,7 @@ export enum DateRangeType {
  */
 export interface DateRangeSelection {
     dateRangeType: DateRangeType,
+    reloadLogs: boolean,
     from?: string,
-    to?: string
+    to?: string,
 }

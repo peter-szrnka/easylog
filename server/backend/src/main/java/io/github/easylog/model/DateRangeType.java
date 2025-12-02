@@ -5,6 +5,7 @@ package io.github.easylog.model;
  */
 public enum DateRangeType {
     CUSTOM,
+    LIVE,
     LAST_5_MINUTES,
     LAST_15_MINUTES,
     LAST_30_MINUTES,

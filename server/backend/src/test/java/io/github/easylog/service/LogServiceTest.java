@@ -1,7 +1,6 @@
 package io.github.easylog.service;
 
-import io.github.easylog.data.LogEntity;
-import io.github.easylog.data.LogEntityRepository;
+import io.github.easylog.dao.LogEntityDao;
 import io.github.easylog.model.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,10 +8,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import java.time.ZonedDateTime;
@@ -23,16 +18,16 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class FileDbLogServiceTest {
+class LogServiceTest {
 
     @Mock
-    private LogEntityRepository repository;
+    private LogEntityDao dao;
 
     @Mock
     private SimpMessagingTemplate messagingTemplate;
 
     @InjectMocks
-    private FileDbLogService fileDbLogService;
+    private LogService fileDbLogService;
 
     @Test
     void testSave_savesEntriesAndSendsToWebSocket() {
@@ -54,28 +49,41 @@ class FileDbLogServiceTest {
         fileDbLogService.save(request);
 
         // then
-        verify(repository, times(2)).save(any(LogEntity.class));
+        verify(dao).save(any(SaveLogRequest.class));
         verify(messagingTemplate, times(1)).convertAndSend(anyString(), eq(request));
+    }
+
+    @Test
+    void testList_returnsEmptyList() {
+        // given
+        SearchRequest searchRequest = SearchRequest.builder()
+                .pageRequest(PageRequest.builder().size(10).sortBy("timestamp").build())
+                .from(ZonedDateTime.now().minusDays(1L))
+                .dateRangeType(DateRangeType.LIVE)
+                .build();
+
+        // when
+        PageResponse<LogEntry> result = fileDbLogService.list(searchRequest);
     }
 
     @Test
     void testList_returnsMappedLogEntries() {
         // given
-        LogEntity entity = LogEntity.builder()
-                .level(LogLevel.INFO)
-                .message("Some message")
-                .timestamp(ZonedDateTime.now())
-                .tag("TAG")
-                .sessionId("SESSION1")
-                .messageId("CORR1")
-                .build();
+        LogEntry entity = new LogEntry();
+        entity.setLogLevel(LogLevel.INFO);
+        entity.setMessage("Some message");
+        entity.setTimestamp(ZonedDateTime.now());
+        entity.setTag("TAG");
+        entity.setSessionId("SESSION1");
+        entity.setMessageId("CORR1");
 
-        Page<LogEntity> entityPage = new PageImpl<>(List.of(entity));
-        when(repository.findAll(Mockito.<Specification<LogEntity>>any(), any(Pageable.class))).thenReturn(entityPage);
+        PageResponse<LogEntry> entityPage = PageResponse.<LogEntry>builder().content(List.of(entity)).build();
+        when(dao.findAll(Mockito.any(SearchRequest.class))).thenReturn(entityPage);
 
         SearchRequest searchRequest = SearchRequest.builder()
                 .pageRequest(PageRequest.builder().size(10).sortBy("timestamp").build())
                 .from(ZonedDateTime.now().minusDays(1L))
+                .dateRangeType(DateRangeType.LAST_1_MONTH)
                 .build();
 
         // when
@@ -85,7 +93,7 @@ class FileDbLogServiceTest {
         assertNotNull(result);
         assertEquals(1, result.getContent().size());
         LogEntry logEntry = result.getContent().getFirst();
-        assertEquals(entity.getLevel(), logEntry.getLogLevel());
+        assertEquals(entity.getLogLevel(), logEntry.getLogLevel());
         assertEquals(entity.getMessage(), logEntry.getMessage());
         assertEquals(entity.getTimestamp(), logEntry.getTimestamp());
         assertEquals(entity.getTag(), logEntry.getTag());

@@ -1,3 +1,11 @@
+input[type="datetime-local"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    height: 40px;
+    box-sizing: border-box;
+  }
+
 .dropdown-container {
   position: relative;
   display: inline-block;
