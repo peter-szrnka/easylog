@@ -1,5 +1,5 @@
 # EasyLog server application
-
+**UNDER DEVELOPMENT!!!**
 This folder contains the server-side application for EasyLog, a local logging and monitoring library solution (https://github.com/peter-szrnka/easylog-android-client-library).
 The server application is responsible for receiving, processing, and storing log data sent from various clients.
 
