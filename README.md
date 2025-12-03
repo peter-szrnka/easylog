@@ -17,8 +17,6 @@ EasyLog is a lightweight logging solution designed primarily for Android applica
 
 - **Debugging during development**
    Inspect application behavior directly on the device, even without access to Android Studio or remote debugging tools.
-- **Crash or error reporting**
-   Collect logs around failures and allow users or testers to send logs for support.
 - **Field diagnostics**
    Useful for testers, field engineers, or beta users who need an easy way to capture and report application behavior.
 - **Hybrid logging scenarios**
