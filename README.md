@@ -28,7 +28,7 @@ EasyLog is a lightweight logging solution designed primarily for Android applica
 
 EasyLog consists of 2 parts:
 #### Server
-https://github.com/peter-szrnka/easylog/server
+[https://github.com/peter-szrnka/easylog/server](https://github.com/peter-szrnka/easylog/tree/main/server)
 
 #### Android library
 For further details please visit the Android Library repository: https://github.com/peter-szrnka/easylog-android-client-library
