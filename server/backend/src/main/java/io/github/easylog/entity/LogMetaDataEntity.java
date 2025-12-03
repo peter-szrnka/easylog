@@ -27,13 +27,11 @@ public class LogMetaDataEntity {
     @Column(nullable = false)
     private String key;
 
-    @Column(nullable = false)
+    @Column
     private String value;
 
     @PrePersist
     public void prePersist() {
-        if (id == null) {
-            id = UlidCreator.getUlid().toString();
-        }
+         id = UlidCreator.getUlid().toString();
     }
 }

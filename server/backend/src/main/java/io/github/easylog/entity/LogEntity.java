@@ -48,11 +48,7 @@ public class LogEntity {
 
     @PrePersist
     public void prePersist() {
-        if (id == null) {
-            id = UlidCreator.getUlid().toString();
-        }
-        if (timestamp == null) {
-            timestamp = ZonedDateTime.now();
-        }
+        id = UlidCreator.getUlid().toString();
+        timestamp = ZonedDateTime.now();
     }
 }
