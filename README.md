@@ -26,10 +26,7 @@ EasyLog is a lightweight logging solution designed primarily for Android applica
 
 ### Getting Started
 
-1. Add EasyLog as a dependency in your Android project.
-2. Initialize the logger in your application or activity.
-3. Start writing log messages using the provided API.
-4. (Optional) Integrate remote log handling if your project requires centralized log collection.
+For further details please visit the Android Library repository: https://github.com/peter-szrnka/easylog-android-client-library
 
 ### Why EasyLog?
 
