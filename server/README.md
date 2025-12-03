@@ -1,6 +1,6 @@
 # EasyLog server application
 
-This repository contains the server-side application for EasyLog, a local logging and monitoring library solution (https://github.com/peter-szrnka/easylog-android-client-library).
+This folder contains the server-side application for EasyLog, a local logging and monitoring library solution (https://github.com/peter-szrnka/easylog-android-client-library).
 The server application is responsible for receiving, processing, and storing log data sent from various clients.
 
 **The database provider is SQLite, because this whole library and server designed to test your apps locally.**
