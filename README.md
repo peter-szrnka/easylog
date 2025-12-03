@@ -1,5 +1,7 @@
 # EasyLog Android application logging tool
 
+**UNDER DEVELOPMENT!!!**
+
 ### Overview
 
 EasyLog is a lightweight logging solution designed primarily for Android applications. It provides an easy-to-use API for capturing, storing, and reviewing log entries directly on the device — without requiring a remote backend. Its purpose is to simplify debugging and error tracking during development, testing, and production diagnostics.
