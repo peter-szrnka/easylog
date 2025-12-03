@@ -31,7 +31,7 @@ EasyLog consists of 2 parts:
 [https://github.com/peter-szrnka/easylog/server](https://github.com/peter-szrnka/easylog/tree/main/server)
 
 #### Android library
-For further details please visit the Android Library repository: https://github.com/peter-szrnka/easylog-android-client-library
+For further details please visit the [Android Library repository](https://github.com/peter-szrnka/easylog-android-client-library)
 
 ### Why EasyLog?
 
