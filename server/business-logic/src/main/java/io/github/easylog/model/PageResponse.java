@@ -13,7 +13,10 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PageResponse<T> {
-    private int totalPages;
-    private long totalElements;
-    private List<T> content;
+    @Builder.Default
+    private int totalPages = 0;
+    @Builder.Default
+    private long totalElements = 0;
+    @Builder.Default
+    private List<T> content = List.of();
 }

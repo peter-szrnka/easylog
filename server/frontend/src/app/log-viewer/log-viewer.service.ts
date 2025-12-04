@@ -13,10 +13,11 @@ export class LogViewerService {
     constructor(private readonly httpClient: HttpClient) {}
 
     public list(
+    dateRangeType: DateRangeType,
     filter?: string,
     startDate?: Date,
     endDate?: Date,
-    dateRangeType: DateRangeType = DateRangeType.LAST_15_MINUTES,
+  
     page: number = 0,
     size: number = 20,
     sortBy: string = 'timestamp',

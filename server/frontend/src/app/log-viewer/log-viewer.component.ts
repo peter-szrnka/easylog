@@ -5,7 +5,7 @@ import { DateRangeSelection, DateRangeType, LogEntry, LogEntryDisplayable, SaveL
 import { DatatableComponent, NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { LogViewerService } from './log-viewer.service';
 import { Title } from '@angular/platform-browser';
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -43,7 +43,7 @@ export class LogViewerComponent
   totalElements = 0;
   pageSizeOptions = [5, 10, 25, 50, 100];
   expandedRows: any[] = [];
-  dateRangeType: DateRangeType = localStorage.getItem('range') as DateRangeType ?? DateRangeType.LAST_15_MINUTES;
+  dateRangeType: DateRangeType = DateRangeType[(localStorage.getItem('range') || "") as keyof typeof DateRangeType];
 
   constructor(
     private destroyRef: DestroyRef,
@@ -93,8 +93,6 @@ export class LogViewerComponent
       this.size = params['size'] ? +params['size'] : 50;
       this.sortBy = params['sortBy'] || 'timestamp';
       this.sortDirection = params['sortDirection'] || 'desc';
-
-      this.loadLogs();
     });
 
     document.addEventListener('visibilitychange', () => {
@@ -118,6 +116,7 @@ export class LogViewerComponent
     this.startDate = event.from;
     this.endDate = event.to;
     this.dateRangeType = event.dateRangeType;
+    localStorage.setItem('range', this.dateRangeType.toString());
 
     if (event.reloadLogs === true) {
       this.loadLogs();
@@ -128,10 +127,10 @@ export class LogViewerComponent
     this.loading = true;
     this.logService
       .list(
+        this.dateRangeType,
         this.filter,
         this.dateRangeType === DateRangeType.CUSTOM ? (this.startDate ? new Date(this.startDate) : undefined) : undefined,
         this.dateRangeType === DateRangeType.CUSTOM ? (this.endDate ? new Date(this.endDate) : undefined) : undefined,
-        this.dateRangeType,
         this.page,
         this.size,
         this.sortBy,

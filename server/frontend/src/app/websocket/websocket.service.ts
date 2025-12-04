@@ -17,12 +17,14 @@ export class WebsocketService {
   public websocketState$ = this.websocketSubject.asObservable();
 
   connect(): void {
+    this.websocketSubject.next(WebsocketState.LOADING);
     this.wsClient = new WebSocket(environment.webSocketUrl);
     this.wsClient.onopen = () => this.websocketSubject.next(WebsocketState.CONNECTED);
     this.wsClient.onmessage = (event) => this.messageSubject.next(event.data);
     this.wsClient.onerror = (event) => {
       this.websocketSubject.next(WebsocketState.FAILED);
       console.error(event);
+      setTimeout(() => this.connect(), 10000);
     };
     this.wsClient.onclose = () => console.log("Disconnected");
   }

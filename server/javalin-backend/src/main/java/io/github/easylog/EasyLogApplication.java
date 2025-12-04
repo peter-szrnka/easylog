@@ -1,5 +1,8 @@
 package io.github.easylog;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.github.easylog.controller.LogController;
 import io.github.easylog.dao.DefaultLogEntityDao;
 import io.github.easylog.dao.LogEntityDao;
@@ -8,6 +11,7 @@ import io.github.easylog.service.JmDnsService;
 import io.github.easylog.service.LogService;
 import io.javalin.Javalin;
 import io.javalin.config.JavalinConfig;
+import io.javalin.json.JavalinJackson;
 import io.javalin.plugin.bundled.CorsPluginConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.jdbi.v3.core.Jdbi;
@@ -46,18 +50,17 @@ public class EasyLogApplication {
         config.useVirtualThreads = true;
         config.staticFiles.add("static");
         config.http.defaultContentType = "application/json";
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        config.jsonMapper(new JavalinJackson(objectMapper, true));
     }
 
     private static void initWebsocket(Javalin app, DefaultWebsocketMessagingClientService websocketMessagingClientService) {
         app.ws("/topic/logs", ws -> {
-            ws.onConnect(wsConnectContext -> {
-                websocketMessagingClientService.register(wsConnectContext);
-                log.info("WS connected");
-            });
-            ws.onClose(wsCloseContext -> {
-                websocketMessagingClientService.unregister(wsCloseContext);
-                log.info("WS closed");
-            });
+            ws.onConnect(websocketMessagingClientService::register);
+            ws.onClose(websocketMessagingClientService::unregister);
         });
         log.info("Websocket initialized");
     }
