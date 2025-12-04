@@ -30,11 +30,13 @@
             </roles>
         </developer>
     </developers>
-	
-	<modules>
-                <module>frontend</module>
-                <module>backend</module>
-            </modules>
+
+    <modules>
+        <module>business-logic</module>
+        <module>frontend</module>
+        <module>javalin-backend</module>
+        <module>spring-boot-backend</module>
+    </modules>
 
     <profiles>
         <profile>
@@ -45,16 +47,16 @@
         </profile>
 
     </profiles>
-	
-	<build>
+
+    <build>
         <pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.8.1</version>
-				</plugin>
-			</plugins>
-		</pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.8.1</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
 </project>
