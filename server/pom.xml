@@ -16,6 +16,11 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <easylog.common.version>0.0.1-SNAPSHOT</easylog.common.version>
+
+        <sonar.coverage.jacoco.xmlReportPaths>
+            ${maven.multiModuleProjectDirectory}/report-aggregate/target/site/
+            jacoco-aggregate/jacoco.xml
+        </sonar.coverage.jacoco.xmlReportPaths>
     </properties>
 
     <developers>
@@ -32,11 +37,12 @@
     </developers>
 
     <modules>
-    <module>business-logic</module>
-    <module>frontend</module>
-    <module>javalin-backend</module>
-    <module>spring-boot-backend</module>
-</modules>
+        <module>business-logic</module>
+        <module>frontend</module>
+        <module>javalin-backend</module>
+        <module>spring-boot-backend</module>
+        <module>report-aggregate-module</module>
+    </modules>
 
     <profiles>
         <profile>
