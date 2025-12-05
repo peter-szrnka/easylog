@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Client, IMessage } from '@stomp/stompjs';
 import { BehaviorSubject, ReplaySubject } from 'rxjs';
 import { environment } from '../../environment/environment';
 import { WebsocketState } from '../model';
@@ -11,38 +10,27 @@ import { WebsocketState } from '../model';
   providedIn: 'root'
 })
 export class WebsocketService {
-  private stompClient?: Client;
+  private wsClient?: WebSocket;
   private messageSubject = new BehaviorSubject<string | null>(null);
   private websocketSubject = new ReplaySubject<WebsocketState>(WebsocketState.LOADING);
   public messages$ = this.messageSubject.asObservable();
   public websocketState$ = this.websocketSubject.asObservable();
 
   connect(): void {
-    this.stompClient = new Client({
-      brokerURL: environment.webSocketUrl,
-      reconnectDelay: 10000
-    });
-
-    this.stompClient.debug = () => {};
-    this.stompClient.activate();
-    this.stompClient.onConnect = () => {
-      this.websocketSubject.next(WebsocketState.CONNECTED);
-      console.log('WebSocket connected');
-        this.stompClient?.subscribe('/topic/logs', (message: IMessage) => {
-          if (message.body) {
-            this.messageSubject.next(message.body);
-          }
-        });
-    };
-
-    this.stompClient.onWebSocketError = (event) => {
+    this.websocketSubject.next(WebsocketState.LOADING);
+    this.wsClient = new WebSocket(environment.webSocketUrl);
+    this.wsClient.onopen = () => this.websocketSubject.next(WebsocketState.CONNECTED);
+    this.wsClient.onmessage = (event) => this.messageSubject.next(event.data);
+    this.wsClient.onerror = (event) => {
       this.websocketSubject.next(WebsocketState.FAILED);
-      console.error('WebSocket Error:', event);
+      console.error(event);
+      setTimeout(() => this.connect(), 10000);
     };
+    this.wsClient.onclose = () => console.log("Disconnected");
   }
 
   disconnect(): void {
-    this.stompClient?.deactivate();
+    this.wsClient?.close();
     console.log('WebSocket disconnected');
   }
 }
