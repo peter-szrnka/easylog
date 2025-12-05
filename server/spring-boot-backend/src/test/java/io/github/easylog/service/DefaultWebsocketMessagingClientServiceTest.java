@@ -8,8 +8,8 @@ import org.springframework.web.socket.WebSocketSession;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 /**
@@ -39,7 +39,7 @@ class DefaultWebsocketMessagingClientServiceTest {
         WebSocketSession session = mock(WebSocketSession.class);
         service.register(session);
 
-        assertThat(DefaultWebsocketMessagingClientService.getSessions().size()).isEqualTo(1);
+        assertThat(DefaultWebsocketMessagingClientService.getSessions()).hasSize(1);
     }
 
     @Test
