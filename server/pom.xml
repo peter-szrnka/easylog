@@ -18,7 +18,7 @@
         <easylog.common.version>0.0.1-SNAPSHOT</easylog.common.version>
 
         <sonar.coverage.jacoco.xmlReportPaths>
-            ${maven.multiModuleProjectDirectory}/report-aggregate/target/site/
+            ${maven.multiModuleProjectDirectory}/report-aggregate-module/target/site/
             jacoco-aggregate/jacoco.xml
         </sonar.coverage.jacoco.xmlReportPaths>
     </properties>
