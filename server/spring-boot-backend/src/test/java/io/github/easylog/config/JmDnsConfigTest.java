@@ -32,7 +32,7 @@ class JmDnsConfigTest {
     }
 
     @Test
-    void onShutdown_shouldUnregisterAndCloseJmDNS() throws Exception {
+    void onShutdown_shouldUnregisterAndCloseJmDNS() {
         // when
         jmDnsConfig.onShutdown();
 

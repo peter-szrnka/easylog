@@ -117,15 +117,13 @@ public class DefaultLogEntityDao implements LogEntityDao {
     public PageResponse<LogEntry> findAll(SearchRequest searchRequest) {
         PageRequest pageRequest = searchRequest.getPageRequest();
         String filter = searchRequest.getFilter() == null ? "" : "%" + searchRequest.getFilter() + "%";
-        List<LogEntry> entries = jdbi.withHandle(handle -> {
-            return handle.createQuery(FIND_QUERY)
-                    .bind("filter", filter.toLowerCase())
-                    .bind("limit", pageRequest.getSize())
-                    .bind("offset", pageRequest.getPage() * pageRequest.getSize())
-                    .bind("from", convertToNullSafe(searchRequest.getFrom()))
-                    .bind("to", convertToNullSafe(searchRequest.getTo()))
-                    .map((rs, _) -> mapToLogEntry(handle, rs)).list();
-        });
+        List<LogEntry> entries = jdbi.withHandle(handle -> handle.createQuery(FIND_QUERY)
+                .bind("filter", filter.toLowerCase())
+                .bind("limit", pageRequest.getSize())
+                .bind("offset", pageRequest.getPage() * pageRequest.getSize())
+                .bind("from", convertToNullSafe(searchRequest.getFrom()))
+                .bind("to", convertToNullSafe(searchRequest.getTo()))
+                .map((rs, _) -> mapToLogEntry(handle, rs)).list());
 
         long total = jdbi.withHandle(handle -> countResults(handle, filter).mapTo(Long.class).one());
         int totalPages = (int) Math.ceil((double) total / pageRequest.getSize());

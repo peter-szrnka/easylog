@@ -73,8 +73,6 @@ class LogControllerIntegrationTest {
 
         // then
         assertEquals(201, connection.getResponseCode());
-        //ArgumentCaptor<SaveLogRequest> captor = ArgumentCaptor.forClass(SaveLogRequest.class);
-        // TODO Add response assertion
     }
 
     @ParameterizedTest

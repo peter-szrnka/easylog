@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -57,14 +56,11 @@ class LogControllerIntegrationTest {
         entry.setSessionId("session-id");
         request.setEntries(List.of(entry));
 
-        // when
+        // when & then
         mockMvc.perform(post("/api/log")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk());
-
-        // then
-        ArgumentCaptor<SaveLogRequest> captor = ArgumentCaptor.forClass(SaveLogRequest.class);
     }
 
     @ParameterizedTest
@@ -101,13 +97,6 @@ class LogControllerIntegrationTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content[0].messageId").value("1"));
-    }
-
-    private static Stream<Arguments> saveInputData() {
-        return Stream.of(
-                Arguments.of((ZonedDateTime) null),
-                Arguments.of(ZonedDateTime.now())
-                );
     }
 
     private static Stream<Arguments> listInputData() {
