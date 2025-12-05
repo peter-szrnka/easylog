@@ -50,14 +50,9 @@ class WebSocketConfigIntegrationTest {
                 .execute(new TextWebSocketHandler() {}, wsUrl)
                 .get(3, TimeUnit.SECONDS);
 
-        // várunk egy kicsit, hogy a register hívás megtörténjen
-        Thread.sleep(200);
-
         verify(websocketMessagingClientService, timeout(1000)).register(any(WebSocketSession.class));
 
-        // kapcsolat lezárása
         session.close();
-        Thread.sleep(200);
 
         verify(websocketMessagingClientService, timeout(1000)).unregister(any(WebSocketSession.class));
     }
