@@ -45,7 +45,7 @@ public class DefaultLogEntityDao implements LogEntityDao {
                             log_id VARCHAR,
                             key VARCHAR,
                             value VARCHAR,
-                            PRIMARY KEY (log_id)
+                            PRIMARY KEY (log_id, key)
                         )
                     """);
 
@@ -72,17 +72,15 @@ public class DefaultLogEntityDao implements LogEntityDao {
                         .execute();
 
                 if (entry.getMetadata() != null && !entry.getMetadata().isEmpty()) {
-                    entry.getMetadata().forEach((key, value) -> {
-                        handle.createUpdate("""
-                                            INSERT INTO easylog_log_metadata(log_id, key, value)
-                                            VALUES(:logId, :key, :value)
-                                            ON CONFLICT(log_id, key) DO UPDATE SET value = :value
-                                        """)
-                                .bind("logId", entry.getMessageId())
-                                .bind("key", key)
-                                .bind("value", value)
-                                .execute();
-                    });
+                    entry.getMetadata().forEach((key, value) -> handle.createUpdate("""
+                                        INSERT INTO easylog_log_metadata(log_id, key, value)
+                                        VALUES(:logId, :key, :value)
+                                        ON CONFLICT(log_id, key) DO UPDATE SET value = :value
+                                    """)
+                            .bind("logId", entry.getMessageId())
+                            .bind("key", key)
+                            .bind("value", value)
+                            .execute());
                 }
             });
         });

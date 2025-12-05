@@ -32,11 +32,11 @@
     </developers>
 
     <modules>
-        <module>business-logic</module>
-        <module>frontend</module>
-        <module>javalin-backend</module>
-        <module>spring-boot-backend</module>
-    </modules>
+    <module>business-logic</module>
+    <module>frontend</module>
+    <module>javalin-backend</module>
+    <module>spring-boot-backend</module>
+</modules>
 
     <profiles>
         <profile>

@@ -86,7 +86,7 @@ class LogControllerIntegrationTest {
         entry.setTag("test");
         entry.setTimestamp(ZonedDateTime.now());
         entry.setMessage("message");
-        entry.setSessionId("session-id");
+        entry.setSessionId(UUID.randomUUID().toString());
         entry.setMetadata(metadata);
         request.setEntries(List.of(entry));
 
