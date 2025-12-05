@@ -7,17 +7,26 @@ import io.github.easylog.dao.LogEntityDao;
 import io.github.easylog.service.JmDnsService;
 import io.github.easylog.service.LogService;
 import io.github.easylog.service.WebsocketMessagingClientService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.lang.NonNull;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.resource.PathResourceResolver;
+
+import java.io.IOException;
 
 /**
  * @author Peter Szrnka
  */
+@Slf4j
 @Configuration
-public class ApplicationConfig {
+public class ApplicationConfig implements WebMvcConfigurer {
 
     @Value("${config.easylog.service.name}")
     private String serviceName;
@@ -27,6 +36,8 @@ public class ApplicationConfig {
     private String serviceType;
     @Value("${server.ssl.enabled:false}")
     private boolean sslEnabled;
+    @Value("${config.easylog.disable-cors:false}")
+    private boolean disableCors;
 
     @Bean
     public LogService logService(WebsocketMessagingClientService websocketMessagingClientService, LogEntityDao logEntityDao) {
@@ -45,16 +56,34 @@ public class ApplicationConfig {
                 .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     }
 
-    @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")
-                        .allowedOrigins("*")
-                        .allowedMethods("*")
-                        .allowedHeaders("*");
-            }
-        };
+    @Override
+    public void addCorsMappings(@NonNull CorsRegistry registry) {
+        if (!disableCors) {
+            return;
+        }
+
+        registry.addMapping("/api/**")
+                .allowedOrigins("http://localhost:4200", "http://127.0.0.1:4200")
+                .allowedMethods("*")
+                .allowCredentials(true);
+        log.info("CORS configuration disabled in development profile");
+    }
+
+    @Override
+    public void addResourceHandlers(@NonNull ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/**")
+                .addResourceLocations("classpath:/static/")
+                .resourceChain(true)
+                .addResolver(new PathResourceResolver() {
+                    @Override
+                    protected Resource getResource(@NonNull String resourcePath, @NonNull Resource location) throws IOException {
+                        Resource requestedResource = location.createRelative(resourcePath);
+                        return checkRequestedResource(requestedResource) ? requestedResource : new ClassPathResource("/static/index.html");
+                    }
+                });
+    }
+
+    private static boolean checkRequestedResource(Resource requestedResource) {
+        return requestedResource.exists() && requestedResource.isReadable();
     }
 }

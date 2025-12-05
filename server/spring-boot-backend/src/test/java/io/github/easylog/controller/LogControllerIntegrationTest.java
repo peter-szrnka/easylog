@@ -29,9 +29,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+/**
+ * @author Peter Szrnka
+ */
 @SpringBootTest
 @AutoConfigureMockMvc
-class LogControllerTest {
+class LogControllerIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;

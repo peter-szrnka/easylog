@@ -12,13 +12,17 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.time.ZonedDateTime;
 
-import static io.github.easylog.converter.Converters.converDateRangeType;
+import static io.github.easylog.converter.Converters.convertDateRangeType;
 import static io.github.easylog.converter.Converters.convertZonedDateTime;
 
+/**
+ * @author Peter Szrnka
+ */
 @Slf4j
 @RequiredArgsConstructor
 public class LogController {
 
+    public static final int STATUS_CREATED = 201;
     private final LogService logService;
 
     public void registerRoutes(Javalin app) {
@@ -30,13 +34,13 @@ public class LogController {
     private void saveLog(Context ctx) {
         SaveLogRequest request = ctx.bodyAsClass(SaveLogRequest.class);
         logService.save(request);
-        ctx.status(201);
+        ctx.status(STATUS_CREATED);
     }
 
     private void listLogs(Context ctx) {
         ZonedDateTime from = convertZonedDateTime(ctx, "startDate");
         ZonedDateTime to =  convertZonedDateTime(ctx, "endDate");
-        DateRangeType dateRangeType = converDateRangeType(ctx, "dateRangeType");
+        DateRangeType dateRangeType = convertDateRangeType(ctx, "dateRangeType");
 
         SearchRequest req = SearchRequest.builder()
                 .filter(ctx.queryParam("filter"))

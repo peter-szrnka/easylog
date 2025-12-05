@@ -12,8 +12,12 @@ import java.sql.Timestamp;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * @author Peter Szrnka
+ */
 @Slf4j
 public class DefaultLogEntityDao implements LogEntityDao {
 
@@ -41,7 +45,7 @@ public class DefaultLogEntityDao implements LogEntityDao {
                             log_id VARCHAR,
                             key VARCHAR,
                             value VARCHAR,
-                            PRIMARY KEY (log_id, key)
+                            PRIMARY KEY (log_id)
                         )
                     """);
 
@@ -52,6 +56,7 @@ public class DefaultLogEntityDao implements LogEntityDao {
     @Override
     public void save(SaveLogRequest request) {
         request.getEntries().forEach(entry -> {
+            ZonedDateTime timestamp = Optional.ofNullable(entry.getTimestamp()).orElse(ZonedDateTime.now());
             jdbi.useHandle(handle -> {
                 handle.createUpdate("""
                                     INSERT INTO easylog_log(message_id, session_id, level, message, tag, timestamp)
@@ -63,7 +68,7 @@ public class DefaultLogEntityDao implements LogEntityDao {
                         .bind("level", entry.getLogLevel())
                         .bind("message", entry.getMessage())
                         .bind("tag", entry.getTag())
-                        .bind("timestamp", Timestamp.from(entry.getTimestamp().toInstant()))
+                        .bind("timestamp", Timestamp.from(timestamp.toInstant()))
                         .execute();
 
                 if (entry.getMetadata() != null && !entry.getMetadata().isEmpty()) {
@@ -85,9 +90,6 @@ public class DefaultLogEntityDao implements LogEntityDao {
 
     @Override
     public PageResponse<LogEntry> findAll(SearchRequest searchRequest) {
-        if (searchRequest.getDateRangeType() == DateRangeType.LIVE) {
-            return PageResponse.<LogEntry>builder().build();
-        }
         PageRequest pageRequest = searchRequest.getPageRequest();
         String filter = searchRequest.getFilter() == null ? "" : "%" + searchRequest.getFilter() + "%";
         List<LogEntry> entries = jdbi.withHandle(handle -> {
@@ -129,7 +131,7 @@ public class DefaultLogEntityDao implements LogEntityDao {
         return (input == null) ? null : Timestamp.from(input.toInstant());
     }
 
-    private static LogEntry mapToLogEntry(Handle handle, ResultSet rs) throws SQLException {
+    private LogEntry mapToLogEntry(Handle handle, ResultSet rs) throws SQLException {
         LogEntry e = new LogEntry();
         e.setMessageId(rs.getString("message_id"));
         e.setSessionId(rs.getString("session_id"));

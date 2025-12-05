@@ -1,6 +1,5 @@
 package io.github.easylog.data;
 
-import io.github.easylog.common.Constants;
 import io.github.easylog.entity.LogEntity;
 import org.springframework.data.jpa.domain.Specification;
 import jakarta.persistence.criteria.Predicate;
@@ -13,6 +12,8 @@ import java.util.List;
  * @author Peter Szrnka
  */
 public class LogSpecification {
+
+    private static final String TIMESTAMP = "timestamp";
 
     public static Specification<LogEntity> search(String term, ZonedDateTime startDate, ZonedDateTime endDate) {
         return (root, query, cb) -> {
@@ -33,14 +34,14 @@ public class LogSpecification {
             }
 
             if (startDate != null && endDate != null) {
-                predicates.add(cb.between(root.get(Constants.TIMESTAMP), startDate, endDate));
+                predicates.add(cb.between(root.get(TIMESTAMP), startDate, endDate));
             } else  {
                 if (startDate != null) {
-                    predicates.add(cb.greaterThanOrEqualTo(root.get(Constants.TIMESTAMP), startDate));
+                    predicates.add(cb.greaterThanOrEqualTo(root.get(TIMESTAMP), startDate));
                 }
 
                 if (endDate != null) {
-                    predicates.add(cb.lessThanOrEqualTo(root.get(Constants.TIMESTAMP), endDate));
+                    predicates.add(cb.lessThanOrEqualTo(root.get(TIMESTAMP), endDate));
                 }
             }
 

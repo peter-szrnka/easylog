@@ -4,10 +4,16 @@ import io.github.easylog.model.DateRangeType;
 import io.javalin.http.Context;
 
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
+/**
+ * @author Peter Szrnka
+ */
 public class Converters {
 
-    public static DateRangeType converDateRangeType(Context ctx, String key) {
+    public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssZ");
+
+    public static DateRangeType convertDateRangeType(Context ctx, String key) {
         String value = ctx.queryParam(key);
 
         DateRangeType dateRangeType = null;
@@ -23,7 +29,7 @@ public class Converters {
 
         ZonedDateTime date = null;
         if (value != null && !value.isEmpty()) {
-            date = ZonedDateTime.parse(value);
+            date = ZonedDateTime.parse(value.replace(" ", "+"), FORMATTER);
         }
 
         return date;

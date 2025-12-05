@@ -1,6 +1,5 @@
 package io.github.easylog.entity;
 
-import com.github.f4b6a3.ulid.UlidCreator;
 import io.github.easylog.model.LogLevel;
 import jakarta.persistence.*;
 import lombok.*;
@@ -21,9 +20,6 @@ import java.util.Set;
 public class LogEntity {
 
     @Id
-    @Column(length = 26, unique = true, nullable = false)
-    private String id;
-
     @Column(nullable = false)
     private String messageId;
 
@@ -45,10 +41,4 @@ public class LogEntity {
 
     @OneToMany(mappedBy = "log", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<LogMetaDataEntity> metadata;
-
-    @PrePersist
-    public void prePersist() {
-        id = UlidCreator.getUlid().toString();
-        timestamp = ZonedDateTime.now();
-    }
 }

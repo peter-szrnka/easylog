@@ -1,13 +1,18 @@
 package io.github.easylog.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.javalin.json.JavalinJackson;
 import io.javalin.websocket.WsContext;
+import lombok.AccessLevel;
+import lombok.Getter;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+/**
+ * @author Peter Szrnka
+ */
 public class DefaultWebsocketMessagingClientService implements WebsocketMessagingClientService {
+    @Getter(AccessLevel.PROTECTED)
     private static final List<WsContext> sessions = new CopyOnWriteArrayList<>();
 
     public void register(WsContext ctx) {
@@ -23,7 +28,7 @@ public class DefaultWebsocketMessagingClientService implements WebsocketMessagin
         for (WsContext session : sessions) {
             try {
                 session.send(JavalinJackson.defaultMapper().writeValueAsString(payload));
-            } catch (JsonProcessingException e) {
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }

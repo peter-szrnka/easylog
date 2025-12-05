@@ -8,7 +8,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -24,10 +23,10 @@ class LogServiceTest {
     private LogEntityDao dao;
 
     @Mock
-    private SimpMessagingTemplate messagingTemplate;
+    private WebsocketMessagingClientService websocketMessagingClientService;
 
     @InjectMocks
-    private LogService fileDbLogService;
+    private LogService service;
 
     @Test
     void testSave_savesEntriesAndSendsToWebSocket() {
@@ -46,11 +45,11 @@ class LogServiceTest {
         request.setEntries(List.of(entry1, entry2));
 
         // when
-        fileDbLogService.save(request);
+        service.save(request);
 
         // then
         verify(dao).save(any(SaveLogRequest.class));
-        verify(messagingTemplate, times(1)).convertAndSend(anyString(), eq(request));
+        verify(websocketMessagingClientService, times(1)).convertAndSend(anyString(), eq(request));
     }
 
     @Test
@@ -63,7 +62,7 @@ class LogServiceTest {
                 .build();
 
         // when
-        PageResponse<LogEntry> result = fileDbLogService.list(searchRequest);
+        PageResponse<LogEntry> result = service.list(searchRequest);
     }
 
     @Test
@@ -87,7 +86,7 @@ class LogServiceTest {
                 .build();
 
         // when
-        PageResponse<LogEntry> result = fileDbLogService.list(searchRequest);
+        PageResponse<LogEntry> result = service.list(searchRequest);
 
         // then
         assertNotNull(result);

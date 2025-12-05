@@ -31,6 +31,7 @@ public enum DateRangeType {
             case LAST_1_DAY -> now.minusDays(1);
             case LAST_7_DAYS -> now.minusDays(7);
             case LAST_1_MONTH -> now.minusMonths(1);
+            case LIVE -> now;
             default ->  now.minusMinutes(15);
         };
     }

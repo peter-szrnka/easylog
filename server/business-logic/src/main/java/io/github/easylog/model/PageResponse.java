@@ -6,6 +6,7 @@ import java.util.List;
 
 /**
  * @author Peter Szrnka
+ * @param <T> Type of the response
  */
 @Getter
 @Setter

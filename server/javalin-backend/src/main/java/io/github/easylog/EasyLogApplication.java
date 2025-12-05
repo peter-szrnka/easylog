@@ -17,29 +17,51 @@ import lombok.extern.slf4j.Slf4j;
 import org.jdbi.v3.core.Jdbi;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Objects;
 
+import static java.util.Optional.ofNullable;
+
+/**
+ * @author Peter Szrnka
+ */
 @Slf4j
 public class EasyLogApplication {
 
     public static void main() throws IOException {
-        Jdbi jdbi = Jdbi.create("jdbc:sqlite:easylog.db");
+        int port = Integer.parseInt(getEnv("EASYLOG_SERVER_PORT", "8080"));
+        startApp(port);
+    }
+
+    public static Javalin startApp(int port) throws IOException {
+        String serverDbFile = getEnv("EASYLOG_SERVER_DB_FILE", "easylog.db");
+        Jdbi jdbi = Jdbi.create("jdbc:sqlite:" + serverDbFile);
         DefaultWebsocketMessagingClientService websocketMessagingClientService = new DefaultWebsocketMessagingClientService();
         LogEntityDao dao = new DefaultLogEntityDao(jdbi);
         LogService service = new LogService(websocketMessagingClientService, dao);
         LogController controller = new LogController(service);
-        JmDnsService jmDnsService = new JmDnsService("EasyLogService", 8080, "easylog", false);
+        JmDnsService jmDnsService = new JmDnsService(
+                getEnv("EASYLOG_SERVICE_NAME", "EasyLogService"),
+                port,
+                getEnv("EASYLOG_SERVICE_NAME", "easylog"),
+                Boolean.parseBoolean(getEnv("EASYLOG_SSL_ENABLED", "false"))
+        );
 
         // App start
-        var app = Javalin.create(EasyLogApplication::setConfig).start(8080);
+        var app = Javalin.create(EasyLogApplication::setConfig).start(port);
+        app.get("/logs", ctx -> ctx.result(Objects.requireNonNull(Javalin.class.getResourceAsStream("/static/index.html"))).contentType("text/html"));
 
         controller.registerRoutes(app);
         initWebsocket(app, websocketMessagingClientService);
         app.events(event -> event.serverStopping(jmDnsService::onShutdown));
         jmDnsService.init();
+
+        return app;
     }
 
     private static void setConfig(JavalinConfig config) {
-        boolean isDev = "dev".equals(System.getenv("env"));
+        boolean isDev = "dev".equals(getEnv("ENV", ""));
 
         if (isDev) {
             log.info("dev profile is active");
@@ -48,7 +70,10 @@ public class EasyLogApplication {
         }
 
         config.useVirtualThreads = true;
-        config.staticFiles.add("static");
+        config.staticFiles.add(staticFiles -> {
+            staticFiles.directory = "static";
+            staticFiles.hostedPath = "/";
+        });
         config.http.defaultContentType = "application/json";
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -63,5 +88,9 @@ public class EasyLogApplication {
             ws.onClose(websocketMessagingClientService::unregister);
         });
         log.info("Websocket initialized");
+    }
+
+    private static String getEnv(String key, String defaultValue) {
+        return ofNullable(System.getenv(key)).orElse(defaultValue);
     }
 }

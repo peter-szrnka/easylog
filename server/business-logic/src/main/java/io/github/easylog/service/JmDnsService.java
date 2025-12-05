@@ -23,11 +23,15 @@ public class JmDnsService {
 
     private JmDNS jmdns;
 
+    protected JmDNS createJmDNS(InetAddress address) throws IOException {
+        return JmDNS.create(address);
+    }
+
     public void init() throws IOException {
         InetAddress localAddress = InetAddress.getLocalHost();
         log.info("Using interface: {} / {}", localAddress.getHostName(), localAddress.getHostAddress());
 
-        jmdns = JmDNS.create(localAddress);
+        jmdns = createJmDNS(localAddress);
         ServiceInfo serviceInfo = createServiceInfo();
 
         jmdns.registerService(serviceInfo);
