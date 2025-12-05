@@ -16,6 +16,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.time.ZonedDateTime;
@@ -113,11 +114,10 @@ class LogControllerIntegrationTest {
 
         HttpURLConnection getConnection = get(stringBuilder.toString());
         assertEquals(200, getConnection.getResponseCode());
-        // TODO Add response assertion
     }
 
     private static HttpURLConnection postJson(String json) throws IOException {
-        URL url = new URL("http://localhost:" + PORT + "/api/log");
+        URL url = URI.create("http://localhost:" + PORT + "/api/log").toURL();
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("POST");
         connection.setDoOutput(true);
@@ -127,7 +127,7 @@ class LogControllerIntegrationTest {
     }
 
     private static HttpURLConnection get(String path) throws IOException {
-        URL url = new URL("http://localhost:" + PORT + path);
+        URL url = URI.create("http://localhost:" + PORT + path).toURL();
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
         return connection;

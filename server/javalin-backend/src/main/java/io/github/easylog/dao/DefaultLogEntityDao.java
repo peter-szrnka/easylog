@@ -21,6 +21,49 @@ import java.util.stream.Collectors;
 @Slf4j
 public class DefaultLogEntityDao implements LogEntityDao {
 
+    private static final String COUNT_SQL = """
+            SELECT COUNT(*)
+                FROM easylog_log
+                WHERE :filter="" or (
+                    lower(tag) like :filter OR
+                    lower(message) like :filter OR
+                    lower(message_id) like :filter OR
+                    lower(session_id) like :filter
+                    )
+            """;
+    private static final String FIND_QUERY = """
+            SELECT *
+                FROM easylog_log
+                WHERE :filter="" or (
+                    LOWER(tag) LIKE :filter OR
+                    LOWER(message) LIKE :filter OR
+                    LOWER(message_id) LIKE :filter OR
+                    LOWER(session_id) LIKE :filter
+                    )
+                    AND (
+                        :from is null or :from >= timestamp OR
+                        :to is null or :to <= timestamp
+                    )
+                ORDER BY timestamp DESC LIMIT :limit OFFSET :offset
+            """;
+    private static final String CREATE_LOG_TABLE = """
+                CREATE TABLE IF NOT EXISTS easylog_log (
+                    message_id VARCHAR PRIMARY KEY,
+                    session_id VARCHAR,
+                    level VARCHAR,
+                    message VARCHAR,
+                    tag VARCHAR,
+                    timestamp TIMESTAMP
+                )
+            """;
+    private static final String CREATE_LOG_METADATA_TABLE = """
+                CREATE TABLE IF NOT EXISTS easylog_log_metadata (
+                    log_id VARCHAR,
+                    key VARCHAR,
+                    value VARCHAR,
+                    PRIMARY KEY (log_id, key)
+                )
+            """;
     private final Jdbi jdbi;
 
     public DefaultLogEntityDao(Jdbi jdbi) {
@@ -30,24 +73,8 @@ public class DefaultLogEntityDao implements LogEntityDao {
 
     private void initSchema() {
         jdbi.useHandle(handle -> {
-            handle.execute("""
-                        CREATE TABLE IF NOT EXISTS easylog_log (
-                            message_id VARCHAR PRIMARY KEY,
-                            session_id VARCHAR,
-                            level VARCHAR,
-                            message VARCHAR,
-                            tag VARCHAR,
-                            timestamp TIMESTAMP
-                        )
-                    """);
-            handle.execute("""
-                        CREATE TABLE IF NOT EXISTS easylog_log_metadata (
-                            log_id VARCHAR,
-                            key VARCHAR,
-                            value VARCHAR,
-                            PRIMARY KEY (log_id, key)
-                        )
-                    """);
+            handle.execute(CREATE_LOG_TABLE);
+            handle.execute(CREATE_LOG_METADATA_TABLE);
 
             log.info("Database tables initialized");
         });
@@ -91,22 +118,7 @@ public class DefaultLogEntityDao implements LogEntityDao {
         PageRequest pageRequest = searchRequest.getPageRequest();
         String filter = searchRequest.getFilter() == null ? "" : "%" + searchRequest.getFilter() + "%";
         List<LogEntry> entries = jdbi.withHandle(handle -> {
-            String sql = """
-                SELECT *
-                    FROM easylog_log
-                    WHERE :filter="" or (
-                        LOWER(tag) LIKE :filter OR
-                        LOWER(message) LIKE :filter OR
-                        LOWER(message_id) LIKE :filter OR
-                        LOWER(session_id) LIKE :filter
-                        )
-                        AND (
-                            :from is null or :from >= timestamp OR
-                            :to is null or :to <= timestamp
-                        )
-                    ORDER BY timestamp DESC LIMIT :limit OFFSET :offset
-                """;
-            return handle.createQuery(sql)
+            return handle.createQuery(FIND_QUERY)
                     .bind("filter", filter.toLowerCase())
                     .bind("limit", pageRequest.getSize())
                     .bind("offset", pageRequest.getPage() * pageRequest.getSize())
@@ -139,31 +151,24 @@ public class DefaultLogEntityDao implements LogEntityDao {
         e.setTimestamp(rs.getTimestamp("timestamp").toInstant().atZone(ZoneId.systemDefault()));
 
         // metadata
-        List<LogMetaData> metadata = handle.createQuery("""
+        try (Query query = handle.createQuery("""
                                 SELECT key, value FROM easylog_log_metadata WHERE log_id = :logId
-                            """).bind("logId", e.getMessageId())
-                .map((rs2, _) -> new LogMetaData(rs2.getString("key"), rs2.getString("value"))).list();
+                            """)) {
+            List<LogMetaData> metadata = query.bind("logId", e.getMessageId())
+                    .map((rs2, _) -> new LogMetaData(rs2.getString("key"), rs2.getString("value"))).list();
 
-        if (!metadata.isEmpty()) {
-            e.setMetadata(metadata.stream()
-                    .collect(Collectors.toMap(LogMetaData::key, LogMetaData::value)));
+            if (!metadata.isEmpty()) {
+                e.setMetadata(metadata.stream()
+                        .collect(Collectors.toMap(LogMetaData::key, LogMetaData::value)));
+            }
         }
 
         return e;
     }
 
     private static Query countResults(Handle handle, String filter) {
-        String sql = """
-                SELECT COUNT(*)
-                    FROM easylog_log
-                    WHERE :filter="" or (
-                        lower(tag) like :filter OR
-                        lower(message) like :filter OR
-                        lower(message_id) like :filter OR
-                        lower(session_id) like :filter
-                        )
-                """;
-        return handle.createQuery(sql)
-                .bind("filter", filter.toLowerCase());
+        try (Query query = handle.createQuery(COUNT_SQL)) {
+            return query.bind("filter", filter.toLowerCase());
+        }
     }
 }
