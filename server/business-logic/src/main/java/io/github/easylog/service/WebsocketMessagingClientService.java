@@ -5,5 +5,5 @@ package io.github.easylog.service;
  */
 public interface WebsocketMessagingClientService {
 
-    void convertAndSend(String destination, Object payload);
+    void convertAndSend(String destination, Object payload) throws Exception;
 }

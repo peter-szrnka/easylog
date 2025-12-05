@@ -67,19 +67,4 @@ class DefaultWebsocketMessagingClientServiceTest {
         verify(session1, times(1)).sendMessage(new TextMessage(objectMapper.writeValueAsString(payload)));
         verify(session2, times(1)).sendMessage(new TextMessage(objectMapper.writeValueAsString(payload)));
     }
-
-    @Test
-    void convertAndSend_shouldWrapExceptionInRuntimeException() throws Exception {
-        // given
-        WebSocketSession session = mock(WebSocketSession.class);
-        doThrow(new RuntimeException("fail")).when(session).sendMessage(any());
-
-        service.register(session);
-
-        // when
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> service.convertAndSend("/topic/test", "payload"));
-
-        // then
-        assertEquals("java.lang.RuntimeException: fail", exception.getMessage());
-    }
 }

@@ -57,7 +57,7 @@ class DefaultWebsocketMessagingClientServiceTest {
     }
 
     @Test
-    void convertAndSend_shouldSendMessageToAllSessions() {
+    void convertAndSend_shouldSendMessageToAllSessions() throws Exception {
         // given
         WsContext session1 = mock(WsContext.class);
         WsContext session2 = mock(WsContext.class);
@@ -73,19 +73,5 @@ class DefaultWebsocketMessagingClientServiceTest {
         // then
         verify(session1).send(payload);
         verify(session2).send(payload);
-    }
-
-    @Test
-    void convertAndSend_shouldWrapExceptionInRuntimeException() {
-        // given
-        WsContext session = mock(WsContext.class);
-        doThrow(new RuntimeException("fail")).when(session).send(anyString());
-
-        // when
-        service.register(session);
-
-        // then
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> service.convertAndSend("/topic/test", "payload"));
-        assertThat(exception.getMessage()).isEqualTo("java.lang.RuntimeException: fail");
     }
 }

@@ -32,13 +32,9 @@ public class DefaultWebsocketMessagingClientService implements WebsocketMessagin
 
 
     @Override
-    public void convertAndSend(String destination, Object payload) {
+    public void convertAndSend(String destination, Object payload) throws Exception {
         for (WebSocketSession session : sessions) {
-            try {
-                session.sendMessage(new TextMessage(objectMapper.writeValueAsString(payload)));
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+            session.sendMessage(new TextMessage(objectMapper.writeValueAsString(payload)));
         }
     }
 }

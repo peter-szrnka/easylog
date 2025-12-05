@@ -31,6 +31,10 @@ public class LogService {
     }
 
     private void sendToWebSocket(SaveLogRequest request) {
-        websocketMessagingClientService.convertAndSend("/topic/logs", request);
+        try {
+            websocketMessagingClientService.convertAndSend("/topic/logs", request);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

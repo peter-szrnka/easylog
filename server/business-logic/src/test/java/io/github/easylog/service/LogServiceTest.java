@@ -12,8 +12,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -29,7 +29,7 @@ class LogServiceTest {
     private LogService service;
 
     @Test
-    void testSave_savesEntriesAndSendsToWebSocket() {
+    void testSave_savesEntriesAndSendsToWebSocket() throws Exception {
         // given
         LogEntry entry1 = new LogEntry();
         entry1.setLogLevel(LogLevel.INFO);
@@ -101,5 +101,24 @@ class LogServiceTest {
         assertEquals(entity.getTag(), logEntry.getTag());
         assertEquals(entity.getSessionId(), logEntry.getSessionId());
         assertEquals(entity.getMessageId(), logEntry.getMessageId());
+    }
+
+    @Test
+    void convertAndSend_shouldWrapExceptionInRuntimeException() throws Exception {
+        // given
+        LogEntry entry1 = new LogEntry();
+        entry1.setLogLevel(LogLevel.INFO);
+        entry1.setMessage("Test message 1");
+        entry1.setTimestamp(ZonedDateTime.now());
+
+        SaveLogRequest request = new SaveLogRequest();
+        request.setEntries(List.of(entry1));
+        doThrow(new IllegalArgumentException("Oops")).when(websocketMessagingClientService).convertAndSend("/topic/logs", request);
+
+        // when
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> service.save(request));
+
+        // then
+        assertThat(exception.getMessage()).isEqualTo("java.lang.IllegalArgumentException: Oops");
     }
 }

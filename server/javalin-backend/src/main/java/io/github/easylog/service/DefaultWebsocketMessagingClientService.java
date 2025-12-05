@@ -24,13 +24,9 @@ public class DefaultWebsocketMessagingClientService implements WebsocketMessagin
     }
 
     @Override
-    public void convertAndSend(String destination, Object payload) {
+    public void convertAndSend(String destination, Object payload) throws Exception {
         for (WsContext session : sessions) {
-            try {
-                session.send(JavalinJackson.defaultMapper().writeValueAsString(payload));
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+            session.send(JavalinJackson.defaultMapper().writeValueAsString(payload));
         }
     }
 }
