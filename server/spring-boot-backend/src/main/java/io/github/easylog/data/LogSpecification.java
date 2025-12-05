@@ -1,6 +1,8 @@
 package io.github.easylog.data;
 
 import io.github.easylog.entity.LogEntity;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import jakarta.persistence.criteria.Predicate;
 
@@ -11,6 +13,7 @@ import java.util.List;
 /**
  * @author Peter Szrnka
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class LogSpecification {
 
     private static final String TIMESTAMP = "timestamp";

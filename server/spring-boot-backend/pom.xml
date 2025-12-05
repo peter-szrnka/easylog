@@ -70,14 +70,6 @@
             <artifactId>spring-boot-starter-websocket</artifactId>
         </dependency>
 
-        <!-- For development only -->
-        <!--<dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <scope>runtime</scope>
-            <optional>true</optional>
-        </dependency>-->
-
         <!-- Database dependencies -->
         <dependency>
             <groupId>org.xerial</groupId>
@@ -188,7 +180,6 @@
             <build>
 				<finalName>easylog-server-${project.version}</finalName>
                 <plugins>
-                    <!-- Copy the already built resources of the frontend component -->
                     <plugin>
                         <artifactId>maven-resources-plugin</artifactId>
                         <version>3.0.2</version>
@@ -280,8 +271,6 @@
                             </execution>
                         </executions>
                         <configuration>
-                            <!--<outputDirectory>${project.build.directory}/jacoco-report</outputDirectory>
-                             <dataFile>${project.build.directory}/jacoco.exec</dataFile>-->
                             <formats>
                                 <format>XML</format>
                             </formats>

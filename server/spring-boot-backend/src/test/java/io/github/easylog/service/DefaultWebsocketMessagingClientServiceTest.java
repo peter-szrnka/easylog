@@ -9,7 +9,7 @@ import org.springframework.web.socket.WebSocketSession;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 /**
@@ -70,16 +70,16 @@ class DefaultWebsocketMessagingClientServiceTest {
 
     @Test
     void convertAndSend_shouldWrapExceptionInRuntimeException() throws Exception {
+        // given
         WebSocketSession session = mock(WebSocketSession.class);
         doThrow(new RuntimeException("fail")).when(session).sendMessage(any());
 
         service.register(session);
 
-        try {
-            service.convertAndSend("/topic/test", "payload");
-            assert false;
-        } catch (RuntimeException e) {
-            assert e.getMessage() != null;
-        }
+        // when
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> service.convertAndSend("/topic/test", "payload"));
+
+        // then
+        assertEquals("java.lang.RuntimeException: fail", exception.getMessage());
     }
 }

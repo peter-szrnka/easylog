@@ -195,7 +195,6 @@
             <build>
 				<finalName>easylog-desktop-${project.version}</finalName>
                 <plugins>
-                    <!-- Copy the already built resources of the frontend component -->
                     <plugin>
                         <artifactId>maven-resources-plugin</artifactId>
                         <version>3.0.2</version>
@@ -274,8 +273,6 @@
                             </execution>
                         </executions>
                         <configuration>
-                            <!--<outputDirectory>${project.build.directory}/jacoco-report</outputDirectory>
-                            <dataFile>${project.build.directory}/jacoco.exec</dataFile>-->
                             <formats>
                                 <format>XML</format>
                             </formats>

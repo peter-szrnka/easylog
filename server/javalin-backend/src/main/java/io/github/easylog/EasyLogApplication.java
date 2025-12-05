@@ -13,6 +13,8 @@ import io.javalin.Javalin;
 import io.javalin.config.JavalinConfig;
 import io.javalin.json.JavalinJackson;
 import io.javalin.plugin.bundled.CorsPluginConfig;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jdbi.v3.core.Jdbi;
 
@@ -25,6 +27,7 @@ import static java.util.Optional.ofNullable;
  * @author Peter Szrnka
  */
 @Slf4j
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class EasyLogApplication {
 
     public static void main() throws IOException {

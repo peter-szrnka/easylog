@@ -26,7 +26,6 @@ class DateRangeTypeTest {
             assertThat(result).isEqualTo(input);
         } else {
             ZonedDateTime now = ZonedDateTime.now();
-
             switch (dateRangeType) {
                 case LAST_5_MINUTES -> assertThat(result).isAfter(now.minusMinutes(6)).isBefore(now.minusMinutes(4));
                 case LAST_15_MINUTES -> assertThat(result).isAfter(now.minusMinutes(16)).isBefore(now.minusMinutes(14));
@@ -37,6 +36,7 @@ class DateRangeTypeTest {
                 case LAST_7_DAYS -> assertThat(result).isAfter(now.minusDays(7).minusSeconds(1)).isBefore(now.minusDays(7).plusSeconds(1));
                 case LAST_1_MONTH -> assertThat(result).isAfter(now.minusMonths(1).minusSeconds(1)).isBefore(now.minusMonths(1).plusSeconds(1));
                 case LIVE -> assertThat(result).isAfter(now.minusSeconds(1)).isBefore(now.plusSeconds(1));
+                default -> assertThat(result).isAfter(now.minusMinutes(16)).isBefore(now.minusMinutes(14));
             }
         }
     }

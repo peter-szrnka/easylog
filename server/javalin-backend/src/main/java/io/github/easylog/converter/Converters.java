@@ -2,6 +2,8 @@ package io.github.easylog.converter;
 
 import io.github.easylog.model.DateRangeType;
 import io.javalin.http.Context;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -9,6 +11,7 @@ import java.time.format.DateTimeFormatter;
 /**
  * @author Peter Szrnka
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Converters {
 
     public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssZ");

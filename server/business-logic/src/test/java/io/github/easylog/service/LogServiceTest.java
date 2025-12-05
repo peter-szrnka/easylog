@@ -63,6 +63,9 @@ class LogServiceTest {
 
         // when
         PageResponse<LogEntry> result = service.list(searchRequest);
+
+        // then
+        assertNotNull(result);
     }
 
     @Test
