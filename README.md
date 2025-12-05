@@ -6,6 +6,10 @@
 
 EasyLog is a lightweight logging solution designed primarily for Android applications. It provides an easy-to-use API for capturing, storing, and reviewing log entries directly on the device — without requiring a remote backend. Its purpose is to simplify debugging and error tracking during development, testing, and production diagnostics.
 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=peter-szrnka_easylog&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=peter-szrnka_easylog)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=peter-szrnka_easylog&metric=coverage)](https://sonarcloud.io/summary/new_code?id=peter-szrnka_easylog)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=peter-szrnka_easylog&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=peter-szrnka_easylog)
+
 ### Key Features
 
 - **In-app local logging**
