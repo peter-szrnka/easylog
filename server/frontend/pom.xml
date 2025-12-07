@@ -112,6 +112,50 @@
             <build>
                 <plugins>
                     <plugin>
+                      <artifactId>maven-clean-plugin</artifactId>
+                      <version>3.0.0</version>
+                      <configuration>
+                        <filesets>
+                          <fileset>
+                            <directory>${project.basedir}/dist</directory>
+                          </fileset>
+                          <fileset>
+                            <directory>${project.basedir}/target</directory>
+                          </fileset>
+                        </filesets>
+                      </configuration>
+                    </plugin>
+                    <plugin>
+                      <groupId>org.codehaus.mojo</groupId>
+                      <artifactId>exec-maven-plugin</artifactId>
+                      <version>3.3.0</version>
+                      <executions>
+                        <execution>
+                          <id>exec-npm-install</id>
+                          <phase>generate-resources</phase>
+                          <configuration>
+                            <workingDirectory>${project.basedir}/src</workingDirectory>
+                            <executable>npm</executable>
+                            <arguments>
+                              <argument>install</argument>
+                            </arguments>
+                          </configuration>
+                          <goals>
+                            <goal>exec</goal>
+                          </goals>
+                        </execution>
+                        <execution>
+                            <id>run vitest</id>
+                            <goals>
+                                <goal>npm</goal>
+                            </goals>
+                            <configuration>
+                                <arguments>run test:ci</arguments>
+                            </configuration>
+                        </execution>
+                      </executions>
+                    </plugin>
+                    <plugin>
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
                         <version>0.8.14</version>
