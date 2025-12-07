@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, EventEmitter, HostListener, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Output, ViewChild, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DateRangeType, DateRangeSelection } from '../model';
 
@@ -14,6 +14,8 @@ import { DateRangeType, DateRangeSelection } from '../model';
     styleUrls: ['./date-range-dropdown.component.scss']
 })
 export class DateRangeDropdownComponent {
+    private eRef = inject(ElementRef);
+
     DateRangeType = DateRangeType;
 
     open = false;
@@ -24,8 +26,6 @@ export class DateRangeDropdownComponent {
     dateRangeSelectionEmitter: EventEmitter<DateRangeSelection> = new EventEmitter<DateRangeSelection>();
 
     @ViewChild('dropdownPanel') dropdownPanel?: ElementRef<HTMLDivElement>;
-
-    constructor(private eRef: ElementRef) { }
 
     toggle() {
         this.open = !this.open;

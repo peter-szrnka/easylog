@@ -8,7 +8,7 @@
     <div #dropdownPanel class="dropdown-panel">
       <ul class="dropdown-list">
         @for(range of (DateRangeType | keyvalue); track range) {
-          <li (click)="selectRange(range.value)"[class.selected]="selectedRange === range.value">
+          <li tabindex="0" role="button" (click)="selectRange(range.value)" (keydown.enter)="selectRange(range.value)" (keydown.space)="selectRange(range.value)" [class.selected]="selectedRange === range.value">
             {{ range.value.replaceAll('_', ' ') }}
           </li>
         }

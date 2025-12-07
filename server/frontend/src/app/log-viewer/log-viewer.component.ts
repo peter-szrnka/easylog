@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef, CUSTOM_ELEMENTS_SCHEMA, ViewChild, DestroyRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, CUSTOM_ELEMENTS_SCHEMA, ViewChild, DestroyRef, inject } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { WebsocketService } from '../websocket/websocket.service';
 import { DateRangeSelection, DateRangeType, LogEntry, LogEntryDisplayable, LogsResponse, SaveLogRequest, WebsocketState } from '../model';
@@ -25,6 +25,13 @@ import { SpinnerComponent } from '../common/spinner.component';
 })
 export class LogViewerComponent
   implements OnInit, OnDestroy {
+  private destroyRef = inject(DestroyRef);
+  private title = inject(Title);
+  private wsService = inject(WebsocketService);
+  private cd = inject(ChangeDetectorRef);
+  private logService = inject(LogViewerService);
+  private route = inject(ActivatedRoute);
+
   messages: LogEntryDisplayable[] = [];
   private sub?: Subscription;
   private baseTitle = 'EasyLog Viewer';
@@ -44,15 +51,6 @@ export class LogViewerComponent
   pageSizeOptions = [5, 10, 25, 50, 100];
   expandedRows: any[] = [];
   dateRangeType: DateRangeType = DateRangeType[(localStorage.getItem('range') || "") as keyof typeof DateRangeType];
-
-  constructor(
-    private destroyRef: DestroyRef,
-    private title: Title,
-    private wsService: WebsocketService,
-    private cd: ChangeDetectorRef,
-    private logService: LogViewerService,
-    private route: ActivatedRoute,
-  ) { }
 
   ngOnInit(): void {
     this.title.setTitle(this.baseTitle);
@@ -81,7 +79,6 @@ export class LogViewerComponent
         }
       }
       this.messages = [...this.messages];
-      this.totalElements = this.totalElements;
       this.cd.detectChanges();
     });
 
@@ -164,11 +161,6 @@ export class LogViewerComponent
     const sort = event.sorts[0];
     this.sortBy = sort.prop;
     this.sortDirection = sort.dir;
-    this.loadLogs();
-  }
-
-  onPageSizeChange(event: any) {
-    this.page = 0;
     this.loadLogs();
   }
 

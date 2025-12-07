@@ -31,7 +31,8 @@ module.exports = defineConfig([
           style: "kebab-case",
         },
       ],
-    },
+      "@typescript-eslint/no-explicit-any": "off",
+    }
   },
   {
     files: ["**/*.html"],

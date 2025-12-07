@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from "@angular/common/http";
-import { Injectable } from "@angular/core";
+import { Injectable, inject } from "@angular/core";
 import { Observable } from "rxjs";
 import { DateRangeType, LogsResponse } from "../model";
 import { environment } from "../../environment/environment";
@@ -9,8 +9,8 @@ import { environment } from "../../environment/environment";
  */
 @Injectable({  providedIn: 'root' })
 export class LogViewerService {
-  
-    constructor(private readonly httpClient: HttpClient) {}
+    private readonly httpClient = inject(HttpClient);
+
 
     public list(
     dateRangeType: DateRangeType,
