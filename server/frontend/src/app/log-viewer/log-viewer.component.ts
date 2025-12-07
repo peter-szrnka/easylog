@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef, CUSTOM_ELEMENTS_SCHEMA, ViewChild, DestroyRef } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { WebsocketService } from '../websocket/websocket.service';
-import { DateRangeSelection, DateRangeType, LogEntry, LogEntryDisplayable, SaveLogRequest, WebsocketState } from '../model';
-import { DatatableComponent, NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { DateRangeSelection, DateRangeType, LogEntry, LogEntryDisplayable, LogsResponse, SaveLogRequest, WebsocketState } from '../model';
+import { DatatableComponent, NgxDatatableModule, PageEvent } from '@swimlane/ngx-datatable';
 import { LogViewerService } from './log-viewer.service';
 import { Title } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
@@ -16,7 +16,7 @@ import { SpinnerComponent } from '../common/spinner.component';
  * @author Peter Szrnka
  */
 @Component({
-  selector: 'log-viewer',
+  selector: 'app-log-viewer',
   templateUrl: './log-viewer.component.html',
   standalone: true,
   imports: [NgxDatatableModule, CommonModule, FormsModule, DateRangeDropdownComponent, SpinnerComponent],
@@ -33,12 +33,12 @@ export class LogViewerComponent
   websocketState: WebsocketState = WebsocketState.LOADING;
   loading = true;
 
-  filter: string = '';
-  startDate?: string = '';
-  endDate?: string = '';
-  page: number = 0;
-  size: number = 50;
-  sortBy: string = 'timestamp';
+  filter = '';
+  startDate? = '';
+  endDate? = '';
+  page = 0;
+  size = 50;
+  sortBy = 'timestamp';
   sortDirection: 'asc' | 'desc' = 'desc';
   totalElements = 0;
   pageSizeOptions = [5, 10, 25, 50, 100];
@@ -138,19 +138,12 @@ export class LogViewerComponent
       )
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (logs: any) => {
-          if (logs.content) {
-            this.messages = logs.content.map((log: LogEntry) => ({
-              ...log,
-              fromWebSocket: false,
-            }));
-            this.totalElements = logs.totalElements;
-          } else {
-            this.messages = logs.map((log: LogEntry) => ({
-              ...log,
-              fromWebSocket: false,
-            }));
-          }
+        next: (logs: LogsResponse) => {
+          this.messages = logs.content.map((log: LogEntry) => ({
+            ...log,
+            fromWebSocket: false,
+          }));
+          this.totalElements = logs.totalElements;
           this.loading = false;
           this.cd.detectChanges();
         },
@@ -162,7 +155,7 @@ export class LogViewerComponent
       });
   }
 
-  onPage(event: any): void {
+  onPage(event: PageEvent): void {
     this.page = event.offset;
     this.loadLogs();
   }

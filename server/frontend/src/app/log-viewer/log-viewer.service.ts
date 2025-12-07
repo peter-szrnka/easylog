@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from "@angular/common/http";
-import { Inject, Injectable } from "@angular/core";
+import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { DateRangeType, LogEntry } from "../model";
+import { DateRangeType, LogsResponse } from "../model";
 import { environment } from "../../environment/environment";
 
 /**
@@ -18,11 +18,11 @@ export class LogViewerService {
     startDate?: Date,
     endDate?: Date,
   
-    page: number = 0,
-    size: number = 20,
-    sortBy: string = 'timestamp',
+    page = 0,
+    size = 20,
+    sortBy = 'timestamp',
     sortDirection: 'asc' | 'desc' = 'desc',
-  ): Observable<LogEntry[]> {
+  ): Observable<LogsResponse> {
     let params = new HttpParams()
       .set('page', page)
       .set('size', size)
@@ -42,6 +42,6 @@ export class LogViewerService {
       params = params.set('endDate', endDate.toISOString());
     }
 
-    return this.httpClient.get<LogEntry[]>(`${environment.apiUrl}/log`, { params });
+    return this.httpClient.get<LogsResponse>(`${environment.apiUrl}/log`, { params });
   }
 }
