@@ -32,9 +32,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Build with NPM
-        working-directory: ./server/frontend
-        run: npm install --force
+      #- name: Build with NPM
+      #  working-directory: ./server/frontend
+      #  run: npm install --force
       - name: Build common module (Maven)
         run: mvn clean install -DskipTests
         working-directory: common
