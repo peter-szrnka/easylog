@@ -26,6 +26,11 @@
         </dependency>
         <dependency>
             <groupId>io.github.easylog</groupId>
+            <artifactId>frontend</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.easylog</groupId>
             <artifactId>javalin-backend</artifactId>
             <version>${project.version}</version>
         </dependency>

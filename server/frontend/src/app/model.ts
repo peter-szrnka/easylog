@@ -59,3 +59,11 @@ export interface DateRangeSelection {
     from?: string,
     to?: string,
 }
+
+/**
+ * @author Peter Szrnka
+ */
+export interface LogsResponse {
+    content: LogEntry[];
+    totalElements: number;
+}

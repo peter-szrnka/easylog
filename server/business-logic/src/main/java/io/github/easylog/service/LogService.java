@@ -16,6 +16,7 @@ public class LogService {
     private final LogEntityDao dao;
 
     public void save(SaveLogRequest request) {
+        request.getEntries().forEach(entry -> log.info(entry.toString()));
         dao.save(request);
         sendToWebSocket(request);
     }
