@@ -28,6 +28,10 @@ jobs:
         with:
           java-version: '25'
           distribution: 'temurin'
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
       - name: Build common module (Maven)
         run: mvn clean install -DskipTests
         working-directory: common
