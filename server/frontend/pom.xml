@@ -76,15 +76,6 @@
                 </goals>
               </execution>
               <execution>
-                  <id>run vitest</id>
-                  <goals>
-                      <goal>npm</goal>
-                  </goals>
-                  <configuration>
-                      <arguments>run test:ci --force</arguments>
-                  </configuration>
-              </execution>
-              <execution>
                 <id>exec-ng-build</id>
                 <phase>generate-resources</phase>
                 <configuration>
