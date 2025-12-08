@@ -145,7 +145,7 @@
                           </goals>
                           <phase>generate-resources</phase>
                           <configuration>
-                            <arguments>ci --legacy-peer-deps</arguments>
+                            <arguments>ci - -legacy-peer-deps</arguments>
                           </configuration>
                         </execution>
 
@@ -161,7 +161,7 @@
                         </execution>
                       </executions>
                     </plugin>
-                    <!--<plugin>
+                    <plugin>
                       <groupId>org.codehaus.mojo</groupId>
                       <artifactId>exec-maven-plugin</artifactId>
                       <version>3.3.0</version>
@@ -190,8 +190,8 @@
                             </configuration>
                         </execution>
                       </executions>
-                    </plugin>-->
-                    <!--<plugin>
+                    </plugin>
+                    <plugin>
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
                         <version>0.8.14</version>
@@ -208,7 +208,7 @@
                                 <format>XML</format>
                             </formats>
                         </configuration>
-                    </plugin>-->
+                    </plugin>
                 </plugins>
             </build>
         </profile>-->
