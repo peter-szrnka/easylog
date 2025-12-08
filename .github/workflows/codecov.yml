@@ -55,4 +55,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn clean verify -Pcodecov org.sonarsource.scanner.maven:sonar-maven-plugin:5.5.0.6356:sonar -Dsonar.organization=peter-szrnka -Dsonar.projectKey=peter-szrnka_easylog
+        run: mvn clean verify -Pcodecov org.sonarsource.scanner.maven:sonar-maven-plugin:5.5.0.6356:sonar -Dsonar.organization=peter-szrnka -Dsonar.projectKey=peter-szrnka_easylog \
+            -Dsonar.coverage.jacoco.xmlReportPaths="server/business-logic/target/site/jacoco/jacoco.xml,server/javalin-backend/target/site/jacoco/jacoco.xml,server/spring-boot-backend/target/site/jacoco/jacoco.xml" \
+            -Dsonar.javascript.lcov.reportPaths="server/frontend/target/coverage/lcov.info"

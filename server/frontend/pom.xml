@@ -16,6 +16,7 @@
     <maven.compiler.target>25</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
+    <sonar.sources>src</sonar.sources>
     <sonar.javascript.lcov.reportPaths>${project.buildDirectory}/coverage/lcov.info</sonar.javascript.lcov.reportPaths>
     <sonar.typescript.lcov.reportPaths>${project.buildDirectory}/coverage/lcov.info</sonar.typescript.lcov.reportPaths>
     <sonar.junit.reportPaths>${project.buildDirectory}/reports/test-results.xml</sonar.junit.reportPaths>
@@ -117,6 +118,50 @@
                       </configuration>
                     </plugin>
                     <plugin>
+                      <groupId>com.github.eirslett</groupId>
+                      <artifactId>frontend-maven-plugin</artifactId>
+                      <version>1.15.0</version>
+
+                      <configuration>
+                        <workingDirectory>${project.basedir}</workingDirectory>
+                      </configuration>
+
+                      <executions>
+                        <execution>
+                          <id>install node and npm</id>
+                          <goals>
+                            <goal>install-node-and-npm</goal>
+                          </goals>
+                          <configuration>
+                            <nodeVersion>v20.18.0</nodeVersion>
+                            <npmVersion>10.8.1</npmVersion>
+                          </configuration>
+                        </execution>
+
+                        <execution>
+                          <id>npm install</id>
+                          <goals>
+                            <goal>npm</goal>
+                          </goals>
+                          <phase>generate-resources</phase>
+                          <configuration>
+                            <arguments>ci --legacy-peer-deps</arguments>
+                          </configuration>
+                        </execution>
+
+                        <execution>
+                          <id>npm test</id>
+                          <goals>
+                            <goal>npm</goal>
+                          </goals>
+                          <phase>test</phase>
+                          <configuration>
+                            <arguments>run test:ci</arguments>
+                          </configuration>
+                        </execution>
+                      </executions>
+                    </plugin>
+                    <!--<plugin>
                       <groupId>org.codehaus.mojo</groupId>
                       <artifactId>exec-maven-plugin</artifactId>
                       <version>3.3.0</version>
@@ -145,8 +190,8 @@
                             </configuration>
                         </execution>
                       </executions>
-                    </plugin>
-                    <plugin>
+                    </plugin>-->
+                    <!--<plugin>
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
                         <version>0.8.14</version>
@@ -163,7 +208,7 @@
                                 <format>XML</format>
                             </formats>
                         </configuration>
-                    </plugin>
+                    </plugin>-->
                 </plugins>
             </build>
         </profile>-->
