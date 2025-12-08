@@ -96,7 +96,7 @@
         </plugins>
       </build>
     </profile>
-    <!--<profile>
+    <profile>
             <id>codecov</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
@@ -145,7 +145,7 @@
                           </goals>
                           <phase>generate-resources</phase>
                           <configuration>
-                            <arguments>ci - -legacy-peer-deps</arguments>
+                            <arguments>ci --legacy-peer-deps</arguments>
                           </configuration>
                         </execution>
 
@@ -158,36 +158,6 @@
                           <configuration>
                             <arguments>run test:ci</arguments>
                           </configuration>
-                        </execution>
-                      </executions>
-                    </plugin>
-                    <plugin>
-                      <groupId>org.codehaus.mojo</groupId>
-                      <artifactId>exec-maven-plugin</artifactId>
-                      <version>3.3.0</version>
-                      <executions>
-                        <execution>
-                          <id>exec-npm-install</id>
-                          <phase>generate-resources</phase>
-                          <configuration>
-                            <workingDirectory>${project.basedir}/src</workingDirectory>
-                            <executable>npm</executable>
-                            <arguments>
-                              <argument>install</argument>
-                            </arguments>
-                          </configuration>
-                          <goals>
-                            <goal>exec</goal>
-                          </goals>
-                        </execution>
-                        <execution>
-                            <id>run vitest</id>
-                            <goals>
-                                <goal>npm</goal>
-                            </goals>
-                            <configuration>
-                                <arguments>run test:ci</arguments>
-                            </configuration>
                         </execution>
                       </executions>
                     </plugin>
@@ -211,6 +181,6 @@
                     </plugin>
                 </plugins>
             </build>
-        </profile>-->
+        </profile>
   </profiles>
 </project>
