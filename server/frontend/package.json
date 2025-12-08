@@ -8,7 +8,7 @@
     "build": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "vitest",
-    "test:ci": "NODE_OPTIONS='--experimental-vm-modules' vitest run --coverage",
+    "test:ci": "NODE_OPTIONS=--loader=ts-node/esm vitest run --coverage",
     "coverage": "vitest run --coverage",
     "lint": "ng lint",
     "format": "prettier --write ."
