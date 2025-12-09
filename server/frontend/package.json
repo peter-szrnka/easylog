@@ -8,7 +8,7 @@
     "build": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "vitest",
-    "test:ci": "NODE_OPTIONS=--loader=ts-node/esm vitest run --coverage",
+    "test:ci": "vitest run --coverage",
     "coverage": "vitest run --coverage",
     "lint": "ng lint",
     "format": "prettier --write ."
@@ -52,6 +52,7 @@
     "prettier": "^3.7.4",
     "typescript": "~5.9.2",
     "typescript-eslint": "8.46.4",
-    "vitest": "^4.0.15"
+    "vitest": "^4.0.15",
+    "vite": "^4.0.0"
   }
 }
