@@ -5,7 +5,7 @@ export default defineConfig({
   resolve: {
     mainFields: ['module'],
   },
-  plugins: [angular()],
+  plugins: [angular({ jit: true })],
   test: {
     globals: true,
     environment: 'jsdom',
@@ -14,10 +14,10 @@ export default defineConfig({
       ['junit', { outputFile: './target/site/jacoco.xml', suiteName: 'Angular Tests' }]
     ],
     coverage: {
-      provider: 'v8',
-      reporter: ['text', 'html', 'lcov', 'clover', 'json'],
+      provider: 'istanbul',
+      reporter: ['text', 'lcov', 'clover'],
       reportsDirectory: './target/coverage',
-      include: ['src/**/*.{ts,tsx}'],
+      include: ['src/**/*.ts'],
       exclude: ['**/*.spec.ts', '**/node_modules/**'],
       clean: true,
       cleanOnRerun: true,
