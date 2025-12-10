@@ -141,7 +141,7 @@ public class DefaultLogEntityDao implements LogEntityDao {
 
     private LogEntry mapToLogEntry(Handle handle, ResultSet rs) throws SQLException {
         LogEntry e = new LogEntry();
-        e.setLogEntryId(rs.getString("logEntryId"));
+        e.setLogEntryId(rs.getString("log_entry_id"));
         e.setSessionId(rs.getString("session_id"));
         e.setLogLevel(LogLevel.valueOf(rs.getString("level")));
         e.setMessage(rs.getString("message"));
@@ -150,7 +150,7 @@ public class DefaultLogEntityDao implements LogEntityDao {
 
         // metadata
         try (Query query = handle.createQuery("""
-                                SELECT key, value FROM easylog_log_metadata WHERE log_id = :logEntryId
+                                SELECT key, value FROM easylog_log_metadata WHERE log_entry_id = :logEntryId
                             """)) {
             List<LogMetaData> metadata = query.bind("logEntryId", e.getLogEntryId())
                     .map((rs2, _) -> new LogMetaData(rs2.getString("key"), rs2.getString("value"))).list();
