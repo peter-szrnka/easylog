@@ -77,7 +77,7 @@ class LogServiceTest {
         entity.setTimestamp(ZonedDateTime.now());
         entity.setTag("TAG");
         entity.setSessionId("SESSION1");
-        entity.setMessageId("CORR1");
+        entity.setLogEntryId("CORR1");
 
         PageResponse<LogEntry> entityPage = PageResponse.<LogEntry>builder().content(List.of(entity)).build();
         when(dao.findAll(Mockito.any(SearchRequest.class))).thenReturn(entityPage);
@@ -100,7 +100,7 @@ class LogServiceTest {
         assertEquals(entity.getTimestamp(), logEntry.getTimestamp());
         assertEquals(entity.getTag(), logEntry.getTag());
         assertEquals(entity.getSessionId(), logEntry.getSessionId());
-        assertEquals(entity.getMessageId(), logEntry.getMessageId());
+        assertEquals(entity.getLogEntryId(), logEntry.getLogEntryId());
     }
 
     @Test
