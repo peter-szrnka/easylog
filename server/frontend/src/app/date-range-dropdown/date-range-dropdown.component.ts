@@ -88,10 +88,7 @@ export class DateRangeDropdownComponent {
         const rect = panel.getBoundingClientRect();
         const overflowRight = 1;
         const overflowLeft = rect.left;
-
-        if (overflowRight > 0) {
-            panel.style.left = `calc(100% - ${rect.width + overflowRight + 8}px)`;
-        }
+        panel.style.left = `calc(100% - ${rect.width + overflowRight + 8}px)`;
 
         if (overflowLeft < 0) {
             panel.style.left = '0';

@@ -19,6 +19,7 @@
     <sonar.sources>src</sonar.sources>
     <sonar.test.inclusions>**/*.spec.ts</sonar.test.inclusions>
     <sonar.exclusions>**/*.spec.ts</sonar.exclusions>
+    <sonar.coverage.inclusions>**/main.ts,**/polyfills.ts,**/config/**.ts</sonar.coverage.inclusions>
   </properties>
 
   <developers>
