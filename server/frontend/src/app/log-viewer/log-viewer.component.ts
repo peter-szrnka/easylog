@@ -12,6 +12,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DateRangeDropdownComponent } from '../date-range-dropdown/date-range-dropdown.component';
 import { SpinnerComponent } from '../common/spinner.component';
 
+const BASE_TITLE = 'EasyLog Viewer';
+
 /**
  * @author Peter Szrnka
  */
@@ -34,7 +36,6 @@ export class LogViewerComponent
 
   messages: LogEntryDisplayable[] = [];
   private sub?: Subscription;
-  private baseTitle = 'EasyLog Viewer';
   @ViewChild('search', { static: false }) search: any;
   @ViewChild('table') table!: DatatableComponent;
   websocketState: WebsocketState = WebsocketState.LOADING;
@@ -53,7 +54,7 @@ export class LogViewerComponent
   dateRangeType: DateRangeType = DateRangeType[(localStorage.getItem('range') || "") as keyof typeof DateRangeType];
 
   ngOnInit(): void {
-    this.title.setTitle(this.baseTitle);
+    this.title.setTitle(BASE_TITLE);
     this.wsService.websocketState$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((state) => {
       this.websocketState = state;
       this.cd.detectChanges();
@@ -75,7 +76,7 @@ export class LogViewerComponent
         ).length;
 
         if (document.visibilityState === 'hidden') {
-          this.title.setTitle(`${this.baseTitle} (${fromWebSocketCount})`);
+          this.title.setTitle(`${BASE_TITLE} (${fromWebSocketCount})`);
         }
       }
       this.messages = [...this.messages];
@@ -94,7 +95,7 @@ export class LogViewerComponent
 
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'visible') {
-        this.title.setTitle(this.baseTitle);
+        this.title.setTitle(BASE_TITLE);
       }
     });
   }
