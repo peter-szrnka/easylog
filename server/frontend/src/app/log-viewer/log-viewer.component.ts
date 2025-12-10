@@ -25,12 +25,12 @@ import { SpinnerComponent } from '../common/spinner.component';
 })
 export class LogViewerComponent
   implements OnInit, OnDestroy {
-  private destroyRef = inject(DestroyRef);
-  private title = inject(Title);
-  private wsService = inject(WebsocketService);
-  private cd = inject(ChangeDetectorRef);
-  private logService = inject(LogViewerService);
-  private route = inject(ActivatedRoute);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly title = inject(Title);
+  private readonly wsService = inject(WebsocketService);
+  private readonly cd = inject(ChangeDetectorRef);
+  private readonly logService = inject(LogViewerService);
+  private readonly route = inject(ActivatedRoute);
 
   messages: LogEntryDisplayable[] = [];
   private sub?: Subscription;
@@ -123,16 +123,16 @@ export class LogViewerComponent
   loadLogs(): void {
     this.loading = true;
     this.logService
-      .list(
-        this.dateRangeType,
-        this.filter,
-        this.dateRangeType === DateRangeType.CUSTOM ? (this.startDate ? new Date(this.startDate) : undefined) : undefined,
-        this.dateRangeType === DateRangeType.CUSTOM ? (this.endDate ? new Date(this.endDate) : undefined) : undefined,
-        this.page,
-        this.size,
-        this.sortBy,
-        this.sortDirection,
-      )
+      .list({
+        dateRangeType: this.dateRangeType,
+        filter: this.filter,
+        startDate: this.getDateParam(this.startDate),
+        endDate: this.getDateParam(this.endDate),
+        page: this.page,
+        size: this.size,
+        sortBy:this.sortBy,
+        sortDirection: this.sortDirection
+      })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (logs: LogsResponse) => {
@@ -187,4 +187,8 @@ export class LogViewerComponent
   getRowClass = (row: LogEntryDisplayable) => ({
     'from-websocket': row.fromWebSocket,
   });
+  
+  private getDateParam(dateInput: string | undefined): Date | undefined {
+    return this.dateRangeType === DateRangeType.CUSTOM ? (dateInput ? new Date(dateInput) : undefined) : undefined
+  }
 }

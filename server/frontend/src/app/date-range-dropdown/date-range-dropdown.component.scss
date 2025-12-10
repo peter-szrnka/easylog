@@ -26,21 +26,20 @@ input[type="datetime-local"] {
 }
 @media (max-width: 768px) {
   .dropdown-button {
-    width: 40px; /* opcionális: kisebb gombméret */
+    width: 40px;
     padding: 8px;
   }
 
   .dropdown-button span.arrow {
-    margin-left: 0; /* igazítás, ha kell */
+    margin-left: 0;
   }
 
-  /* A szöveg elrejtése mobilon */
   .dropdown-button {
-    font-size: 0; /* a szöveget eltünteti */
+    font-size: 0;
   }
 
   .dropdown-button .arrow {
-    font-size: 16px; /* visszaállítjuk a nyíl méretét */
+    font-size: 16px;
   }
 }
 .dropdown-button:hover {

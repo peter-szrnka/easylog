@@ -14,7 +14,7 @@ import { DateRangeType, DateRangeSelection } from '../model';
     styleUrls: ['./date-range-dropdown.component.scss']
 })
 export class DateRangeDropdownComponent {
-    private eRef = inject(ElementRef);
+    private readonly eRef = inject(ElementRef);
 
     DateRangeType = DateRangeType;
 

@@ -4,6 +4,17 @@ import { Observable } from "rxjs";
 import { DateRangeType, LogsResponse } from "../model";
 import { environment } from "../../environment/environment";
 
+export interface ListLogsParams {
+  dateRangeType: DateRangeType;
+  filter?: string;
+  startDate?: Date;
+  endDate?: Date;
+  page: string | number | boolean;
+  size: number;
+  sortBy: string;
+  sortDirection: 'asc' | 'desc';
+}
+
 /**
  * @author Peter Szrnka
  */
@@ -12,36 +23,26 @@ export class LogViewerService {
     private readonly httpClient = inject(HttpClient);
 
 
-    public list(
-    dateRangeType: DateRangeType,
-    filter?: string,
-    startDate?: Date,
-    endDate?: Date,
-  
-    page = 0,
-    size = 20,
-    sortBy = 'timestamp',
-    sortDirection: 'asc' | 'desc' = 'desc',
-  ): Observable<LogsResponse> {
-    let params = new HttpParams()
-      .set('page', page)
-      .set('size', size)
-      .set('sortBy', sortBy)
-      .set('sortDirection', sortDirection)
-      .set('dateRangeType', dateRangeType);
+    public list(params: ListLogsParams): Observable<LogsResponse> {
+    let httpParams = new HttpParams()
+      .set('page', params.page)
+      .set('size', params.size)
+      .set('sortBy', params.sortBy)
+      .set('sortDirection', params.sortDirection)
+      .set('dateRangeType', params.dateRangeType);
 
-    if (filter) {
-      params = params.set('filter', filter);
+    if (params.filter) {
+      httpParams = httpParams.set('filter', params.filter!);
     }
 
-    if (startDate) {
-      params = params.set('startDate', startDate.toISOString());
+    if (params.startDate) {
+      httpParams = httpParams.set('startDate', params.startDate!.toISOString());
     }
 
-    if (endDate) {
-      params = params.set('endDate', endDate.toISOString());
+    if (params.endDate) {
+      httpParams = httpParams.set('endDate', params.endDate!.toISOString());
     }
 
-    return this.httpClient.get<LogsResponse>(`${environment.apiUrl}/log`, { params });
+    return this.httpClient.get<LogsResponse>(`${environment.apiUrl}/log`, { params: httpParams });
   }
 }

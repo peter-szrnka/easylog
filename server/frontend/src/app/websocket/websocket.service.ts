@@ -11,8 +11,8 @@ import { WebsocketState } from '../model';
 })
 export class WebsocketService {
   private wsClient?: WebSocket;
-  private messageSubject = new BehaviorSubject<string | null>(null);
-  private websocketSubject = new ReplaySubject<WebsocketState>(WebsocketState.LOADING);
+  private readonly messageSubject = new BehaviorSubject<string | null>(null);
+  private readonly websocketSubject = new ReplaySubject<WebsocketState>(WebsocketState.LOADING);
   public messages$ = this.messageSubject.asObservable();
   public websocketState$ = this.websocketSubject.asObservable();
 
