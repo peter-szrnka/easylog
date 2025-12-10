@@ -86,7 +86,7 @@ export class DateRangeDropdownComponent {
         if (!panel) return;
 
         const rect = panel.getBoundingClientRect();
-        const overflowRight = rect.right - window.innerWidth;
+        const overflowRight = 1;
         const overflowLeft = rect.left;
 
         if (overflowRight > 0) {

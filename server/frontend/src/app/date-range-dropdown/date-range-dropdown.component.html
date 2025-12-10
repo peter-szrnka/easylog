@@ -6,13 +6,13 @@
 
   @if(open) {
     <div #dropdownPanel class="dropdown-panel">
-      <ul class="dropdown-list">
+      <span class="dropdown-list">
         @for(range of (DateRangeType | keyvalue); track range) {
-          <li tabindex="0" role="button" (click)="selectRange(range.value)" (keydown.enter)="selectRange(range.value)" (keydown.space)="selectRange(range.value)" [class.selected]="selectedRange === range.value">
+          <button tabindex="0" (click)="selectRange(range.value)" (keydown.enter)="selectRange(range.value)" (keydown.space)="selectRange(range.value)" [class.selected]="selectedRange === range.value">
             {{ range.value.replaceAll('_', ' ') }}
-          </li>
+          </button>
         }
-      </ul>
+      </span>
 
       @if(selectedRange === DateRangeType.CUSTOM) {
         <div class="custom-dates">

@@ -69,16 +69,20 @@ input[type="datetime-local"] {
   max-height: 240px;
   overflow-y: auto;
 }
-.dropdown-list li {
+.dropdown-list button {
   padding: 8px 12px;
   cursor: pointer;
   font-size: 14px;
   transition: background-color 0.2s;
+  display: block;
+  width: 100%;
+  border: none;
+  background-color: transparent;
 }
-.dropdown-list li:hover {
+.dropdown-list button:hover {
   background-color: #e0f2fe;
 }
-.dropdown-list li.selected {
+.dropdown-list button.selected {
   background-color: #bfdbfe;
 }
 
