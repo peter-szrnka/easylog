@@ -32,15 +32,15 @@ export class LogViewerService {
       .set('dateRangeType', params.dateRangeType);
 
     if (params.filter) {
-      httpParams = httpParams.set('filter', params.filter!);
+      httpParams = httpParams.set('filter', params.filter);
     }
 
     if (params.startDate) {
-      httpParams = httpParams.set('startDate', params.startDate!.toISOString());
+      httpParams = httpParams.set('startDate', params.startDate.toISOString());
     }
 
     if (params.endDate) {
-      httpParams = httpParams.set('endDate', params.endDate!.toISOString());
+      httpParams = httpParams.set('endDate', params.endDate.toISOString());
     }
 
     return this.httpClient.get<LogsResponse>(`${environment.apiUrl}/log`, { params: httpParams });

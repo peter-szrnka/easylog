@@ -5,5 +5,8 @@ import { appConfig } from './app/config/app.config';
 /**
  * @author Peter Szrnka
  */
-bootstrapApplication(App, appConfig)
-  .catch((err) => console.error(err));
+try {
+  await bootstrapApplication(App, appConfig);
+} catch (err) {
+  console.error(err);
+}

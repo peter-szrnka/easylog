@@ -189,6 +189,14 @@ export class LogViewerComponent
   });
   
   private getDateParam(dateInput: string | undefined): Date | undefined {
-    return this.dateRangeType === DateRangeType.CUSTOM ? (dateInput ? new Date(dateInput) : undefined) : undefined
+    if (this.dateRangeType !== DateRangeType.CUSTOM) {
+      return undefined;
+    }
+
+    if (!dateInput) {
+      return undefined;
+    }
+
+    return new Date(dateInput);
   }
 }
