@@ -1,10 +1,13 @@
 package io.github.easylog.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.easylog.data.LogEntityRepository;
 import io.github.easylog.model.DateRangeType;
 import io.github.easylog.model.LogEntry;
 import io.github.easylog.model.LogLevel;
 import io.github.easylog.model.SaveLogRequest;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -41,6 +44,19 @@ class LogControllerIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private LogEntityRepository repository;
+
+    @BeforeEach
+    void setup() {
+        repository.deleteAll();
+    }
+
+    @AfterEach
+    void tearDown() {
+        repository.deleteAll();
+    }
+
     private static final DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
 
     @Test
@@ -67,9 +83,10 @@ class LogControllerIntegrationTest {
     @MethodSource("listInputData")
     void list_shouldReturnPagedResult(String filter, String sortDirection, String startDate, String endDate, DateRangeType dateRangeType, Map<String, String> metadata) throws Exception {
         // given
+        String messageId = UUID.randomUUID().toString();
         SaveLogRequest request = new SaveLogRequest();
         LogEntry entry = new LogEntry();
-        entry.setMessageId("1");
+        entry.setMessageId(messageId);
         entry.setLogLevel(LogLevel.INFO);
         entry.setTag("test");
         entry.setTimestamp(ZonedDateTime.now());
@@ -96,7 +113,7 @@ class LogControllerIntegrationTest {
                         .param("dateRangeType", dateRangeType.name())
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content[0].messageId").value("1"));
+                .andExpect(jsonPath("$.content[0].messageId").value(messageId));
     }
 
     private static Stream<Arguments> listInputData() {

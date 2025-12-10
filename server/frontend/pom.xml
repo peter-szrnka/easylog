@@ -17,9 +17,8 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
     <sonar.sources>src</sonar.sources>
-    <sonar.javascript.lcov.reportPaths>${project.buildDirectory}/coverage/lcov.info</sonar.javascript.lcov.reportPaths>
-    <sonar.typescript.lcov.reportPaths>${project.buildDirectory}/coverage/lcov.info</sonar.typescript.lcov.reportPaths>
-    <sonar.junit.reportPaths>${project.buildDirectory}/reports/test-results.xml</sonar.junit.reportPaths>
+    <sonar.test.inclusions>**/*.spec.ts</sonar.test.inclusions>
+    <sonar.exclusions>**/*.spec.ts</sonar.exclusions>
   </properties>
 
   <developers>
