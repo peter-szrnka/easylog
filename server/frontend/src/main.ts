@@ -5,8 +5,12 @@ import { appConfig } from './app/config/app.config';
 /**
  * @author Peter Szrnka
  */
-try {
-  await bootstrapApplication(App, appConfig);
-} catch (err) {
-  console.error(err);
+export async function runApp() {
+  try {
+    await bootstrapApplication(App, appConfig);
+  } catch (err) {
+    console.error(err);
+  }
 }
+
+runApp();
