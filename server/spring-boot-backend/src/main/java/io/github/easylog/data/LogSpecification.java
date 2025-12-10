@@ -28,7 +28,7 @@ public class LogSpecification {
                 predicates.add(
                         cb.or(
                                 cb.like(cb.lower(root.get("sessionId")), like),
-                                cb.like(cb.lower(root.get("messageId")), like),
+                                cb.like(cb.lower(root.get("logEntryId")), like),
                                 cb.like(cb.lower(root.get("message")), like),
                                 cb.like(cb.lower(root.get("tag")), like),
                                 cb.like(cb.lower(root.get("level").as(String.class)), like)

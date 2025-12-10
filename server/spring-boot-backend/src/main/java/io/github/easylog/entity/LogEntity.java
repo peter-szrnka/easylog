@@ -21,7 +21,7 @@ public class LogEntity {
 
     @Id
     @Column(nullable = false)
-    private String messageId;
+    private String logEntryId;
 
     @Column(nullable = false)
     private String sessionId;

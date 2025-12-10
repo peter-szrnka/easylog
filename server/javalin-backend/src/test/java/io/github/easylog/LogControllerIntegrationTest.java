@@ -60,7 +60,7 @@ class LogControllerIntegrationTest {
         // given
         SaveLogRequest request = new SaveLogRequest();
         LogEntry entry = new LogEntry();
-        entry.setMessageId(UUID.randomUUID().toString());
+        entry.setLogEntryId(UUID.randomUUID().toString());
         entry.setLogLevel(LogLevel.INFO);
         entry.setTag("test");
         entry.setTimestamp(input);
@@ -80,7 +80,7 @@ class LogControllerIntegrationTest {
     void list_shouldReturnPagedResult(String filter, String sortDirection, String startDate, String endDate, DateRangeType dateRangeType, Map<String, String> metadata) throws Exception {
         SaveLogRequest request = new SaveLogRequest();
         LogEntry entry = new LogEntry();
-        entry.setMessageId(UUID.randomUUID().toString());
+        entry.setLogEntryId(UUID.randomUUID().toString());
         entry.setLogLevel(LogLevel.INFO);
         entry.setTag("test");
         entry.setTimestamp(ZonedDateTime.now());

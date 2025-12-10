@@ -27,7 +27,7 @@ public class DefaultLogEntityDao implements LogEntityDao {
                 WHERE :filter="" or (
                     lower(tag) like :filter OR
                     lower(message) like :filter OR
-                    lower(message_id) like :filter OR
+                    lower(log_entry_id) like :filter OR
                     lower(session_id) like :filter
                     )
             """;
@@ -37,7 +37,7 @@ public class DefaultLogEntityDao implements LogEntityDao {
                 WHERE :filter="" or (
                     LOWER(tag) LIKE :filter OR
                     LOWER(message) LIKE :filter OR
-                    LOWER(message_id) LIKE :filter OR
+                    LOWER(log_entry_id) LIKE :filter OR
                     LOWER(session_id) LIKE :filter
                     )
                     AND (
@@ -48,7 +48,7 @@ public class DefaultLogEntityDao implements LogEntityDao {
             """;
     private static final String CREATE_LOG_TABLE = """
                 CREATE TABLE IF NOT EXISTS easylog_log (
-                    message_id VARCHAR PRIMARY KEY,
+                    log_entry_id VARCHAR PRIMARY KEY,
                     session_id VARCHAR,
                     level VARCHAR,
                     message VARCHAR,
@@ -58,10 +58,10 @@ public class DefaultLogEntityDao implements LogEntityDao {
             """;
     private static final String CREATE_LOG_METADATA_TABLE = """
                 CREATE TABLE IF NOT EXISTS easylog_log_metadata (
-                    log_id VARCHAR,
+                    log_entry_id VARCHAR,
                     key VARCHAR,
                     value VARCHAR,
-                    PRIMARY KEY (log_id, key)
+                    PRIMARY KEY (log_entry_id, key)
                 )
             """;
     private final Jdbi jdbi;
@@ -86,11 +86,11 @@ public class DefaultLogEntityDao implements LogEntityDao {
             ZonedDateTime timestamp = Optional.ofNullable(entry.getTimestamp()).orElse(ZonedDateTime.now());
             jdbi.useHandle(handle -> {
                 handle.createUpdate("""
-                                    INSERT INTO easylog_log(message_id, session_id, level, message, tag, timestamp)
-                                    VALUES(:messageId, :sessionId, :level, :message, :tag, :timestamp)
-                                    ON CONFLICT(message_id) DO NOTHING
+                                    INSERT INTO easylog_log(log_entry_id, session_id, level, message, tag, timestamp)
+                                    VALUES(:logEntryId, :sessionId, :level, :message, :tag, :timestamp)
+                                    ON CONFLICT(log_entry_id) DO NOTHING
                                 """)
-                        .bind("messageId", entry.getMessageId())
+                        .bind("logEntryId", entry.getLogEntryId())
                         .bind("sessionId", entry.getSessionId())
                         .bind("level", entry.getLogLevel())
                         .bind("message", entry.getMessage())
@@ -100,11 +100,11 @@ public class DefaultLogEntityDao implements LogEntityDao {
 
                 if (entry.getMetadata() != null && !entry.getMetadata().isEmpty()) {
                     entry.getMetadata().forEach((key, value) -> handle.createUpdate("""
-                                        INSERT INTO easylog_log_metadata(log_id, key, value)
-                                        VALUES(:logId, :key, :value)
-                                        ON CONFLICT(log_id, key) DO UPDATE SET value = :value
+                                        INSERT INTO easylog_log_metadata(log_entry_id, key, value)
+                                        VALUES(:logEntryId, :key, :value)
+                                        ON CONFLICT(log_entry_id, key) DO UPDATE SET value = :value
                                     """)
-                            .bind("logId", entry.getMessageId())
+                            .bind("logEntryId", entry.getLogEntryId())
                             .bind("key", key)
                             .bind("value", value)
                             .execute());
@@ -141,7 +141,7 @@ public class DefaultLogEntityDao implements LogEntityDao {
 
     private LogEntry mapToLogEntry(Handle handle, ResultSet rs) throws SQLException {
         LogEntry e = new LogEntry();
-        e.setMessageId(rs.getString("message_id"));
+        e.setLogEntryId(rs.getString("logEntryId"));
         e.setSessionId(rs.getString("session_id"));
         e.setLogLevel(LogLevel.valueOf(rs.getString("level")));
         e.setMessage(rs.getString("message"));
@@ -150,9 +150,9 @@ public class DefaultLogEntityDao implements LogEntityDao {
 
         // metadata
         try (Query query = handle.createQuery("""
-                                SELECT key, value FROM easylog_log_metadata WHERE log_id = :logId
+                                SELECT key, value FROM easylog_log_metadata WHERE log_id = :logEntryId
                             """)) {
-            List<LogMetaData> metadata = query.bind("logId", e.getMessageId())
+            List<LogMetaData> metadata = query.bind("logEntryId", e.getLogEntryId())
                     .map((rs2, _) -> new LogMetaData(rs2.getString("key"), rs2.getString("value"))).list();
 
             if (!metadata.isEmpty()) {

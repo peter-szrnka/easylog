@@ -64,7 +64,7 @@ class LogControllerIntegrationTest {
         // given
         SaveLogRequest request = new SaveLogRequest();
         LogEntry entry = new LogEntry();
-        entry.setMessageId(UUID.randomUUID().toString());
+        entry.setLogEntryId(UUID.randomUUID().toString());
         entry.setLogLevel(LogLevel.INFO);
         entry.setTag("test");
         entry.setTimestamp(ZonedDateTime.now());
@@ -83,10 +83,11 @@ class LogControllerIntegrationTest {
     @MethodSource("listInputData")
     void list_shouldReturnPagedResult(String filter, String sortDirection, String startDate, String endDate, DateRangeType dateRangeType, Map<String, String> metadata) throws Exception {
         // given
-        String messageId = UUID.randomUUID().toString();
+        String logEntryId = UUID.randomUUID().toString();
         SaveLogRequest request = new SaveLogRequest();
+        request.setRequestId(UUID.randomUUID().toString());
         LogEntry entry = new LogEntry();
-        entry.setMessageId(messageId);
+        entry.setLogEntryId(logEntryId);
         entry.setLogLevel(LogLevel.INFO);
         entry.setTag("test");
         entry.setTimestamp(ZonedDateTime.now());
@@ -113,7 +114,7 @@ class LogControllerIntegrationTest {
                         .param("dateRangeType", dateRangeType.name())
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content[0].messageId").value(messageId));
+                .andExpect(jsonPath("$.content[0].logEntryId").value(logEntryId));
     }
 
     private static Stream<Arguments> listInputData() {

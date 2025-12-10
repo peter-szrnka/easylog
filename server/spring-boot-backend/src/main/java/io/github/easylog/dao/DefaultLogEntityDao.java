@@ -64,7 +64,7 @@ public class DefaultLogEntityDao implements LogEntityDao {
                 .timestamp(item.getTimestamp())
                 .tag(item.getTag())
                 .sessionId(item.getSessionId())
-                .messageId(item.getMessageId())
+                .logEntryId(item.getLogEntryId())
                 .build();
 
         entity.setMetadata(mapMetadata(entity, item.getMetadata()));
@@ -86,7 +86,7 @@ public class DefaultLogEntityDao implements LogEntityDao {
         logEntry.setTimestamp(entity.getTimestamp());
         logEntry.setTag(entity.getTag());
         logEntry.setSessionId(entity.getSessionId());
-        logEntry.setMessageId(entity.getMessageId());
+        logEntry.setLogEntryId(entity.getLogEntryId());
 
         return logEntry;
     }
