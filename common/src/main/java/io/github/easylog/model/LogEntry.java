@@ -8,7 +8,7 @@ import java.util.Map;
  */
 public class LogEntry {
 
-    private String messageId;
+    private String logEntryId;
     private String sessionId;
     private LogLevel logLevel;
     private ZonedDateTime timestamp;
@@ -24,12 +24,12 @@ public class LogEntry {
         this.timestamp = timestamp;
     }
 
-    public String getMessageId() {
-        return messageId;
+    public String getLogEntryId() {
+        return logEntryId;
     }
 
-    public void setMessageId(String messageId) {
-        this.messageId = messageId;
+    public void setLogEntryId(String logEntryId) {
+        this.logEntryId = logEntryId;
     }
 
     public String getSessionId() {
@@ -75,7 +75,7 @@ public class LogEntry {
     @Override
     public String toString() {
         return "LogEntry{" +
-                ", messageId='" + messageId + '\'' +
+                ", logEntryId='" + logEntryId + '\'' +
                 ", sessionId='" + sessionId + '\'' +
                 ", logLevel=" + logLevel +
                 ", timestamp=" + timestamp +
