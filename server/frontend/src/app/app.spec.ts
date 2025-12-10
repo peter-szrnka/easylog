@@ -4,6 +4,9 @@ import { provideZonelessChangeDetection } from '@angular/core';
 import { App } from './app';
 import { BrowserTestingModule, platformBrowserTesting } from '@angular/platform-browser/testing';
 
+/**
+ * @author Peter Szrnka
+ */
 describe('App', () => {
 
   beforeAll(() => {

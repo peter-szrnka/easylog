@@ -25,6 +25,9 @@ class MockTitle {
   setTitle = vi.fn();
 }
 
+/**
+ * @author Peter Szrnka
+ */
 describe('LogViewerComponent', () => {
   let component: LogViewerComponent;
   let fixture: ComponentFixture<LogViewerComponent>;
