@@ -36,12 +36,16 @@ EasyLog aims to give Android developers a practical, minimalistic logging librar
 
 ## Getting Started
 
+### Requirements
+
+- Java 17 in the Android project!
+
 ### Android library
 
 In order to use **EasyLog**, you have to import the [Android Library repository](https://github.com/peter-szrnka/easylog-android-client-library) into your Android app:
 
 > ```
-> implementation("com.github.peter-szrnka:easylog-android-client-library:0.0.1")
+> implementation("com.github.peter-szrnka:easylog-android-client-library:0.0.2")
 > ```
 
 Next, you have to set it up. Open your activity and add the following code parts:
@@ -91,7 +95,7 @@ Once you finished the integration of the Android client library, you have to dow
 
 ### Example
 
-You can find a sample application **HERE**
+You can find a sample application **[HERE](https://github.com/peter-szrnka/easylog-android-client-library/examples/android-app-1)**
 
 ## Customization
 
