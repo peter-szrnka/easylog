@@ -48,6 +48,14 @@ In order to use **EasyLog**, you have to import the [Android Library repository]
 > implementation("com.github.peter-szrnka:easylog-android-client-library:0.0.2")
 > ```
 
+Open AndroidManifest.xml and add the following permissions:
+
+> ```
+> <uses-permission android:name="android.permission.INTERNET" />
+> <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+> ```
+
+
 Next, you have to set it up. Open your activity and add the following code parts:
 
 > ```kotlin
