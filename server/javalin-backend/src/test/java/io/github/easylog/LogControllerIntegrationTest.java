@@ -3,10 +3,7 @@ package io.github.easylog;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import io.github.easylog.model.DateRangeType;
-import io.github.easylog.model.LogEntry;
-import io.github.easylog.model.LogLevel;
-import io.github.easylog.model.SaveLogRequest;
+import io.github.easylog.model.*;
 import io.javalin.Javalin;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -19,6 +16,8 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
@@ -43,14 +42,25 @@ class LogControllerIntegrationTest {
 
     @BeforeAll
     static void startServer() throws IOException {
-        app = EasyLogApplication.startApp(PORT);
+        Files.deleteIfExists(Paths.get("easylog-test.db"));
+
+        app = EasyLogApplication.startApp(new ServerConfig(
+                PORT,
+                false,
+                "EasyLogService",
+                "easyLog",
+                "easylog-test.db",
+                ""
+        ));
     }
 
     @AfterAll
-    static void stopServer() {
+    static void stopServer() throws IOException {
         if (app != null) {
             app.stop();
         }
+
+        Files.deleteIfExists(Paths.get("easylog-test.db"));
     }
 
 
