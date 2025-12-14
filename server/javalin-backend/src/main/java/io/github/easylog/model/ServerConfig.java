@@ -9,6 +9,8 @@ package io.github.easylog.model;
  * @param serviceType NSD service type
  * @param serverDbFile Server db file, e.g.: easylog-local.db
  * @param env Environment
+ * @param sslKeystore SSL keystore
+ * @param sslKeystorePassword Password for SSL keystore
  */
 public record ServerConfig(
         int port,
