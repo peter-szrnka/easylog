@@ -50,7 +50,7 @@ class LogControllerIntegrationTest {
                 "EasyLogService",
                 "easyLog",
                 "easylog-test.db",
-                "",
+                "dev",
                 null,
                 null
         ));
