@@ -16,6 +16,8 @@ public record ServerConfig(
         String serviceName,
         String serviceType,
         String serverDbFile,
-        String env
+        String env,
+        String sslKeystore,
+        String sslKeystorePassword
 ) {
 }

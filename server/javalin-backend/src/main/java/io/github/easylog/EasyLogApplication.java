@@ -42,7 +42,9 @@ public class EasyLogApplication {
                 getEnv(SERVICE_NAME),
                 getEnv(SERVICE_TYPE),
                 getEnv(SERVER_DB_FILE),
-                getEnv(ENV)
+                getEnv(ENV),
+                getEnv(SSL_KEYSTORE),
+                getEnv(SSL_KEYSTORE_PASSWORD)
         ));
     }
 
@@ -80,9 +82,7 @@ public class EasyLogApplication {
     }
 
     private static void setConfig(JavalinConfig config, ServerConfig serverConfig) {
-        if (serverConfig.sslEnabled()) {
-            configureSsl(config, serverConfig.port());
-        }
+        configureSsl(config, serverConfig);
 
         if ("dev".equals(serverConfig.env())) {
             log.info("dev profile is active");
@@ -111,20 +111,17 @@ public class EasyLogApplication {
         log.info("Websocket initialized");
     }
 
-    private static void configureSsl(JavalinConfig config, int port) {
+    private static void configureSsl(JavalinConfig config, ServerConfig serverConfig) {
+        if (!serverConfig.sslEnabled()) {
+            return;
+        }
+
         config.jetty.modifyServer(server -> {
-            SslContextFactory.Server sslContextFactory = new SslContextFactory.Server();
-
-            String keystorePath = getEnv(SSL_KEYSTORE);
-            String keystorePassword = getEnv(SSL_KEYSTORE_PASSWORD);
-
-            sslContextFactory.setKeyStorePath(keystorePath);
-            sslContextFactory.setKeyStorePassword(keystorePassword);
-            sslContextFactory.setKeyStoreType("PKCS12");
+            SslContextFactory.Server sslContextFactory = getServer(serverConfig);
 
             HttpConfiguration httpsConfig = new HttpConfiguration();
             httpsConfig.setSecureScheme("https");
-            httpsConfig.setSecurePort(port);
+            httpsConfig.setSecurePort(serverConfig.port());
             httpsConfig.addCustomizer(new SecureRequestCustomizer());
 
             ServerConnector sslConnector = new ServerConnector(
@@ -132,20 +129,33 @@ public class EasyLogApplication {
                     new SslConnectionFactory(sslContextFactory, "http/1.1"),
                     new HttpConnectionFactory(httpsConfig)
             );
-            sslConnector.setPort(port);
+            sslConnector.setPort(serverConfig.port());
 
             server.addConnector(sslConnector);
-            log.info("HTTPS enabled on port {}", port);
+            log.info("HTTPS enabled on port {}", serverConfig.port());
         });
     }
 
-    private static String getEnv(EnvironmentVariable variable) {
-        return ofNullable(System.getenv(variable.getName())).orElseGet(() -> {
-            if (variable.getDefaultValue() == null) {
-                throw new IllegalArgumentException("Environment variable " + variable.getName() + " is mandatory!");
-            }
+    private static SslContextFactory.Server getServer(ServerConfig serverConfig) {
+        SslContextFactory.Server sslContextFactory = new SslContextFactory.Server();
 
-            return variable.getDefaultValue();
-        });
+        String keystorePath = serverConfig.sslKeystore();
+        if (keystorePath == null) {
+            throw new IllegalArgumentException("Environment variable SSL_KEYSTORE is mandatory!");
+        }
+
+        String keystorePassword = serverConfig.sslKeystorePassword();
+        if (keystorePassword == null) {
+            throw new IllegalArgumentException("Environment variable SSL_KEYSTORE_PASSWORD is mandatory!");
+        }
+
+        sslContextFactory.setKeyStorePath(keystorePath);
+        sslContextFactory.setKeyStorePassword(keystorePassword);
+        sslContextFactory.setKeyStoreType("PKCS12");
+        return sslContextFactory;
+    }
+
+    private static String getEnv(EnvironmentVariable variable) {
+        return ofNullable(System.getenv(variable.getName())).orElse(variable.getDefaultValue());
     }
 }
