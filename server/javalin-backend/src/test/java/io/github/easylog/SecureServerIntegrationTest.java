@@ -7,6 +7,7 @@ import io.github.easylog.model.*;
 import io.javalin.Javalin;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -32,6 +33,7 @@ import java.util.stream.Stream;
 import static io.github.easylog.converter.Converters.FORMATTER;
 import static io.github.easylog.model.DateRangeType.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @author Peter Szrnka
@@ -68,6 +70,21 @@ class SecureServerIntegrationTest {
         }
 
         Files.deleteIfExists(Paths.get("easylog-test.db"));
+    }
+
+    @ParameterizedTest
+    @MethodSource("inputData")
+    void whenWrongInputDataProvided_thenThrowException(String sslKeystore, String sslKeystorePassword) throws IOException {
+        assertThrows(IllegalArgumentException.class, () -> EasyLogApplication.startApp(new ServerConfig(
+                PORT,
+                true,
+                "EasyLogService",
+                "easyLog",
+                "easylog-test.db",
+                "",
+                sslKeystore,
+                sslKeystorePassword
+        )));
     }
 
 
@@ -132,6 +149,13 @@ class SecureServerIntegrationTest {
 
         HttpURLConnection getConnection = get(stringBuilder.toString());
         assertEquals(200, getConnection.getResponseCode());
+    }
+
+    private static Stream<Arguments> inputData() {
+        return Stream.of(
+                Arguments.of(null, ""),
+                Arguments.of("", null)
+        );
     }
 
     private static HttpURLConnection postJson(String json) throws IOException {

@@ -141,12 +141,12 @@ public class EasyLogApplication {
 
         String keystorePath = serverConfig.sslKeystore();
         if (keystorePath == null) {
-            throw new IllegalArgumentException("Environment variable SSL_KEYSTORE is mandatory!");
+            throw new IllegalArgumentException("Environment variable EASYLOG_SSL_KEYSTORE is mandatory!");
         }
 
         String keystorePassword = serverConfig.sslKeystorePassword();
         if (keystorePassword == null) {
-            throw new IllegalArgumentException("Environment variable SSL_KEYSTORE_PASSWORD is mandatory!");
+            throw new IllegalArgumentException("Environment variable EASYLOG_SSL_KEYSTORE_PASSWORD is mandatory!");
         }
 
         sslContextFactory.setKeyStorePath(keystorePath);
