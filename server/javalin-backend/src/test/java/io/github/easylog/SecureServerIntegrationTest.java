@@ -73,8 +73,9 @@ class SecureServerIntegrationTest {
 
     @ParameterizedTest
     @MethodSource("inputData")
-    void whenWrongInputDataProvided_thenThrowException(String sslKeystore, String sslKeystorePassword) throws IOException {
-        assertThrows(IllegalArgumentException.class, () -> EasyLogApplication.startApp(new ServerConfig(
+    void whenWrongInputDataProvided_thenThrowException(String sslKeystore, String sslKeystorePassword) {
+        // given
+        ServerConfig serverConfig = new ServerConfig(
                 PORT,
                 true,
                 "EasyLogService",
@@ -83,7 +84,10 @@ class SecureServerIntegrationTest {
                 "",
                 sslKeystore,
                 sslKeystorePassword
-        )));
+        );
+
+        // when & then
+        assertThrows(IllegalArgumentException.class, () -> EasyLogApplication.startApp(serverConfig));
     }
 
 
@@ -146,7 +150,10 @@ class SecureServerIntegrationTest {
             stringBuilder.append("endDate=").append(endDate);
         }
 
+        // when
         HttpURLConnection getConnection = get(stringBuilder.toString());
+
+        // then
         assertEquals(200, getConnection.getResponseCode());
     }
 

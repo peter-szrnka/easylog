@@ -149,7 +149,9 @@ public class EasyLogApplication {
 
     static ServerConfig loadProperties(String propertiesLocation) throws IOException {
         Properties properties = new Properties();
-        properties.load(new FileInputStream(propertiesLocation));
+        try (FileInputStream fileInputStream = new FileInputStream(propertiesLocation)) {
+            properties.load(fileInputStream);
+        }
 
         return new ServerConfig(
                 Integer.parseInt(getProperty(properties, SERVER_PORT)),
