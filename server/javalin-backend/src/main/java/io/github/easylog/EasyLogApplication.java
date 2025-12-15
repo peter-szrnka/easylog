@@ -6,7 +6,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.github.easylog.controller.LogController;
 import io.github.easylog.dao.DefaultLogEntityDao;
 import io.github.easylog.dao.LogEntityDao;
-import io.github.easylog.model.EnvironmentVariable;
+import io.github.easylog.model.EasyLogProperty;
 import io.github.easylog.model.ServerConfig;
 import io.github.easylog.service.DefaultWebsocketMessagingClientService;
 import io.github.easylog.service.JmDnsService;
@@ -22,11 +22,12 @@ import org.eclipse.jetty.server.*;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.jdbi.v3.core.Jdbi;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Objects;
+import java.util.Properties;
 
-import static io.github.easylog.model.EnvironmentVariable.*;
-import static java.util.Optional.ofNullable;
+import static io.github.easylog.model.EasyLogProperty.*;
 
 /**
  * @author Peter Szrnka
@@ -35,17 +36,8 @@ import static java.util.Optional.ofNullable;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class EasyLogApplication {
 
-    public static void main() throws IOException {
-        startApp(new ServerConfig(
-                Integer.parseInt(getEnv(SERVER_PORT)),
-                Boolean.parseBoolean(getEnv(SSL_ENABLED)),
-                getEnv(SERVICE_NAME),
-                getEnv(SERVICE_TYPE),
-                getEnv(SERVER_DB_FILE),
-                getEnv(ENV),
-                getEnv(SSL_KEYSTORE),
-                getEnv(SSL_KEYSTORE_PASSWORD)
-        ));
+    public static void main(String[] args) throws IOException {
+        startApp(loadProperties(args[0]));
     }
 
     public static Javalin startApp(ServerConfig serverConfig) throws IOException {
@@ -155,7 +147,23 @@ public class EasyLogApplication {
         return sslContextFactory;
     }
 
-    private static String getEnv(EnvironmentVariable variable) {
-        return ofNullable(System.getenv(variable.getName())).orElse(variable.getDefaultValue());
+    static ServerConfig loadProperties(String propertiesLocation) throws IOException {
+        Properties properties = new Properties();
+        properties.load(new FileInputStream(propertiesLocation));
+
+        return new ServerConfig(
+                Integer.parseInt(getProperty(properties, SERVER_PORT)),
+                Boolean.parseBoolean(getProperty(properties, SSL_ENABLED)),
+                getProperty(properties, SERVICE_NAME),
+                getProperty(properties, SERVICE_TYPE),
+                getProperty(properties, SERVER_DB_FILE),
+                getProperty(properties, ENV),
+                getProperty(properties, SSL_KEYSTORE),
+                getProperty(properties, SSL_KEYSTORE_PASSWORD)
+        );
+    }
+
+    private static String getProperty(Properties properties, EasyLogProperty variable) {
+        return properties.getProperty(variable.getName(), variable.getDefaultValue());
     }
 }
