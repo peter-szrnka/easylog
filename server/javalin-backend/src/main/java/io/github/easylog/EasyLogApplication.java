@@ -37,6 +37,9 @@ import static io.github.easylog.model.EasyLogProperty.*;
 public class EasyLogApplication {
 
     public static void main(String[] args) throws IOException {
+        if (args.length != 1) {
+            throw new IllegalArgumentException("Error: Missing properties file from program arguments!\njava -jar easylog-desktop.jar easylog-desktop.properties");
+        }
         startApp(loadProperties(args[0]));
     }
 
