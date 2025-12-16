@@ -37,7 +37,7 @@
 
   <profiles>
     <profile>
-      <id>build-prod</id>
+      <id>build-prod-frontend</id>
       <activation>
         <activeByDefault>false</activeByDefault>
       </activation>
@@ -139,7 +139,6 @@
                             <npmVersion>10.8.1</npmVersion>
                           </configuration>
                         </execution>
-
                         <execution>
                           <id>npm install</id>
                           <goals>
@@ -150,8 +149,6 @@
                             <arguments>ci --legacy-peer-deps</arguments>
                           </configuration>
                         </execution>
-
-
                         <execution>
                           <id>npm test</id>
                           <goals>

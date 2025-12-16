@@ -43,7 +43,7 @@ jobs:
 
       - name: Build server module (Maven)
         working-directory: server/javalin-backend
-        run: mvn clean install -DskipTests -Pbuild-prod-javalin
+        run: mvn clean install -DskipTests -Pbuild-prod-frontend,build-prod-javalin
 
       - name: Upload built JAR
         uses: actions/upload-artifact@v4

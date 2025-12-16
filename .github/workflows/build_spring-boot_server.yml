@@ -43,7 +43,7 @@ jobs:
 
       - name: Build server module (Maven)
         working-directory: server/spring-boot-backend
-        run: mvn clean install -DskipTests -Pbuild-prod-spring-boot
+        run: mvn clean install -DskipTests -Pbuild-prod-frontend,build-prod-spring-boot
 
       - name: Upload built JAR
         uses: actions/upload-artifact@v4
