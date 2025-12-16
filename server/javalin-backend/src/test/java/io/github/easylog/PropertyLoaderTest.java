@@ -14,14 +14,19 @@ import static org.junit.jupiter.api.Assertions.*;
 class PropertyLoaderTest {
 
     @Test
+    void loadProperties_whenArgumentIsMissing_thenThrowException() {
+        assertThrows(IllegalArgumentException.class, () -> EasyLogApplication.loadProperties(new String[] {}));
+    }
+
+    @Test
     void loadProperties_whenFileIsMissing_thenThrowException() {
-        assertThrows(FileNotFoundException.class, () -> EasyLogApplication.loadProperties("unknown"));
+        assertThrows(FileNotFoundException.class, () -> EasyLogApplication.loadProperties(new String[] {"unknown"}));
     }
 
     @Test
     void loadProperties() throws IOException {
         // when
-        ServerConfig serverConfig = EasyLogApplication.loadProperties("src/test/resources/application.properties");
+        ServerConfig serverConfig = EasyLogApplication.loadProperties(new String[] {"src/test/resources/application.properties"});
 
         // then
         assertEquals(8081, serverConfig.port());

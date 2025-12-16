@@ -37,10 +37,8 @@ import static io.github.easylog.model.EasyLogProperty.*;
 public class EasyLogApplication {
 
     public static void main(String[] args) throws IOException {
-        if (args.length != 1) {
-            throw new IllegalArgumentException("Error: Missing properties file from program arguments!\njava -jar easylog-desktop.jar easylog-desktop.properties");
-        }
-        startApp(loadProperties(args[0]));
+
+        startApp(loadProperties(args));
     }
 
     public static Javalin startApp(ServerConfig serverConfig) throws IOException {
@@ -150,7 +148,12 @@ public class EasyLogApplication {
         return sslContextFactory;
     }
 
-    static ServerConfig loadProperties(String propertiesLocation) throws IOException {
+    static ServerConfig loadProperties(String[] args) throws IOException {
+        if (args.length != 1) {
+            throw new IllegalArgumentException("Error: Missing properties file from program arguments!\njava -jar easylog-desktop.jar easylog-desktop.properties");
+        }
+
+        String propertiesLocation = args[0];
         Properties properties = new Properties();
         try (FileInputStream fileInputStream = new FileInputStream(propertiesLocation)) {
             properties.load(fileInputStream);
