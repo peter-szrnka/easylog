@@ -42,7 +42,7 @@ jobs:
           mvn versions:update-child-modules -f ./server/spring-boot-backend/pom.xml
 
       - name: Build server module (Maven)
-        working-directory: server/spring-boot-backend
+        working-directory: server
         run: mvn clean install -DskipTests -Pbuild-prod-frontend,build-prod-spring-boot
 
       - name: Upload built JAR

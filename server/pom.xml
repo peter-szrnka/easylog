@@ -48,6 +48,15 @@
             </modules>
         </profile>
         <profile>
+            <id>build-prod-frontend</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <modules>
+                <module>frontend</module>
+            </modules>
+        </profile>
+        <profile>
             <id>build-prod-javalin</id>
             <activation>
                 <activeByDefault>false</activeByDefault>

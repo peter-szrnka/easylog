@@ -42,7 +42,7 @@ jobs:
           mvn versions:update-child-modules -f ./server/javalin-backend/pom.xml
 
       - name: Build server module (Maven)
-        working-directory: server/javalin-backend
+        working-directory: server
         run: mvn clean install -DskipTests -Pbuild-prod-frontend,build-prod-javalin
 
       - name: Upload built JAR
@@ -134,5 +134,5 @@ jobs:
         run: |
           git config --global user.name ${{ secrets.GH_USERNAME }}
           git config --global user.email ${{ secrets.GH_EMAIL }}
-          git commit -m "[ci-skip] Server version updated to ${{ github.event.inputs.developmentVersion }}" || echo "No changes to commit"
+          git commit -m "[ci-skip] Javalin server version updated to ${{ github.event.inputs.developmentVersion }}" || echo "No changes to commit"
           git push origin main
