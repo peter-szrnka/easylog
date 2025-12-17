@@ -34,6 +34,9 @@ jobs:
           distribution: temurin
           java-version: 25
       - name: Update pom.xml to releaseVersion
+        env:
+          JITPACK_USER: ${{ secrets.JITPACK_USER }}
+          JITPACK_TOKEN: ${{ secrets.JITPACK_TOKEN }}
         run: |
           mvn -s .github/settings.xml -B versions:set -DnewVersion=${{ github.event.inputs.releaseVersion }} -DgenerateBackupPoms=false -f ./server/spring-boot-backend/pom.xml
           mvn -s .github/settings.xml versions:update-child-modules -f ./server/spring-boot-backend/pom.xml
@@ -123,6 +126,9 @@ jobs:
           ref: main
           fetch-depth: 0
       - name: Update Spring Boot server pom.xml to developmentVersion
+        env:
+          JITPACK_USER: ${{ secrets.JITPACK_USER }}
+          JITPACK_TOKEN: ${{ secrets.JITPACK_TOKEN }}
         run: |
           mvn -s .github/settings.xml -B versions:set -DnewVersion=${{ github.event.inputs.developmentVersion }} -DgenerateBackupPoms=false -f ./server/spring-boot-backend/pom.xml
           mvn -s .github/settings.xml versions:update-child-modules -f ./server/spring-boot-backend/pom.xml
