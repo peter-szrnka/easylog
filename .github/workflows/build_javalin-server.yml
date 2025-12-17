@@ -54,7 +54,7 @@ jobs:
       - name: Create and push release tag
         id: create_tag
         run: |
-          TAG_NAME="server-${{ github.event.inputs.releaseVersion }}"
+          TAG_NAME="desktop-${{ github.event.inputs.releaseVersion }}"
           git config --global user.name ${{ secrets.GH_USERNAME }}
           git config --global user.email ${{ secrets.GH_EMAIL }}
           git fetch origin main
@@ -100,7 +100,6 @@ jobs:
           prerelease: false
           overwrite_files: true
           name: easylog-desktop-${{ github.event.inputs.releaseVersion }}
-          tag_name: ${{ needs.build.outputs.tag_name }}
           files: |
             server/javalin-backend/target/easylog-desktop-${{ github.event.inputs.releaseVersion }}.jar
         env:
