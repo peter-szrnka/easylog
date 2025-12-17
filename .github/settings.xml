@@ -2,8 +2,8 @@
   <servers>
     <server>
       <id>jitpack.io</id>
-      <username>${secrets.JITPACK_USER}</username>
-      <password>${secrets.JITPACK_TOKEN}</password>
+      <username>${env.JITPACK_USER}</username>
+      <password>${env.JITPACK_TOKEN}</password>
     </server>
     <server>
       <id>github</id>
