@@ -2,7 +2,7 @@
   <servers>
     <server>
       <id>jitpack.io</id>
-      <username>jitpack.io</username>
+      <username>${secrets.JITPACK_USER}</username>
       <password>${secrets.JITPACK_TOKEN}</password>
     </server>
     <server>
