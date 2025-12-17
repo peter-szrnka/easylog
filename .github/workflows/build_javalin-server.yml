@@ -49,7 +49,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: easylog-server-${{ github.event.inputs.releaseVersion }}.jar
-          path: server/javalin-backend/target/easylog-server-${{ github.event.inputs.releaseVersion }}.jar
+          path: server/javalin-backend/target/easylog-desktop-${{ github.event.inputs.releaseVersion }}.jar
 
       - name: Create and push release tag
         id: create_tag
@@ -87,7 +87,7 @@ jobs:
       - name: Download built JAR
         uses: actions/download-artifact@v4
         with:
-          name: easylog-server-${{ github.event.inputs.releaseVersion }}.jar
+          name: easylog-desktop-${{ github.event.inputs.releaseVersion }}.jar
           path: server/javalin-backend/target
 
       - name: Create or update Release
@@ -95,20 +95,14 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ needs.build.outputs.tag_name }}
-          name: Release ${{ needs.build.outputs.tag_name }}
+          #name: Release ${{ needs.build.outputs.tag_name }}
           draft: false
           prerelease: false
           overwrite_files: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload Javalin Server JAR to Release
-        uses: softprops/action-gh-release@v2
-        with:
-          name: easylog-server-${{ github.event.inputs.releaseVersion }}
+          name: easylog-desktop-${{ github.event.inputs.releaseVersion }}
           tag_name: ${{ needs.build.outputs.tag_name }}
           files: |
-            server/javalin-backend/target/easylog-server-${{ github.event.inputs.releaseVersion }}.jar
+            server/javalin-backend/target/easylog-desktop-${{ github.event.inputs.releaseVersion }}.jar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
