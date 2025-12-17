@@ -33,17 +33,14 @@ jobs:
         with:
           distribution: temurin
           java-version: 25
-      - name: Build common module (Maven)
-        run: mvn clean install -DskipTests
-        working-directory: common
       - name: Update pom.xml to releaseVersion
         run: |
-          mvn -B versions:set -DnewVersion=${{ github.event.inputs.releaseVersion }} -DgenerateBackupPoms=false -f ./server/spring-boot-backend/pom.xml
-          mvn versions:update-child-modules -f ./server/spring-boot-backend/pom.xml
+          mvn -s .github/settings.xml -B versions:set -DnewVersion=${{ github.event.inputs.releaseVersion }} -DgenerateBackupPoms=false -f ./server/spring-boot-backend/pom.xml
+          mvn -s .github/settings.xml versions:update-child-modules -f ./server/spring-boot-backend/pom.xml
 
       - name: Build server module (Maven)
         working-directory: server
-        run: mvn clean install -DskipTests -Pbuild-prod-frontend,build-prod-spring-boot
+        run: mvn -s .github/settings.xml clean install -DskipTests -Pbuild-prod-frontend,build-prod-spring-boot
 
       - name: Upload built JAR
         uses: actions/upload-artifact@v4
@@ -127,8 +124,8 @@ jobs:
           fetch-depth: 0
       - name: Update Spring Boot server pom.xml to developmentVersion
         run: |
-          mvn -B versions:set -DnewVersion=${{ github.event.inputs.developmentVersion }} -DgenerateBackupPoms=false -f ./server/spring-boot-backend/pom.xml
-          mvn versions:update-child-modules -f ./server/spring-boot-backend/pom.xml
+          mvn -s .github/settings.xml -B versions:set -DnewVersion=${{ github.event.inputs.developmentVersion }} -DgenerateBackupPoms=false -f ./server/spring-boot-backend/pom.xml
+          mvn -s .github/settings.xml versions:update-child-modules -f ./server/spring-boot-backend/pom.xml
 
       - name: Commit developmentVersion change
         run: |

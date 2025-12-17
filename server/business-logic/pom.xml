@@ -35,9 +35,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>io.github.easylog</groupId>
+            <groupId>com.github.peter-szrnka</groupId>
             <artifactId>easylog-common</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>0.0.1</version>
         </dependency>
 
         <!-- 3rd party dependencies -->
@@ -191,4 +191,11 @@
             </build>
         </profile>
     </profiles>
+	
+	<repositories>
+		<repository>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
+		</repository>
+	</repositories>
 </project>
