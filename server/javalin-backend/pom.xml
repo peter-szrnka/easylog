@@ -37,7 +37,7 @@
         <dependency>
             <groupId>com.github.peter-szrnka</groupId>
             <artifactId>easylog-common</artifactId>
-            <version>0.0.1</version>
+            <version>common-0.0.1</version>
         </dependency>
         <dependency>
             <groupId>io.github.easylog</groupId>
