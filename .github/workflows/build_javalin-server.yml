@@ -33,8 +33,6 @@ jobs:
         with:
           distribution: temurin
           java-version: 25
-      - name: Build common module (Maven)
-        run: mvn clean install -DskipTests
         working-directory: common
       - name: Update pom.xml to releaseVersion
         run: |

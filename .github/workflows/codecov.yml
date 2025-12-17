@@ -35,9 +35,6 @@ jobs:
       #- name: Build with NPM
       #  working-directory: ./server/frontend
       #  run: npm install --force
-      - name: Build common module (Maven)
-        run: mvn clean install -DskipTests
-        working-directory: common
       - name: Cache SonarCloud packages
         uses: actions/cache@v3
         with:
