@@ -50,6 +50,8 @@ jobs:
       - name: Sonarcloud scan
         working-directory: ./server
         env:
+          JITPACK_USER: ${{ secrets.JITPACK_USER }}
+          JITPACK_TOKEN: ${{ secrets.JITPACK_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
