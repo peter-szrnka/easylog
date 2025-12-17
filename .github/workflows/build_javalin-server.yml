@@ -34,12 +34,18 @@ jobs:
           distribution: temurin
           java-version: 25
       - name: Update pom.xml to releaseVersion
+        env:
+          JITPACK_USER: ${{ secrets.JITPACK_USER }}
+          JITPACK_TOKEN: ${{ secrets.JITPACK_TOKEN }}
         run: |
           mvn -s .github/settings.xml -B versions:set -DnewVersion=${{ github.event.inputs.releaseVersion }} -DgenerateBackupPoms=false -f ./server/javalin-backend/pom.xml
           mvn -s .github/settings.xml versions:update-child-modules -f ./server/javalin-backend/pom.xml
 
       - name: Build server module (Maven)
         working-directory: server
+        env:
+          JITPACK_USER: ${{ secrets.JITPACK_USER }}
+          JITPACK_TOKEN: ${{ secrets.JITPACK_TOKEN }}
         run: mvn -s .github/settings.xml clean install -DskipTests -Pbuild-prod-frontend,build-prod-javalin
 
       - name: Upload built JAR
@@ -92,7 +98,6 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ needs.build.outputs.tag_name }}
-          #name: Release ${{ needs.build.outputs.tag_name }}
           draft: false
           prerelease: false
           overwrite_files: true
@@ -116,6 +121,9 @@ jobs:
           ref: main
           fetch-depth: 0
       - name: Update Spring Boot server pom.xml to developmentVersion
+        env:
+          JITPACK_USER: ${{ secrets.JITPACK_USER }}
+          JITPACK_TOKEN: ${{ secrets.JITPACK_TOKEN }}
         run: |
           mvn -s .github/settings.xml -B versions:set -DnewVersion=${{ github.event.inputs.developmentVersion }} -DgenerateBackupPoms=false -f ./server/javalin-backend/pom.xml
           mvn -s .github/settings.xml versions:update-child-modules -f ./server/javalin-backend/pom.xml
