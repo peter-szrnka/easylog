@@ -64,6 +64,7 @@ public class DefaultLogEntityDao implements LogEntityDao {
                     PRIMARY KEY (log_entry_id, key)
                 )
             """;
+    private static final String LOG_ENTRY_ID = "logEntryId";
     private final Jdbi jdbi;
 
     public DefaultLogEntityDao(Jdbi jdbi) {
@@ -90,7 +91,7 @@ public class DefaultLogEntityDao implements LogEntityDao {
                                     VALUES(:logEntryId, :sessionId, :level, :message, :tag, :timestamp)
                                     ON CONFLICT(log_entry_id) DO NOTHING
                                 """)
-                        .bind("logEntryId", entry.getLogEntryId())
+                        .bind(LOG_ENTRY_ID, entry.getLogEntryId())
                         .bind("sessionId", entry.getSessionId())
                         .bind("level", entry.getLogLevel())
                         .bind("message", entry.getMessage())
@@ -104,7 +105,7 @@ public class DefaultLogEntityDao implements LogEntityDao {
                                         VALUES(:logEntryId, :key, :value)
                                         ON CONFLICT(log_entry_id, key) DO UPDATE SET value = :value
                                     """)
-                            .bind("logEntryId", entry.getLogEntryId())
+                            .bind(LOG_ENTRY_ID, entry.getLogEntryId())
                             .bind("key", key)
                             .bind("value", value)
                             .execute());
@@ -152,7 +153,7 @@ public class DefaultLogEntityDao implements LogEntityDao {
         try (Query query = handle.createQuery("""
                                 SELECT key, value FROM easylog_log_metadata WHERE log_entry_id = :logEntryId
                             """)) {
-            List<LogMetaData> metadata = query.bind("logEntryId", e.getLogEntryId())
+            List<LogMetaData> metadata = query.bind(LOG_ENTRY_ID, e.getLogEntryId())
                     .map((rs2, _) -> new LogMetaData(rs2.getString("key"), rs2.getString("value"))).list();
 
             if (!metadata.isEmpty()) {

@@ -11,6 +11,10 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URI;
@@ -18,6 +22,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.security.cert.X509Certificate;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
@@ -27,11 +32,12 @@ import java.util.stream.Stream;
 import static io.github.easylog.converter.Converters.FORMATTER;
 import static io.github.easylog.model.DateRangeType.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @author Peter Szrnka
  */
-class LogControllerIntegrationTest {
+class SecureServerIntegrationTest {
 
     private final ObjectMapper objectMapper = new ObjectMapper()
             .registerModule(new JavaTimeModule())
@@ -46,13 +52,13 @@ class LogControllerIntegrationTest {
 
         app = EasyLogApplication.startApp(new ServerConfig(
                 PORT,
-                false,
+                true,
                 "EasyLogService",
                 "easyLog",
                 "easylog-test.db",
-                "dev",
-                null,
-                null
+                "",
+                "src/test/resources/easylog-keystore.p12",
+                "easylog123"
         ));
     }
 
@@ -65,11 +71,31 @@ class LogControllerIntegrationTest {
         Files.deleteIfExists(Paths.get("easylog-test.db"));
     }
 
+    @ParameterizedTest
+    @MethodSource("inputData")
+    void whenWrongInputDataProvided_thenThrowException(String sslKeystore, String sslKeystorePassword) {
+        // given
+        ServerConfig serverConfig = new ServerConfig(
+                PORT,
+                true,
+                "EasyLogService",
+                "easyLog",
+                "easylog-test.db",
+                "",
+                sslKeystore,
+                sslKeystorePassword
+        );
+
+        // when & then
+        assertThrows(IllegalArgumentException.class, () -> EasyLogApplication.startApp(serverConfig));
+    }
+
 
     @ParameterizedTest
     @MethodSource("saveInputData")
     void save_shouldCallServiceWithRequestBody(ZonedDateTime input) throws Exception {
         // given
+        disableSslVerification();
         SaveLogRequest request = new SaveLogRequest();
         LogEntry entry = new LogEntry();
         entry.setLogEntryId(UUID.randomUUID().toString());
@@ -90,6 +116,8 @@ class LogControllerIntegrationTest {
     @ParameterizedTest
     @MethodSource("listInputData")
     void list_shouldReturnPagedResult(String filter, String sortDirection, String startDate, String endDate, DateRangeType dateRangeType, Map<String, String> metadata) throws Exception {
+        // given
+        disableSslVerification();
         SaveLogRequest request = new SaveLogRequest();
         LogEntry entry = new LogEntry();
         entry.setLogEntryId(UUID.randomUUID().toString());
@@ -122,12 +150,22 @@ class LogControllerIntegrationTest {
             stringBuilder.append("endDate=").append(endDate);
         }
 
+        // when
         HttpURLConnection getConnection = get(stringBuilder.toString());
+
+        // then
         assertEquals(200, getConnection.getResponseCode());
     }
 
+    private static Stream<Arguments> inputData() {
+        return Stream.of(
+                Arguments.of(null, ""),
+                Arguments.of("", null)
+        );
+    }
+
     private static HttpURLConnection postJson(String json) throws IOException {
-        URL url = URI.create("http://localhost:" + PORT + "/api/log").toURL();
+        URL url = URI.create("https://localhost:" + PORT + "/api/log").toURL();
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("POST");
         connection.setDoOutput(true);
@@ -137,7 +175,7 @@ class LogControllerIntegrationTest {
     }
 
     private static HttpURLConnection get(String path) throws IOException {
-        URL url = URI.create("http://localhost:" + PORT + path).toURL();
+        URL url = URI.create("https://localhost:" + PORT + path).toURL();
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
         return connection;
@@ -147,7 +185,7 @@ class LogControllerIntegrationTest {
         return Stream.of(
                 Arguments.of((ZonedDateTime) null),
                 Arguments.of(ZonedDateTime.now())
-                );
+        );
     }
 
     private static Stream<Arguments> listInputData() {
@@ -169,5 +207,24 @@ class LogControllerIntegrationTest {
                 Arguments.of("message", "asc", null, FORMATTER.format(ZonedDateTime.now().plusDays(1)), CUSTOM, null),
                 Arguments.of("message", "asc", FORMATTER.format(ZonedDateTime.now().minusDays(1)), FORMATTER.format(ZonedDateTime.now().plusDays(1)), CUSTOM, null)
         );
+    }
+
+    private static void disableSslVerification() throws Exception {
+        TrustManager[] trustAllCerts = new TrustManager[]{
+                new X509TrustManager() {
+                    public X509Certificate[] getAcceptedIssuers() { return new X509Certificate[0]; }
+                    public void checkClientTrusted(X509Certificate[] certs, String authType) {
+                        // Certs must be accepted automatically
+                    }
+                    public void checkServerTrusted(X509Certificate[] certs, String authType) {
+                        // Certs must be accepted automatically
+                    }
+                }
+        };
+
+        SSLContext sc = SSLContext.getInstance("TLS");
+        sc.init(null, trustAllCerts, new java.security.SecureRandom());
+        HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+        HttpsURLConnection.setDefaultHostnameVerifier((hostname, session) -> true);
     }
 }

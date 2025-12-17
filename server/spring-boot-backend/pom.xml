@@ -8,6 +8,7 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <artifactId>spring-boot-backend</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
     <name>spring-boot-backend</name>
 
     <properties>
@@ -173,7 +174,13 @@
 
     <profiles>
         <profile>
-            <id>build-prod</id>
+            <id>build-prod-javalin</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>build-prod-spring-boot</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>

@@ -33,20 +33,41 @@
         </developer>
     </developers>
 
-    <modules>
-        <module>business-logic</module>
-        <module>frontend</module>
-        <module>javalin-backend</module>
-        <module>spring-boot-backend</module>
-        <module>report-aggregate-module</module>
-    </modules>
-
     <profiles>
         <profile>
             <id>default</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
+            <modules>
+                <module>business-logic</module>
+                <module>frontend</module>
+                <module>javalin-backend</module>
+                <module>spring-boot-backend</module>
+                <module>report-aggregate-module</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>build-prod-javalin</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <modules>
+                <module>business-logic</module>
+                <module>frontend</module>
+                <module>javalin-backend</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>build-prod-spring-boot</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <modules>
+                <module>business-logic</module>
+                <module>frontend</module>
+                <module>spring-boot-backend</module>
+            </modules>
         </profile>
 
     </profiles>

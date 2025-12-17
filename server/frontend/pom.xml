@@ -37,7 +37,7 @@
 
   <profiles>
     <profile>
-      <id>build-prod</id>
+      <id>build-prod-frontend</id>
       <activation>
         <activeByDefault>false</activeByDefault>
       </activation>
@@ -58,38 +58,44 @@
             </configuration>
           </plugin>
           <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>exec-maven-plugin</artifactId>
-            <version>3.3.0</version>
+            <groupId>com.github.eirslett</groupId>
+            <artifactId>frontend-maven-plugin</artifactId>
+            <version>1.15.0</version>
+
+            <configuration>
+              <workingDirectory>${project.basedir}</workingDirectory>
+            </configuration>
+
             <executions>
               <execution>
-                <id>exec-npm-install</id>
-                <phase>generate-resources</phase>
-                <configuration>
-                  <workingDirectory>${project.basedir}/src</workingDirectory>
-                  <executable>npm</executable>
-                  <arguments>
-                    <argument>install</argument>
-                  </arguments>
-                </configuration>
+                <id>install node and npm</id>
                 <goals>
-                  <goal>exec</goal>
+                  <goal>install-node-and-npm</goal>
                 </goals>
+                <configuration>
+                  <nodeVersion>v20.19.0</nodeVersion>
+                  <npmVersion>10.8.1</npmVersion>
+                </configuration>
               </execution>
               <execution>
-                <id>exec-ng-build</id>
+                <id>npm install</id>
+                <goals>
+                  <goal>npm</goal>
+                </goals>
                 <phase>generate-resources</phase>
                 <configuration>
-                  <workingDirectory>${project.basedir}/src</workingDirectory>
-                  <executable>npm</executable>
-                  <arguments>
-                    <argument>run</argument>
-                    <argument>build</argument>
-                  </arguments>
+                  <arguments>ci --legacy-peer-deps</arguments>
                 </configuration>
+              </execution>
+              <execution>
+                <id>npm test</id>
                 <goals>
-                  <goal>exec</goal>
+                  <goal>npm</goal>
                 </goals>
+                <phase>generate-resources</phase>
+                <configuration>
+                  <arguments>run build</arguments>
+                </configuration>
               </execution>
             </executions>
           </plugin>
@@ -97,91 +103,88 @@
       </build>
     </profile>
     <profile>
-            <id>codecov</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                      <artifactId>maven-clean-plugin</artifactId>
-                      <version>3.0.0</version>
-                      <configuration>
-                        <filesets>
-                          <fileset>
-                            <directory>${project.basedir}/dist</directory>
-                          </fileset>
-                          <fileset>
-                            <directory>${project.basedir}/target</directory>
-                          </fileset>
-                        </filesets>
-                      </configuration>
-                    </plugin>
-                    <plugin>
-                      <groupId>com.github.eirslett</groupId>
-                      <artifactId>frontend-maven-plugin</artifactId>
-                      <version>1.15.0</version>
+      <id>codecov</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-clean-plugin</artifactId>
+            <version>3.0.0</version>
+            <configuration>
+              <filesets>
+                <fileset>
+                  <directory>${project.basedir}/dist</directory>
+                </fileset>
+                <fileset>
+                  <directory>${project.basedir}/target</directory>
+                </fileset>
+              </filesets>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>com.github.eirslett</groupId>
+            <artifactId>frontend-maven-plugin</artifactId>
+            <version>1.15.0</version>
 
-                      <configuration>
-                        <workingDirectory>${project.basedir}</workingDirectory>
-                      </configuration>
+            <configuration>
+              <workingDirectory>${project.basedir}</workingDirectory>
+            </configuration>
 
-                      <executions>
-                        <execution>
-                          <id>install node and npm</id>
-                          <goals>
-                            <goal>install-node-and-npm</goal>
-                          </goals>
-                          <configuration>
-                            <nodeVersion>v20.19.0</nodeVersion>
-                            <npmVersion>10.8.1</npmVersion>
-                          </configuration>
-                        </execution>
-
-                        <execution>
-                          <id>npm install</id>
-                          <goals>
-                            <goal>npm</goal>
-                          </goals>
-                          <phase>generate-resources</phase>
-                          <configuration>
-                            <arguments>ci --legacy-peer-deps</arguments>
-                          </configuration>
-                        </execution>
-
-
-                        <execution>
-                          <id>npm test</id>
-                          <goals>
-                            <goal>npm</goal>
-                          </goals>
-                          <phase>test</phase>
-                          <configuration>
-                            <arguments>run test:ci</arguments>
-                          </configuration>
-                        </execution>
-                      </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.jacoco</groupId>
-                        <artifactId>jacoco-maven-plugin</artifactId>
-                        <version>0.8.14</version>
-                        <executions>
-                            <execution>
-                                <id>prepare-agent</id>
-                                <goals>
-                                    <goal>prepare-agent</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <formats>
-                                <format>XML</format>
-                            </formats>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
+            <executions>
+              <execution>
+                <id>install node and npm</id>
+                <goals>
+                  <goal>install-node-and-npm</goal>
+                </goals>
+                <configuration>
+                  <nodeVersion>v20.19.0</nodeVersion>
+                  <npmVersion>10.8.1</npmVersion>
+                </configuration>
+              </execution>
+              <execution>
+                <id>npm install</id>
+                <goals>
+                  <goal>npm</goal>
+                </goals>
+                <phase>generate-resources</phase>
+                <configuration>
+                  <arguments>ci --legacy-peer-deps</arguments>
+                </configuration>
+              </execution>
+              <execution>
+                <id>npm test</id>
+                <goals>
+                  <goal>npm</goal>
+                </goals>
+                <phase>test</phase>
+                <configuration>
+                  <arguments>run test:ci</arguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <version>0.8.14</version>
+            <executions>
+              <execution>
+                <id>prepare-agent</id>
+                <goals>
+                  <goal>prepare-agent</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <formats>
+                <format>XML</format>
+              </formats>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
   </profiles>
 </project>
