@@ -46,7 +46,7 @@ jobs:
         env:
           JITPACK_USER: ${{ secrets.JITPACK_USER }}
           JITPACK_TOKEN: ${{ secrets.JITPACK_TOKEN }}
-        run: mvn -s .github/settings.xml clean install -DskipTests -Pbuild-prod-frontend,build-prod-javalin
+        run: mvn -s ../.github/settings.xml clean install -DskipTests -Pbuild-prod-frontend,build-prod-javalin
 
       - name: Upload built JAR
         uses: actions/upload-artifact@v4
