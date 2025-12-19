@@ -20,7 +20,7 @@ jobs:
       contents: write
       packages: write
     outputs:
-      tag_name: ${{ steps.create_tag.outputs.tag_name || format('server-{0}', github.event.inputs.releaseVersion) }}
+      tag_name: ${{ steps.create_tag.outputs.tag_name }}
 
     steps:
       - name: Checkout code
@@ -42,6 +42,9 @@ jobs:
           mvn -s .github/settings.xml versions:update-child-modules -f ./server/spring-boot-backend/pom.xml
 
       - name: Build server module (Maven)
+        env:
+          JITPACK_USER: ${{ secrets.JITPACK_USER }}
+          JITPACK_TOKEN: ${{ secrets.JITPACK_TOKEN }}
         working-directory: server
         run: mvn -s .github/settings.xml clean install -DskipTests -Pbuild-prod-frontend,build-prod-spring-boot
 
@@ -94,19 +97,11 @@ jobs:
         id: create_release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ needs.build.outputs.tag_name }}
-          name: Release ${{ needs.build.outputs.tag_name }}
+          tag_name: ${{ needs.build.outputs.tag_name || format('server-{0}', github.event.inputs.releaseVersion) }}
           draft: false
           prerelease: false
           overwrite_files: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload Server JAR to Release
-        uses: softprops/action-gh-release@v2
-        with:
           name: easylog-server-${{ github.event.inputs.releaseVersion }}
-          tag_name: ${{ needs.build.outputs.tag_name }}
           files: |
             server/spring-boot-backend/target/easylog-server-${{ github.event.inputs.releaseVersion }}.jar
         env:

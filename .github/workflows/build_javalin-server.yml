@@ -122,7 +122,7 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
-      - name: Update Spring Boot server pom.xml to developmentVersion
+      - name: Update Javalin server pom.xml to developmentVersion
         env:
           JITPACK_USER: ${{ secrets.JITPACK_USER }}
           JITPACK_TOKEN: ${{ secrets.JITPACK_TOKEN }}
