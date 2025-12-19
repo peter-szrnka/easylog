@@ -20,7 +20,7 @@ jobs:
       contents: write
       packages: write
     outputs:
-      tag_name: ${{ steps.create_tag.outputs.tag_name || format('server-{0}', github.event.inputs.releaseVersion) }}
+      tag_name: ${{ steps.create_tag.outputs.tag_name || format('desktop-{0}', github.event.inputs.releaseVersion) }}
 
     steps:
       - name: Checkout code
