@@ -46,7 +46,7 @@ jobs:
           JITPACK_USER: ${{ secrets.JITPACK_USER }}
           JITPACK_TOKEN: ${{ secrets.JITPACK_TOKEN }}
         working-directory: server
-        run: mvn -s .github/settings.xml clean install -DskipTests -Pbuild-prod-frontend,build-prod-spring-boot
+        run: mvn -s ../.github/settings.xml clean install -DskipTests -Pbuild-prod-frontend,build-prod-spring-boot
 
       - name: Upload built JAR
         uses: actions/upload-artifact@v4
