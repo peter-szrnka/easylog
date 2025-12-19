@@ -75,6 +75,8 @@ jobs:
       contents: write
 
     steps:
+      - name: Debug tag output
+        run: echo "Tag is ${{ needs.build.outputs.tag_name }}"
       - name: Checkout code
         uses: actions/checkout@v4
         with:
